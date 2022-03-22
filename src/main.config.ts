@@ -1,5 +1,5 @@
+import "dotenv/config";
 import config from "config";
-import("dotenv/config");
 
 enum Routes {
   URL = "url",
@@ -9,7 +9,7 @@ enum Routes {
 
 export class Chromiumly {
   private static readonly GOTENBERG_ENDPOINT =
-    config.get<string>("gotenberg.endpoint") || process.env.GOTENBERG_ENDPOINT;
+    process.env.GOTENBERG_ENDPOINT || config.get<string>("gotenberg.endpoint");
 
   private static readonly PATH = "forms/chromium/convert";
 
