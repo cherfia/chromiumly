@@ -14,5 +14,5 @@ export type PageProperties = {
   printBackground?: boolean;
   landscape?: boolean;
   scale?: number;
-  nativePageRanges?: { x: number; y: number };
+  nativePageRanges?: { from: number; to: number };
 };
