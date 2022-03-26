@@ -75,7 +75,7 @@ const buffer = await markdownConverter.convert({
 
 ### Customization
 
-Each class `convert()` function takes an optional properties parameter of the following type which dictates how the PDF generated file will look like.
+Each class has a `convert()` function which takes an optional properties parameter of the following type which dictates how the PDF generated file will look like.
 
 ```typescript
 type PageProperties = {
