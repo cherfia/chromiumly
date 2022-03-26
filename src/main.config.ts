@@ -1,7 +1,4 @@
-process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
-
-import "dotenv/config";
-import config from "config";
+import { Gotenberg } from "./gotenberg";
 
 enum Routes {
   URL = "url",
@@ -10,8 +7,7 @@ enum Routes {
 }
 
 export class Chromiumly {
-  private static readonly GOTENBERG_ENDPOINT =
-    process.env.GOTENBERG_ENDPOINT || config.get<string>("gotenberg.endpoint");
+  private static readonly GOTENBERG_ENDPOINT = Gotenberg.endpoint;
 
   private static readonly PATH = "forms/chromium/convert";
 
