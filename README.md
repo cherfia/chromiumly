@@ -38,6 +38,20 @@ GOTENBERG_ENDPOINT=localhost:3000
 
 Chromiumly introduces different classes that serve as wrappers to Gotenberg's Chromium [routes](https://gotenberg.dev/docs/modules/chromium#routes).
 
+Each class comes with two methods :  
+
+#### convert
+
+This method takes either a `url`, an `html` file path or `html` and `markdown` file paths and returns a `buffer` which contains the converted PDF file content.
+
+#### generate
+
+ It is just a generic complementary method that takes the `buffer` returned by the `convert` method, and a chosen `filename` to generate the PDF file.
+
+Please note that all the PDF files can be found `__generated__` folder in the root folder of your project  
+
+### Modules
+
 #### URL
 
 ```typescript
@@ -79,7 +93,7 @@ const buffer = await markdownConverter.convert({
 
 ### Customization
 
-Each class has a `convert()` function which takes an optional properties parameter of the following type which dictates how the PDF generated file will look like.
+`convert()` method takes an optional `properties` parameter of the following type which dictates how the PDF generated file will look like.
 
 ```typescript
 type PageProperties = {
@@ -99,4 +113,23 @@ type PageProperties = {
   scale?: number; // The scale of the page rendering (default 1.0)
   nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
+```
+
+### Snippet
+
+The following is a short snippet of how to use the library.
+
+```typescript
+import { UrlConverter } from "chromiumly";
+
+async function run() {
+  const urlConverter = new UrlConverter();
+  const buffer = await urlConverter.convert({
+    url: "https://gotenberg.dev/",
+  });
+
+  await urlConverter.generate("gotenberg.pdf", buffer);
+}
+
+run();
 ```
