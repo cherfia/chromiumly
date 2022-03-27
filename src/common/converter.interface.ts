@@ -7,5 +7,5 @@ export interface IConverter {
     ...args
   }: {
     [x: string]: string | PathLike | PageProperties;
-  }): Promise<Buffer> | Promise<void>;
+  }): Promise<Buffer>;
 }
