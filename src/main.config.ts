@@ -1,6 +1,6 @@
 import { Gotenberg } from "./gotenberg";
 
-enum Routes {
+export enum Route {
   URL = "url",
   HTML = "html",
   MARKDOWN = "markdown",
@@ -12,9 +12,9 @@ export class Chromiumly {
   private static readonly PATH = "forms/chromium/convert";
 
   private static readonly ROUTES = {
-    url: Routes.URL,
-    html: Routes.HTML,
-    markdown: Routes.MARKDOWN,
+    url: Route.URL,
+    html: Route.HTML,
+    markdown: Route.MARKDOWN,
   };
 
   public static readonly endpoint = Chromiumly.GOTENBERG_ENDPOINT;
