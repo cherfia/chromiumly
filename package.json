@@ -12,6 +12,12 @@
   "engines": {
     "node": "14.x"
   },
+  "keywords": [
+    "gotenberg",
+    "chromium",
+    "html",
+    "pdf"
+  ],
   "scripts": {
     "clean": "rm -rf dist build",
     "lint": "eslint src/ --ext .js,.ts",
