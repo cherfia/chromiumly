@@ -51,6 +51,8 @@ const buffer = await urlConverter.convert({
 
 #### HTML
 
+The only requirement is that the file name should be `index.html`.
+
 ```typescript
 import { HtmlConverter } from "chromiumly";
 
@@ -62,6 +64,8 @@ const buffer = await htmlConverter.convert({
 ```
 
 #### Markdown
+
+This route accepts an `index.html` file plus a markdown file.
 
 ```typescript
 import { MarkdownConverter } from "chromiumly";
