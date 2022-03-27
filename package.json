@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "description": "A lightweight Typescrpit library which interacts with Gotenberg's Chromium module to convert HTML documents to PDF.",
   "main": "dist/main.js",
-  "repository": "https://github.com/cherfia/chromiumly.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cherfia/chromiumly.git"
+  },
   "author": "Taha Cherfia <taha.cherfia@gmail.com>",
   "license": "MIT",
-  "private": true,
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "clean": "rm -rf dist build",
     "lint": "eslint src/ --ext .js,.ts",
