@@ -5,13 +5,12 @@ import FormData from "form-data";
 import { IConverter } from "../common/converter.interface";
 import { PageProperties } from "../common/converter.types";
 import { ConverterUtils } from "../common/converter.utils";
-import { Chromiumly } from "../main.config";
+import { Converter } from "../common/converter";
+import { Route } from "../main.config";
 
-export class HtmlConverter implements IConverter {
-  private readonly endpoint: string;
-
+export class HtmlConverter extends Converter implements IConverter {
   constructor() {
-    this.endpoint = `${Chromiumly.endpoint}/${Chromiumly.path}/${Chromiumly.routes.html}`;
+    super(Route.HTML);
   }
 
   async convert({
@@ -22,13 +21,10 @@ export class HtmlConverter implements IConverter {
     properties?: PageProperties;
   }): Promise<Buffer> {
     const data = new FormData();
-
     data.append("index.html", createReadStream(html));
-
     if (properties) {
       ConverterUtils.injectPageProperties(data, properties);
     }
-
     return ConverterUtils.fetch(this.endpoint, data);
   }
 }
