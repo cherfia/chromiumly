@@ -1,3 +1,5 @@
+import { URL } from "url";
+
 import FormData from "form-data";
 
 import { Chromiumly } from "./../main.config";
@@ -19,14 +21,18 @@ export class UrlConverter implements IConverter {
     url: string;
     properties?: PageProperties;
   }): Promise<Buffer> {
-    const data = new FormData();
+    try {
+      const _url = new URL(url);
+      const data = new FormData();
+      data.append("url", _url.href);
 
-    data.append("url", url);
+      if (properties) {
+        ConverterUtils.injectPageProperties(data, properties);
+      }
 
-    if (properties) {
-      ConverterUtils.injectPageProperties(data, properties);
+      return ConverterUtils.fetch(this.endpoint, data);
+    } catch (error) {
+      throw error;
     }
-
-    return ConverterUtils.fetch(this.endpoint, data);
   }
 }
