@@ -1,7 +1,7 @@
 {
   "name": "chromiumly",
   "version": "1.0.0",
-  "description": "A Gotenberg-based Node library to convert HTML documents to PDF.",
+  "description": "A lightweight Typescrpit library which interacts with Gotenberg's Chromium module to convert HTML documents to PDF.",
   "main": "dist/main.js",
   "repository": "https://github.com/cherfia/chromiumly.git",
   "author": "Taha Cherfia <taha.cherfia@gmail.com>",

@@ -1,6 +1,6 @@
 # Chromiumly
 
-A Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s Chromium module to convert HTML documents to PDF.
+A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s Chromium module to convert HTML documents to PDF.
 
 ## Prerequisites
 
