@@ -21,7 +21,7 @@ Chromiumly supports both [dotenv](https://www.npmjs.com/package/dotenv) and [con
 #### dotenv
 
 ```bash
-GOTENBERG_ENDPOINT=localhost:3000
+GOTENBERG_ENDPOINT=http://localhost:3000
 ```
 
 #### config
@@ -29,7 +29,7 @@ GOTENBERG_ENDPOINT=localhost:3000
 ```json
 {
   "gotenberg": {
-    "enpdoint": "localhost:3000"
+    "enpdoint": "http://localhost:3000"
   }
 }
 ```
