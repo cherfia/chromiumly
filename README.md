@@ -1,6 +1,6 @@
 # Chromiumly
 
-A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s Chromium module to convert HTML documents to PDF.
+A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
 
 ## Prerequisites
 
@@ -34,23 +34,13 @@ GOTENBERG_ENDPOINT=http://localhost:3000
 }
 ```
 
-### Usage
+## Modules
 
-Chromiumly introduces different classes that serve as wrappers to Gotenberg's Chromium [routes](https://gotenberg.dev/docs/modules/chromium#routes).
+Chromiumly introduces different classes that serve as wrappers to Gotenberg's [modules](https://gotenberg.dev/docs/modules/api#modules).
 
-Each class comes with two methods :  
+### Chormium
 
-#### convert
-
-This method takes either a `url`, an `html` file path or `html` and `markdown` file paths and returns a `buffer` which contains the converted PDF file content.
-
-#### generate
-
- It is just a generic complementary method that takes the `buffer` returned by the `convert` method, and a chosen `filename` to generate the PDF file.
-
-Please note that all the PDF files can be found `__generated__` folder in the root folder of your project  
-
-### Modules
+There are three different classes that come with a single method (i.e.`convert`) which calls one of Chromium's [routes](https://gotenberg.dev/docs/modules/chromium#routes) to convert `html` and `markdown` files, or a `url` to a `buffer` which contains the converted PDF file content.
 
 #### URL
 
@@ -115,12 +105,52 @@ type PageProperties = {
 };
 ```
 
-### Snippet
+### PDF Engine
+
+The `PDFEngine` combines the functionality of both Gotenberg's [PDF Engines](https://gotenberg.dev/docs/modules/pdf-engines) and [LibreOffice](https://gotenberg.dev/docs/modules/libreoffice) modules to manipulate different file formats.
+
+#### convert
+
+This method interacts with [LibreOffice](https://gotenberg.dev/docs/modules/libreoffice) module to convert different documents to PDF files. You can find the file extensions accepted [here](https://gotenberg.dev/docs/modules/libreoffice#route).
+
+```typescript
+import { PDFEngine } from "chromiumly";
+
+const buffer = await PDFEngine.convert({
+  files: ["path/to/file.docx", "path/to/file.png"],
+});
+```
+
+Similarly to Chromium's module `convert` method, this method takes the following optional parameters :
+
+- `properties`: changes how the PDF generated file will look like.
+- `pdfFormat`: PDF format of the conversion resulting file (i.e. `PDF/A-1a`, `PDF/A-2b`, `PDF/A-3b`).
+- `merge`: merge all the resulting files from the conversion into an individual PDF file.
+
+#### merge
+
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/modules/pdf-engines) module which gathers different engines that can manipulate and merge PDF files such as: [PDFtk](https://gitlab.com/pdftk-java/pdftk), [PDFcpu](https://github.com/pdfcpu/pdfcpu), [QPDF](https://github.com/qpdf/qpdf), and [UNO](https://github.com/unoconv/unoconv).
+
+```typescript
+import { PDFEngine } from "chromiumly";
+
+const buffer = await PDFEngine.merge({
+  files: ["path/to/file.docx", "path/to/file.png"],
+});
+```
+
+#### generate
+
+It is just a generic complementary method that takes the `buffer` returned by the `convert` method, and a chosen `filename` to generate the PDF file.
+
+Please note that all the PDF files can be found `__generated__` folder in the root folder of your project.  
+
+## Snippet
 
 The following is a short snippet of how to use the library.
 
 ```typescript
-import { UrlConverter } from "chromiumly";
+import { PDFEngine, UrlConverter } from "chromiumly";
 
 async function run() {
   const urlConverter = new UrlConverter();
@@ -128,7 +158,7 @@ async function run() {
     url: "https://gotenberg.dev/",
   });
 
-  await urlConverter.generate("gotenberg.pdf", buffer);
+  await PDFEngine.generate("gotenberg.pdf", buffer);
 }
 
 run();
