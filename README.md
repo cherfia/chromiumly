@@ -2,6 +2,20 @@
 
 A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
 
+## Install
+
+Using npm:
+
+```bash
+npm install chromiumly
+```
+
+Using yarn:
+
+```bash
+yarn add chromiumly
+```
+
 ## Prerequisites
 
 Before attempting to use Chromiumly, be sure you install [Docker](https://www.docker.com/) if you have not already done so.
