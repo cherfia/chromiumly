@@ -8,8 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Codecov
-        uses: codecov/codecov-action@v2.1.0
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
@@ -18,3 +16,13 @@ jobs:
       - run: yarn
       - run: yarn build
       - run: yarn test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ./coverage/
+          fail_ci_if_error: true
+          files: ./clover.xml
+          flags: unittests
+          name: codecov-chromiumly
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
