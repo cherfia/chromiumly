@@ -8,6 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Codecov
+        uses: codecov/codecov-action@v2.1.0
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
