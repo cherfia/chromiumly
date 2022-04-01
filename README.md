@@ -1,6 +1,7 @@
 # Chromiumly
 
 ![build](https://github.com/cherfia/chromiumly/actions/workflows/build.yml/badge.svg)
+[![downloads](https://img.shields.io/npm/dt/chromiumly.svg?style=flat-square)](https://npm-stat.com/charts.html?package=chromiumly)
 
 A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
 
