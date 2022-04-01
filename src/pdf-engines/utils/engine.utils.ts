@@ -9,7 +9,12 @@ export class PDFEngineUtils {
       try {
         await promises.access(file, constants.R_OK);
         const filename = path.basename(file.toString());
-        data.append(filename, createReadStream(file));
+        const extension = path.extname(filename);
+        if (extension === ".pdf") {
+          data.append(filename, createReadStream(file));
+        } else {
+          throw new Error(`${extension} is not supported`);
+        }
       } catch (error) {
         throw error;
       }
