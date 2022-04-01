@@ -1,5 +1,7 @@
 # Chromiumly
 
+![build](https://github.com/cherfia/chromiumly/actions/workflows/build.yml/badge.svg)
+
 A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
 
 ## Install
