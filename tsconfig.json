@@ -19,7 +19,7 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "types": ["node"],
+    "types": ["node", "jest"],
     "lib": ["ES6"]
   },
   "include": ["src/**/*.ts"],
