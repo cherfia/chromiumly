@@ -1,6 +1,6 @@
 {
   "name": "chromiumly",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A lightweight Typescrpit library which interacts with Gotenberg's different modules to convert a variety of document formats to PDF files.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -29,7 +29,7 @@
     "clean": "rm -rf dist build",
     "lint": "eslint src/ --ext .js,.ts",
     "build": "yarn clean && tsc -p tsconfig.json",
-    "test": "jest"
+    "test": "jest --runInBand --ci --coverage --reporters=default --reporters=jest-junit"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.7",
