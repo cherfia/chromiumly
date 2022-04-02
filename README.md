@@ -8,7 +8,7 @@
 [![downloads](https://img.shields.io/npm/dt/chromiumly.svg?color=brightgreen&style=flat-square)](https://npm-stat.com/charts.html?package=chromiumly)
 ![licence](https://img.shields.io/github/license/cherfia/chromiumly?style=flat-square)
 
-A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
+A lightweight Typescript library that interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
 
 ## Install
 
