@@ -2,7 +2,8 @@
 
 ![build](https://github.com/cherfia/chromiumly/actions/workflows/build.yml/badge.svg)
 [![codecov](https://codecov.io/gh/cherfia/chromiumly/branch/main/graph/badge.svg?token=2MEQ11YIDO)](https://codecov.io/gh/cherfia/chromiumly)
-[![downloads](https://img.shields.io/npm/dt/chromiumly.svg?style=flat-square)](https://npm-stat.com/charts.html?package=chromiumly)
+[![vulnerabilities](https://snyk.io/test/github/cherfia/chromiumly/badge.svg?targetFile=package.json)](https://snyk.io/test/github/cherfia/chromiumly?targetFile=package.json)
+[![downloads](https://img.shields.io/npm/dt/chromiumly.svg)](https://npm-stat.com/charts.html?package=chromiumly)
 
 A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
 
