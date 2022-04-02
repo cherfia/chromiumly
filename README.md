@@ -1,11 +1,12 @@
 # Chromiumly
 
 ![build](https://github.com/cherfia/chromiumly/actions/workflows/build.yml/badge.svg)
-[![codecov](https://codecov.io/gh/cherfia/chromiumly/branch/main/graph/badge.svg?token=2MEQ11YIDO)](https://codecov.io/gh/cherfia/chromiumly)
-[![vulnerabilities](https://snyk.io/test/github/cherfia/chromiumly/badge.svg?targetFile=package.json)](https://snyk.io/test/github/cherfia/chromiumly?targetFile=package.json)
-[![maintainability](https://api.codeclimate.com/v1/badges/4a9ee49e0bf00a38464e/maintainability)](https://codeclimate.com/github/cherfia/chromiumly/maintainability)
-[![npm version](https://badge.fury.io/js/chromiumly.svg)](https://npmjs.org/package/chromiumly)
-[![downloads](https://img.shields.io/npm/dt/chromiumly.svg)](https://npm-stat.com/charts.html?package=chromiumly)
+[![coverage](https://img.shields.io/codecov/c/gh/cherfia/chromiumly?style=flat-square)](https://codecov.io/gh/cherfia/chromiumly)
+[![vulnerabilities](https://snyk.io/test/github/cherfia/chromiumly/badge.svg?targetFile=package.json&color=brightgreen&style=flat-square)](https://snyk.io/test/github/cherfia/chromiumly?targetFile=package.json)
+[![maintainability](https://img.shields.io/codeclimate/maintainability/cherfia/chromiumly?color=yellow&style=flat-square)](https://codeclimate.com/github/cherfia/chromiumly/maintainability)
+[![npm](https://img.shields.io/npm/v/chromiumly?color=brightgreen&style=flat-square)](https://npmjs.org/package/chromiumly)
+[![downloads](https://img.shields.io/npm/dt/chromiumly.svg?color=brightgreen&style=flat-square)](https://npm-stat.com/charts.html?package=chromiumly)
+![licence](https://img.shields.io/github/license/cherfia/chromiumly?style=flat-square)
 
 A lightweight Typescrpit library which interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert a variety of document formats to PDF files.
 
