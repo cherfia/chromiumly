@@ -32,7 +32,7 @@
     "test": "jest --runInBand --ci --coverage --reporters=default --reporters=jest-junit"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "7.16.7",
+    "@babel/preset-typescript": "7.18.6",
     "@types/config": "0.0.41",
     "@types/dotenv": "8.2.0",
     "@types/form-data": "2.5.0",
