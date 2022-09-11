@@ -1,5 +1,17 @@
 {
-  "extends": [
-    "config:base"
+  "extends": ["config:base"],
+  "reviewers": ["cherfia"],
+  "packageRules": [
+    {
+      "description": "Lock node-fetch version to 2.6.2",
+      "matchPackageNames": ["node-fetch"],
+      "enabled": false
+    },
+    {
+      "description": "Enable auto-merge",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true,
+      "automergeType": "branch"
+    }
   ]
 }
