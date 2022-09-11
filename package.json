@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "config": "^3.3.7",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "form-data": "^4.0.0",
     "node-fetch": "2"
   }
