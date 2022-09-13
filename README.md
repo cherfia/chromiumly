@@ -51,7 +51,7 @@ GOTENBERG_ENDPOINT=http://localhost:3000
 ```json
 {
   "gotenberg": {
-    "enpdoint": "http://localhost:3000"
+    "endpoint": "http://localhost:3000"
   }
 }
 ```
