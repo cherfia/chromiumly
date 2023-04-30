@@ -52,6 +52,6 @@
     "config": "3.3.9",
     "dotenv": "16.0.3",
     "form-data": "4.0.0",
-    "node-fetch": "2"
+    "node-fetch": "2.6.8"
   }
 }
