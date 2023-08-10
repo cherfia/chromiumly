@@ -1,7 +1,6 @@
-import { createReadStream, promises } from "fs";
-
-import fetch from "node-fetch";
 import FormData from "form-data";
+import { createReadStream, promises } from "fs";
+import fetch from "node-fetch";
 
 import { PdfFormat } from "../../../common";
 import { MarkdownConverter } from "../markdown.converter";
@@ -29,7 +28,9 @@ describe("MarkdownConverter", () => {
 
   describe("convert", () => {
     beforeEach(() => {
-      (createReadStream as jest.Mock) = jest.fn().mockImplementation(() => {});
+      (createReadStream as jest.Mock) = jest
+        .fn()
+        .mockImplementation((file) => file);
     });
 
     describe("when file exists", () => {
