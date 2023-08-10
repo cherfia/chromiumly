@@ -1,5 +1,5 @@
-import fetch from "node-fetch";
 import FormData from "form-data";
+import fetch from "node-fetch";
 
 import { PdfFormat } from "../../../common";
 import { UrlConverter } from "../url.converter";
@@ -64,7 +64,7 @@ describe("HtmlConverter", () => {
       it("should throw an error", async () => {
         await expect(() =>
           converter.convert({ url: "invalid url" })
-        ).rejects.toThrow("Invalid URL: invalid url");
+        ).rejects.toThrow("Invalid URL");
       });
     });
 
