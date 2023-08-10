@@ -1,21 +1,17 @@
+import FormData from "form-data";
+import { createReadStream, promises } from "fs";
+import fs from "fs/promises";
+import fetch from "node-fetch";
 import path from "path";
 
-import { PDFEngine } from "./../pdf.engine";
 import { PdfFormat } from "../../common";
-
-import { promises, createReadStream } from "fs";
-
-import fetch from "node-fetch";
-import FormData from "form-data";
+import { PDFEngine } from "../pdf.engine";
 
 const { Response } = jest.requireActual("node-fetch");
 jest.mock("node-fetch", () => jest.fn());
 
 describe("PDFEngine", () => {
-  const mockProcessCwd = jest.spyOn(process, "cwd");
   const mockPromisesAccess = jest.spyOn(promises, "access");
-  const mockPromisesMkDir = jest.spyOn(promises, "mkdir");
-  const mockPromisesWriteFile = jest.spyOn(promises, "writeFile");
   const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
   const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
 
@@ -71,14 +67,55 @@ describe("PDFEngine", () => {
   });
 
   describe("generate", () => {
+    const mockFilename = "test.pdf";
+    const mockBuffer = Buffer.from("mock pdf content");
+
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+
     it("should generate a PDF file", async () => {
-      mockProcessCwd.mockReturnValue("path/to/");
-      mockPromisesMkDir.mockResolvedValue("__generated__");
-      await PDFEngine.generate("file.pdf", Buffer.from("content"));
-      expect(mockPromisesWriteFile).toBeCalledWith(
-        path.resolve("path/to/__generated__/file.pdf"),
-        Buffer.from("content")
+      const mockGeneratedDir = path.join(process.cwd(), "__generated__");
+      const mockGeneratedFilePath = path.join(mockGeneratedDir, mockFilename);
+
+      const mockPromisesMkDir = jest
+        .spyOn(fs, "mkdir")
+        .mockResolvedValueOnce(mockGeneratedDir);
+
+      const mockPromisesWriteFile = jest
+        .spyOn(fs, "writeFile")
+        .mockResolvedValueOnce();
+
+      await PDFEngine.generate(mockFilename, mockBuffer);
+
+      expect(mockPromisesMkDir).toHaveBeenCalledWith(mockGeneratedDir, {
+        recursive: true,
+      });
+
+      expect(mockPromisesWriteFile).toHaveBeenCalledWith(
+        mockGeneratedFilePath,
+        mockBuffer
       );
+    });
+
+    it("should handle errors during file generation", async () => {
+      jest
+        .spyOn(fs, "mkdir")
+        .mockRejectedValueOnce(new Error("Cannot create directory"));
+
+      await expect(
+        PDFEngine.generate(mockFilename, mockBuffer)
+      ).rejects.toThrow("Cannot create directory");
+    });
+
+    it("should handle errors during file writing", async () => {
+      jest
+        .spyOn(fs, "writeFile")
+        .mockRejectedValueOnce(new Error("Failed to write to file"));
+
+      await expect(
+        PDFEngine.generate(mockFilename, mockBuffer)
+      ).rejects.toThrow("Failed to write to file");
     });
   });
 });
