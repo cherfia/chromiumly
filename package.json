@@ -37,7 +37,7 @@
     "@types/dotenv": "8.2.0",
     "@types/form-data": "2.5.0",
     "@types/jest": "29.5.5",
-    "@types/node": "18.17.17",
+    "@types/node": "18.17.18",
     "@types/node-fetch": "2.6.5",
     "@typescript-eslint/eslint-plugin": "6.7.2",
     "@typescript-eslint/parser": "6.7.2",
