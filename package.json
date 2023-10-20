@@ -38,7 +38,7 @@
     "@types/form-data": "2.5.0",
     "@types/jest": "29.5.6",
     "@types/node": "18.18.6",
-    "@types/node-fetch": "2.6.6",
+    "@types/node-fetch": "2.6.7",
     "@typescript-eslint/eslint-plugin": "6.8.0",
     "@typescript-eslint/parser": "6.8.0",
     "eslint": "8.51.0",
