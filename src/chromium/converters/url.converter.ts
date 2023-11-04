@@ -1,3 +1,5 @@
+import { PathLike, constants, createReadStream, promises } from "fs";
+
 import { URL } from "url";
 
 import FormData from "form-data";
@@ -16,26 +18,38 @@ export class UrlConverter extends Converter implements IConverter {
 
   async convert({
     url,
+    header,
+    footer,
     properties,
     pdfFormat,
   }: {
     url: string;
+    header?: PathLike;
+    footer?: PathLike;
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
   }): Promise<Buffer> {
-    try {
-      const _url = new URL(url);
-      const data = new FormData();
-      if (pdfFormat) {
-        data.append("pdfFormat", pdfFormat);
-      }
-      data.append("url", _url.href);
-      if (properties) {
-        ConverterUtils.injectPageProperties(data, properties);
-      }
-      return GotenbergUtils.fetch(this.endpoint, data);
-    } catch (error) {
-      throw error;
+    const _url = new URL(url);
+    const data = new FormData();
+    if (pdfFormat) {
+      data.append("pdfFormat", pdfFormat);
     }
+
+    data.append("url", _url.href);
+
+    if (header) {
+      await promises.access(header, constants.R_OK);
+      data.append("header.html", createReadStream(header));
+    }
+
+    if (footer) {
+      await promises.access(footer, constants.R_OK);
+      data.append("footer.html", createReadStream(footer));
+    }
+
+    if (properties) {
+      ConverterUtils.injectPageProperties(data, properties);
+    }
+    return GotenbergUtils.fetch(this.endpoint, data);
   }
 }
