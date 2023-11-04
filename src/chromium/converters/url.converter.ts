@@ -1,3 +1,4 @@
+import { EmulatedMediaType } from "./../../common/constants";
 import { PathLike, constants, createReadStream, promises } from "fs";
 
 import { URL } from "url";
@@ -22,12 +23,14 @@ export class UrlConverter extends Converter implements IConverter {
     footer,
     properties,
     pdfFormat,
+    emulatedMediaType,
   }: {
     url: string;
     header?: PathLike;
     footer?: PathLike;
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
+    emulatedMediaType?: EmulatedMediaType;
   }): Promise<Buffer> {
     const _url = new URL(url);
     const data = new FormData();
@@ -45,6 +48,10 @@ export class UrlConverter extends Converter implements IConverter {
     if (footer) {
       await promises.access(footer, constants.R_OK);
       data.append("footer.html", createReadStream(footer));
+    }
+
+    if (emulatedMediaType) {
+      data.append("emulatedMediaType", emulatedMediaType);
     }
 
     if (properties) {

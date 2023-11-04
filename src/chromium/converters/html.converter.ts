@@ -8,6 +8,7 @@ import { PageProperties } from "../interfaces/converter.types";
 import { ConverterUtils } from "../utils/converter.utils";
 import { Converter } from "./converter";
 import { ChromiumRoute } from "../../main.config";
+import { EmulatedMediaType } from "../../common/constants";
 
 export class HtmlConverter extends Converter implements IConverter {
   constructor() {
@@ -20,15 +21,18 @@ export class HtmlConverter extends Converter implements IConverter {
     footer,
     properties,
     pdfFormat,
+    emulatedMediaType,
   }: {
     html: PathLike;
     header?: PathLike;
     footer?: PathLike;
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
+    emulatedMediaType?: EmulatedMediaType;
   }): Promise<Buffer> {
     await promises.access(html, constants.R_OK);
     const data = new FormData();
+
     if (pdfFormat) {
       data.append("pdfFormat", pdfFormat);
     }
@@ -45,9 +49,14 @@ export class HtmlConverter extends Converter implements IConverter {
       data.append("footer.html", createReadStream(footer));
     }
 
+    if (emulatedMediaType) {
+      data.append("emulatedMediaType", emulatedMediaType);
+    }
+
     if (properties) {
       ConverterUtils.injectPageProperties(data, properties);
     }
+
     return GotenbergUtils.fetch(this.endpoint, data);
   }
 }
