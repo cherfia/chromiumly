@@ -4,11 +4,13 @@ import FormData from "form-data";
 
 import { GotenbergUtils, PdfFormat } from "../../common";
 import { IConverter } from "../interfaces/converter.interface";
-import { PageProperties } from "../interfaces/converter.types";
+import {
+  EmulatedMediaType,
+  PageProperties,
+} from "../interfaces/converter.types";
 import { ConverterUtils } from "../utils/converter.utils";
 import { Converter } from "./converter";
 import { ChromiumRoute } from "../../main.config";
-import { EmulatedMediaType } from "../../common/constants";
 
 export class HtmlConverter extends Converter implements IConverter {
   constructor() {

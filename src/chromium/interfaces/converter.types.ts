@@ -19,3 +19,5 @@ export type PageProperties = {
   scale?: number; // The scale of the page rendering (default 1.0)
   nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
+
+export type EmulatedMediaType = "screen" | "print";

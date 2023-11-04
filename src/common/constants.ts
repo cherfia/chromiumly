@@ -3,8 +3,3 @@ export enum PdfFormat {
   A_2b = "PDF/A-2b",
   A_3b = "PDF/A-3b",
 }
-
-export enum EmulatedMediaType {
-  SCREEN = "screen",
-  PRINT = "print",
-}
