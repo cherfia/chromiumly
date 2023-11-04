@@ -1,5 +1,6 @@
-import FormData from "form-data";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from "fs";
+import FormData from "form-data";
 import fs from "fs/promises";
 import fetch from "node-fetch";
 import path from "path";
@@ -34,7 +35,7 @@ describe("PDFEngine", () => {
           files: ["path/to/file.docx", "path/to/file.bib"],
         });
         expect(buffer).toEqual(Buffer.from("content"));
-        expect(mockFormDataAppend).toBeCalledTimes(2);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
       });
     });
 
@@ -49,7 +50,7 @@ describe("PDFEngine", () => {
           merge: true,
         });
         expect(buffer).toEqual(Buffer.from("content"));
-        expect(mockFormDataAppend).toBeCalledTimes(5);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
       });
     });
   });
@@ -62,7 +63,7 @@ describe("PDFEngine", () => {
         files: ["path/to/file.pdf", "path/to/another-file.pdf"],
       });
       expect(buffer).toEqual(Buffer.from("content"));
-      expect(mockFormDataAppend).toBeCalledTimes(2);
+      expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
     });
   });
 

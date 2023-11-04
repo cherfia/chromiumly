@@ -1,7 +1,8 @@
-import { PDFEngineUtils } from "./../engine.utils";
-import { promises, createReadStream } from "fs";
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { createReadStream, promises } from "fs";
 import FormData from "form-data";
+
+import { PDFEngineUtils } from "./../engine.utils";
 
 describe("PDFEngineUtils", () => {
   const mockPromisesAccess = jest.spyOn(promises, "access");
@@ -26,7 +27,7 @@ describe("PDFEngineUtils", () => {
           ["path/to/file.pdf", "path/to/another-file.pdf"],
           data
         );
-        expect(mockFormDataAppend).toBeCalledTimes(2);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
       });
     });
 

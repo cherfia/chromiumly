@@ -1,5 +1,7 @@
-import FormData from "form-data";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from "fs";
+
+import FormData from "form-data";
 import fetch from "node-fetch";
 
 import { PdfFormat } from "../../../common";
@@ -54,7 +56,7 @@ describe("MarkdownConverter", () => {
           markdown: "path/to/file.md",
           pdfFormat: PdfFormat.A_2b,
         });
-        expect(mockFormDataAppend).toBeCalledTimes(3);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
         expect(buffer).toEqual(Buffer.from("content"));
       });
     });
@@ -68,7 +70,52 @@ describe("MarkdownConverter", () => {
           markdown: "path/to/file.md",
           properties: { size: { width: 8.3, height: 11.7 } },
         });
-        expect(mockFormDataAppend).toBeCalledTimes(4);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+        expect(buffer).toEqual(Buffer.from("content"));
+      });
+    });
+
+    describe("when header parameter is passed", () => {
+      it("should return a buffer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        mockFetch.mockResolvedValue(new Response("content"));
+        const buffer = await converter.convert({
+          html: "path/to/index.html",
+          markdown: "path/to/file.md",
+          header: "path/to/header.html",
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+        expect(buffer).toEqual(Buffer.from("content"));
+      });
+    });
+
+    describe("when footer parameter is passed", () => {
+      it("should return a buffer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        mockFetch.mockResolvedValue(new Response("content"));
+        const buffer = await converter.convert({
+          html: "path/to/index.html",
+          markdown: "path/to/file.md",
+          footer: "path/to/footer.html",
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+        expect(buffer).toEqual(Buffer.from("content"));
+      });
+    });
+
+    describe("when all parameters are passed", () => {
+      it("should return a buffer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        mockFetch.mockResolvedValue(new Response("content"));
+        const buffer = await converter.convert({
+          html: "path/to/index.html",
+          markdown: "path/to/file.md",
+          header: "path/to/header.html",
+          footer: "path/to/footer.html",
+          pdfFormat: PdfFormat.A_1a,
+          properties: { size: { width: 8.3, height: 11.7 } },
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(7);
         expect(buffer).toEqual(Buffer.from("content"));
       });
     });

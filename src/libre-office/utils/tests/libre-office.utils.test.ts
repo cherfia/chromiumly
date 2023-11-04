@@ -1,5 +1,6 @@
-import { LibreOfficeUtils } from "../libre-office.utils";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { promises, createReadStream } from "fs";
+import { LibreOfficeUtils } from "../libre-office.utils";
 
 import FormData from "form-data";
 
@@ -26,7 +27,7 @@ describe("LibreOfficeUtils", () => {
           ["path/to/file.docx", "path/to/file.bib"],
           data
         );
-        expect(mockFormDataAppend).toBeCalledTimes(2);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
       });
     });
 
@@ -64,7 +65,7 @@ describe("LibreOfficeUtils", () => {
           LibreOfficeUtils.injectPageProperties(data, {
             landscape: true,
           });
-          expect(mockFormDataAppend).toBeCalledTimes(1);
+          expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
           expect(data.append).toHaveBeenCalledWith("landscape", "true");
         });
       });
@@ -76,7 +77,7 @@ describe("LibreOfficeUtils", () => {
           LibreOfficeUtils.injectPageProperties(data, {
             nativePageRanges: { from: 1, to: 6 },
           });
-          expect(mockFormDataAppend).toBeCalledTimes(1);
+          expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
           expect(data.append).toHaveBeenCalledWith("nativePageRanges", "1-6");
         });
       });
