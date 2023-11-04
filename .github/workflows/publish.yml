@@ -12,6 +12,7 @@ jobs:
           node-version: "16.x"
           registry-url: "https://registry.npmjs.org"
       - run: yarn
+      - run: yarn lint
       - run: yarn build
       - run: yarn test
       - run: yarn publish --access public
