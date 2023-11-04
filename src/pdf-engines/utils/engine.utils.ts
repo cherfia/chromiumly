@@ -6,17 +6,13 @@ import FormData from "form-data";
 export class PDFEngineUtils {
   public static async injectFiles(files: PathLike[], data: FormData) {
     for (const file of files) {
-      try {
-        await promises.access(file, constants.R_OK);
-        const filename = path.basename(file.toString());
-        const extension = path.extname(filename);
-        if (extension === ".pdf") {
-          data.append(filename, createReadStream(file));
-        } else {
-          throw new Error(`${extension} is not supported`);
-        }
-      } catch (error) {
-        throw error;
+      await promises.access(file, constants.R_OK);
+      const filename = path.basename(file.toString());
+      const extension = path.extname(filename);
+      if (extension === ".pdf") {
+        data.append(filename, createReadStream(file));
+      } else {
+        throw new Error(`${extension} is not supported`);
       }
     }
   }
