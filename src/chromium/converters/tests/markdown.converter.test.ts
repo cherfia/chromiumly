@@ -6,6 +6,7 @@ import fetch from "node-fetch";
 
 import { PdfFormat } from "../../../common";
 import { MarkdownConverter } from "../markdown.converter";
+import { EmulatedMediaType } from "../../../common/constants";
 
 const { Response } = jest.requireActual("node-fetch");
 jest.mock("node-fetch", () => jest.fn());
@@ -103,6 +104,21 @@ describe("MarkdownConverter", () => {
       });
     });
 
+    describe("when emulatedMediaType parameter is passed", () => {
+      it("should return a buffer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        mockFetch.mockResolvedValue(new Response("content"));
+        const buffer = await converter.convert({
+          html: "path/to/index.html",
+          markdown: "path/to/file.md",
+          emulatedMediaType: EmulatedMediaType.SCREEN,
+        });
+
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+        expect(buffer).toEqual(Buffer.from("content"));
+      });
+    });
+
     describe("when all parameters are passed", () => {
       it("should return a buffer", async () => {
         mockPromisesAccess.mockResolvedValue();
@@ -113,9 +129,10 @@ describe("MarkdownConverter", () => {
           header: "path/to/header.html",
           footer: "path/to/footer.html",
           pdfFormat: PdfFormat.A_1a,
+          emulatedMediaType: EmulatedMediaType.SCREEN,
           properties: { size: { width: 8.3, height: 11.7 } },
         });
-        expect(mockFormDataAppend).toHaveBeenCalledTimes(7);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(8);
         expect(buffer).toEqual(Buffer.from("content"));
       });
     });

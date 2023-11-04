@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 
 import { PdfFormat } from "../../../common";
 import { UrlConverter } from "../url.converter";
+import { EmulatedMediaType } from "../../../common/constants";
 
 const { Response } = jest.requireActual("node-fetch");
 jest.mock("node-fetch", () => jest.fn());
@@ -97,6 +98,19 @@ describe("HtmlConverter", () => {
       });
     });
 
+    describe("when emulatedMediaType parameter is passed", () => {
+      it("should return a buffer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        mockFetch.mockResolvedValue(new Response("content"));
+        const buffer = await converter.convert({
+          url: "http://www.example.com/",
+          emulatedMediaType: EmulatedMediaType.SCREEN,
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        expect(buffer).toEqual(Buffer.from("content"));
+      });
+    });
+
     describe("when all parameters are passed", () => {
       it("should return a buffer", async () => {
         mockPromisesAccess.mockResolvedValue();
@@ -106,9 +120,10 @@ describe("HtmlConverter", () => {
           header: "path/to/header.html",
           footer: "path/to/footer.html",
           pdfFormat: PdfFormat.A_1a,
+          emulatedMediaType: EmulatedMediaType.SCREEN,
           properties: { size: { width: 8.3, height: 11.7 } },
         });
-        expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(7);
         expect(buffer).toEqual(Buffer.from("content"));
       });
     });
