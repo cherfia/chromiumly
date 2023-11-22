@@ -36,7 +36,7 @@
     "@types/config": "3.3.3",
     "@types/dotenv": "8.2.0",
     "@types/form-data": "2.5.0",
-    "@types/jest": "29.5.8",
+    "@types/jest": "29.5.10",
     "@types/node": "20.9.2",
     "@types/node-fetch": "2.6.9",
     "@typescript-eslint/eslint-plugin": "6.12.0",
