@@ -1,0 +1,27 @@
+plugins:
+  "@release-it/conventional-changelog":
+    infile: "CHANGELOG.md"
+    preset:
+      name: conventionalcommits
+    types:
+      - type: "feat"
+        section: "Features"
+      - type: "fix"
+        section: "Bug Fixes"
+git:
+  requireBranch: main
+  commitMessage: "chore: release v${version}"
+  changelog: "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+
+hooks:
+  before:init: ["git pull", "yarn lint", "yarn test"]
+  after:bump: "npx auto-changelog -p && git add CHANGELOG.md"
+  after:release:
+    - "echo Successfully released ${name} v${version} to ${repo.repository}."
+
+github:
+  release: true
+npm:
+  publish: true
+  publishConfig:
+    registry: "https://registry.npmjs.org"
