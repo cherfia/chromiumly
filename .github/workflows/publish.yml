@@ -1,20 +1,24 @@
 name: Publish
-on:
-  release:
-    types: [published]
+on: workflow_dispatch
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: "16.x"
+          node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
-      - run: yarn
-      - run: yarn lint
-      - run: yarn build
-      - run: yarn test
-      - run: yarn publish --access public
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Setup Git user
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Release
+        run: yarn release --ci
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
