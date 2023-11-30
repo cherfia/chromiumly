@@ -1,6 +1,6 @@
 {
   "name": "chromiumly",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A lightweight Typescript library that interacts with Gotenberg's different modules to convert a variety of document formats to PDF files.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
