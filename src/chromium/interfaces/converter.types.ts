@@ -1,3 +1,6 @@
+import { PathLike } from "fs";
+import { PdfFormat } from "../../common";
+
 type PageSize = {
   width: number; // Paper width, in inches (default 8.5)
   height: number; //Paper height, in inches (default 11)
@@ -21,3 +24,11 @@ export type PageProperties = {
 };
 
 export type EmulatedMediaType = "screen" | "print";
+
+export type ConversionOptions = {
+  header?: PathLike;
+  footer?: PathLike;
+  properties?: PageProperties;
+  pdfFormat?: PdfFormat;
+  emulatedMediaType?: EmulatedMediaType;
+};
