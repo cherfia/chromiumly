@@ -23,6 +23,8 @@ export class HtmlConverter extends Converter {
     properties,
     pdfFormat,
     emulatedMediaType,
+    waitDelay,
+    waitForExpression,
   }: {
     html: PathLike;
     header?: PathLike;
@@ -30,6 +32,8 @@ export class HtmlConverter extends Converter {
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
     emulatedMediaType?: EmulatedMediaType;
+    waitDelay?: string;
+    waitForExpression?: string;
   }): Promise<Buffer> {
     await promises.access(html, constants.R_OK);
     const data = new FormData();
@@ -42,6 +46,8 @@ export class HtmlConverter extends Converter {
       properties,
       pdfFormat,
       emulatedMediaType,
+      waitDelay,
+      waitForExpression,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);

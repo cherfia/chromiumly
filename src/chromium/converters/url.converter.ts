@@ -25,6 +25,8 @@ export class UrlConverter extends Converter {
     properties,
     pdfFormat,
     emulatedMediaType,
+    waitDelay,
+    waitForExpression,
   }: {
     url: string;
     header?: PathLike;
@@ -32,6 +34,8 @@ export class UrlConverter extends Converter {
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
     emulatedMediaType?: EmulatedMediaType;
+    waitDelay?: string;
+    waitForExpression?: string;
   }): Promise<Buffer> {
     const _url = new URL(url);
     const data = new FormData();
@@ -44,6 +48,8 @@ export class UrlConverter extends Converter {
       properties,
       pdfFormat,
       emulatedMediaType,
+      waitDelay,
+      waitForExpression,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);
