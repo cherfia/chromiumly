@@ -106,5 +106,9 @@ export class ConverterUtils {
     if (options.properties) {
       ConverterUtils.injectPageProperties(data, options.properties);
     }
+
+    if (options.waitDelay) {
+      data.append("waitDelay", options.waitDelay);
+    }
   }
 }

@@ -32,4 +32,5 @@ export type ConversionOptions = {
   properties?: PageProperties;
   pdfFormat?: PdfFormat;
   emulatedMediaType?: EmulatedMediaType;
+  waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before converting it into PDF
 };

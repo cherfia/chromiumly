@@ -186,6 +186,16 @@ describe("ConverterUtils", () => {
       });
     });
 
+    describe("when waitDelay parameter is passed", () => {
+      it("should append waitDelay", async () => {
+        await ConverterUtils.customize(data, {
+          waitDelay: "5s",
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        expect(data.append).toHaveBeenCalledWith("waitDelay", "5s");
+      });
+    });
+
     describe("when all options are passed", () => {
       it("should append all options", async () => {
         mockPromisesAccess.mockResolvedValue();
