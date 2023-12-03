@@ -262,8 +262,14 @@ describe("ConverterUtils", () => {
           pdfFormat: PdfFormat.A_1a,
           emulatedMediaType: "screen",
           properties: { size: { width: 8.3, height: 11.7 } },
+          waitDelay: "5s",
+          waitForExpression: "document.readyState === 'complete'",
+          userAgent:
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+          extraHttpHeaders: { "X-Custom-Header": "value" },
+          failOnConsoleExceptions: true,
         });
-        expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
         expect(data.append).toHaveBeenNthCalledWith(1, "pdfFormat", "PDF/A-1a");
         expect(data.append).toHaveBeenNthCalledWith(
           2,
@@ -282,6 +288,27 @@ describe("ConverterUtils", () => {
         );
         expect(data.append).toHaveBeenNthCalledWith(5, "paperWidth", 8.3);
         expect(data.append).toHaveBeenNthCalledWith(6, "paperHeight", 11.7);
+        expect(data.append).toHaveBeenNthCalledWith(7, "waitDelay", "5s");
+        expect(data.append).toHaveBeenNthCalledWith(
+          8,
+          "waitForExpression",
+          "document.readyState === 'complete'"
+        );
+        expect(data.append).toHaveBeenNthCalledWith(
+          9,
+          "userAgent",
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+        );
+        expect(data.append).toHaveBeenNthCalledWith(
+          10,
+          "extraHttpHeaders",
+          JSON.stringify({ "X-Custom-Header": "value" })
+        );
+        expect(data.append).toHaveBeenNthCalledWith(
+          11,
+          "failOnConsoleExceptions",
+          "true"
+        );
       });
     });
   });
