@@ -27,6 +27,7 @@ export class HtmlConverter extends Converter {
     waitForExpression,
     userAgent,
     extraHttpHeaders,
+    failOnConsoleExceptions,
   }: {
     html: PathLike;
     header?: PathLike;
@@ -38,6 +39,7 @@ export class HtmlConverter extends Converter {
     waitForExpression?: string;
     userAgent?: string;
     extraHttpHeaders?: Record<string, string>;
+    failOnConsoleExceptions?: boolean;
   }): Promise<Buffer> {
     await promises.access(html, constants.R_OK);
     const data = new FormData();
@@ -54,6 +56,7 @@ export class HtmlConverter extends Converter {
       waitForExpression,
       userAgent,
       extraHttpHeaders,
+      failOnConsoleExceptions,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);

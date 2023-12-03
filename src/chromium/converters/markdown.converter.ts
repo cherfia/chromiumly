@@ -28,6 +28,7 @@ export class MarkdownConverter extends Converter {
     waitForExpression,
     userAgent,
     extraHttpHeaders,
+    failOnConsoleExceptions,
   }: {
     html: PathLike;
     markdown: PathLike;
@@ -40,6 +41,7 @@ export class MarkdownConverter extends Converter {
     waitForExpression?: string;
     userAgent?: string;
     extraHttpHeaders?: Record<string, string>;
+    failOnConsoleExceptions?: boolean;
   }): Promise<Buffer> {
     await promises.access(html, constants.R_OK);
     await promises.access(markdown, constants.R_OK);
@@ -58,6 +60,7 @@ export class MarkdownConverter extends Converter {
       waitForExpression,
       userAgent,
       extraHttpHeaders,
+      failOnConsoleExceptions,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);

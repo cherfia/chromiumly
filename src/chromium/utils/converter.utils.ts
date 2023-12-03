@@ -122,5 +122,12 @@ export class ConverterUtils {
     if (options.extraHttpHeaders) {
       data.append("extraHttpHeaders", JSON.stringify(options.extraHttpHeaders));
     }
+
+    if (options.failOnConsoleExceptions) {
+      data.append(
+        "failOnConsoleExceptions",
+        String(options.failOnConsoleExceptions)
+      );
+    }
   }
 }

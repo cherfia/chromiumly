@@ -238,6 +238,20 @@ describe("ConverterUtils", () => {
         );
       });
     });
+
+    describe("when failOnConsoleExceptions parameter is passed", () => {
+      it("should append failOnConsoleExceptions", async () => {
+        await ConverterUtils.customize(data, {
+          failOnConsoleExceptions: true,
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        expect(data.append).toHaveBeenCalledWith(
+          "failOnConsoleExceptions",
+          "true"
+        );
+      });
+    });
+
     describe("when all options are passed", () => {
       it("should append all options", async () => {
         mockPromisesAccess.mockResolvedValue();
