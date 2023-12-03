@@ -70,6 +70,16 @@ describe("ConverterUtils", () => {
           expect(data.append).toHaveBeenCalledWith("printBackground", "true");
         });
       });
+
+      describe("when omitBackground parameter is set", () => {
+        it("should append omitBackground to data", () => {
+          ConverterUtils.injectPageProperties(data, {
+            omitBackground: true,
+          });
+          expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+          expect(data.append).toHaveBeenCalledWith("omitBackground", "true");
+        });
+      });
     });
 
     describe("Page landscape", () => {

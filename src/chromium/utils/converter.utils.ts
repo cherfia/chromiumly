@@ -48,6 +48,10 @@ export class ConverterUtils {
       data.append("printBackground", String(pageProperties.printBackground));
     }
 
+    if (pageProperties.omitBackground) {
+      data.append("omitBackground", String(pageProperties.omitBackground));
+    }
+
     if (pageProperties.landscape) {
       data.append("landscape", String(pageProperties.landscape));
     }
