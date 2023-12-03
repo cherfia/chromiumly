@@ -86,7 +86,7 @@ export class ConverterUtils {
     options: ConversionOptions
   ): Promise<void> {
     if (options.pdfFormat) {
-      data.append("pdfFormat", options.pdfFormat);
+      data.append("pdfa", options.pdfFormat);
     }
 
     if (options.header) {

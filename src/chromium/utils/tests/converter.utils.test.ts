@@ -161,7 +161,7 @@ describe("ConverterUtils", () => {
           pdfFormat: PdfFormat.A_1a,
         });
         expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-        expect(data.append).toHaveBeenCalledWith("pdfFormat", "PDF/A-1a");
+        expect(data.append).toHaveBeenCalledWith("pdfa", "PDF/A-1a");
       });
     });
 
@@ -270,7 +270,7 @@ describe("ConverterUtils", () => {
           failOnConsoleExceptions: true,
         });
         expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
-        expect(data.append).toHaveBeenNthCalledWith(1, "pdfFormat", "PDF/A-1a");
+        expect(data.append).toHaveBeenNthCalledWith(1, "pdfa", "PDF/A-1a");
         expect(data.append).toHaveBeenNthCalledWith(
           2,
           "header.html",

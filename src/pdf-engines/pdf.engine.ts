@@ -29,7 +29,7 @@ export class PDFEngine {
   }): Promise<Buffer> {
     const data = new FormData();
     if (pdfFormat) {
-      data.append("pdfFormat", pdfFormat);
+      data.append("pdfa", pdfFormat);
     }
     if (merge) {
       data.append("merge", String(merge));
