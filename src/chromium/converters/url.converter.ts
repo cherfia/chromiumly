@@ -27,6 +27,7 @@ export class UrlConverter extends Converter {
     emulatedMediaType,
     waitDelay,
     waitForExpression,
+    userAgent,
   }: {
     url: string;
     header?: PathLike;
@@ -36,6 +37,7 @@ export class UrlConverter extends Converter {
     emulatedMediaType?: EmulatedMediaType;
     waitDelay?: string;
     waitForExpression?: string;
+    userAgent?: string;
   }): Promise<Buffer> {
     const _url = new URL(url);
     const data = new FormData();
@@ -50,6 +52,7 @@ export class UrlConverter extends Converter {
       emulatedMediaType,
       waitDelay,
       waitForExpression,
+      userAgent,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);

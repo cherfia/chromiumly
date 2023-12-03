@@ -26,6 +26,7 @@ export class MarkdownConverter extends Converter {
     emulatedMediaType,
     waitDelay,
     waitForExpression,
+    userAgent,
   }: {
     html: PathLike;
     markdown: PathLike;
@@ -36,6 +37,7 @@ export class MarkdownConverter extends Converter {
     emulatedMediaType?: EmulatedMediaType;
     waitDelay?: string;
     waitForExpression?: string;
+    userAgent?: string;
   }): Promise<Buffer> {
     await promises.access(html, constants.R_OK);
     await promises.access(markdown, constants.R_OK);
@@ -52,6 +54,7 @@ export class MarkdownConverter extends Converter {
       emulatedMediaType,
       waitDelay,
       waitForExpression,
+      userAgent,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);

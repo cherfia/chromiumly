@@ -114,5 +114,9 @@ export class ConverterUtils {
     if (options.waitForExpression) {
       data.append("waitForExpression", options.waitForExpression);
     }
+
+    if (options.userAgent) {
+      data.append("userAgent", options.userAgent);
+    }
   }
 }

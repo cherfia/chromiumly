@@ -34,4 +34,5 @@ export type ConversionOptions = {
   emulatedMediaType?: EmulatedMediaType;
   waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before converting it into PDF
   waitForExpression?: string; // JavaScript expression to wait before converting an HTML document into PDF until it returns true.
+  userAgent?: string;
 };

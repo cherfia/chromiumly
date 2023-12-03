@@ -25,6 +25,7 @@ export class HtmlConverter extends Converter {
     emulatedMediaType,
     waitDelay,
     waitForExpression,
+    userAgent,
   }: {
     html: PathLike;
     header?: PathLike;
@@ -34,6 +35,7 @@ export class HtmlConverter extends Converter {
     emulatedMediaType?: EmulatedMediaType;
     waitDelay?: string;
     waitForExpression?: string;
+    userAgent?: string;
   }): Promise<Buffer> {
     await promises.access(html, constants.R_OK);
     const data = new FormData();
@@ -48,6 +50,7 @@ export class HtmlConverter extends Converter {
       emulatedMediaType,
       waitDelay,
       waitForExpression,
+      userAgent,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);
