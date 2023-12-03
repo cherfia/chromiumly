@@ -222,6 +222,22 @@ describe("ConverterUtils", () => {
       });
     });
 
+    describe("when extraHttpHeaders parameter is passed", () => {
+      it("should append extraHttpHeaders", async () => {
+        const extraHttpHeaders = {
+          "X-Custom-Header": "value",
+        };
+
+        await ConverterUtils.customize(data, {
+          extraHttpHeaders,
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        expect(data.append).toHaveBeenCalledWith(
+          "extraHttpHeaders",
+          JSON.stringify(extraHttpHeaders)
+        );
+      });
+    });
     describe("when all options are passed", () => {
       it("should append all options", async () => {
         mockPromisesAccess.mockResolvedValue();

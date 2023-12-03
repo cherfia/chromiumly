@@ -28,6 +28,7 @@ export class UrlConverter extends Converter {
     waitDelay,
     waitForExpression,
     userAgent,
+    extraHttpHeaders,
   }: {
     url: string;
     header?: PathLike;
@@ -38,6 +39,7 @@ export class UrlConverter extends Converter {
     waitDelay?: string;
     waitForExpression?: string;
     userAgent?: string;
+    extraHttpHeaders?: Record<string, string>;
   }): Promise<Buffer> {
     const _url = new URL(url);
     const data = new FormData();
@@ -53,6 +55,7 @@ export class UrlConverter extends Converter {
       waitDelay,
       waitForExpression,
       userAgent,
+      extraHttpHeaders,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);

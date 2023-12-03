@@ -118,5 +118,9 @@ export class ConverterUtils {
     if (options.userAgent) {
       data.append("userAgent", options.userAgent);
     }
+
+    if (options.extraHttpHeaders) {
+      data.append("extraHttpHeaders", JSON.stringify(options.extraHttpHeaders));
+    }
   }
 }

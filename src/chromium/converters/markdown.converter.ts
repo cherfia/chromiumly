@@ -27,6 +27,7 @@ export class MarkdownConverter extends Converter {
     waitDelay,
     waitForExpression,
     userAgent,
+    extraHttpHeaders,
   }: {
     html: PathLike;
     markdown: PathLike;
@@ -38,6 +39,7 @@ export class MarkdownConverter extends Converter {
     waitDelay?: string;
     waitForExpression?: string;
     userAgent?: string;
+    extraHttpHeaders?: Record<string, string>;
   }): Promise<Buffer> {
     await promises.access(html, constants.R_OK);
     await promises.access(markdown, constants.R_OK);
@@ -55,6 +57,7 @@ export class MarkdownConverter extends Converter {
       waitDelay,
       waitForExpression,
       userAgent,
+      extraHttpHeaders,
     });
 
     return GotenbergUtils.fetch(this.endpoint, data);
