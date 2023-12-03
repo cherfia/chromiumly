@@ -110,5 +110,9 @@ export class ConverterUtils {
     if (options.waitDelay) {
       data.append("waitDelay", options.waitDelay);
     }
+
+    if (options.waitForExpression) {
+      data.append("waitForExpression", options.waitForExpression);
+    }
   }
 }

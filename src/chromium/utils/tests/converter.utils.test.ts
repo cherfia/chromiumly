@@ -196,6 +196,19 @@ describe("ConverterUtils", () => {
       });
     });
 
+    describe("when waitForExpression parameter is passed", () => {
+      it("should append waitForExpression", async () => {
+        await ConverterUtils.customize(data, {
+          waitForExpression: "document.readyState === 'complete'",
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        expect(data.append).toHaveBeenCalledWith(
+          "waitForExpression",
+          "document.readyState === 'complete'"
+        );
+      });
+    });
+
     describe("when all options are passed", () => {
       it("should append all options", async () => {
         mockPromisesAccess.mockResolvedValue();
