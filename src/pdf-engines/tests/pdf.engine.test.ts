@@ -47,10 +47,11 @@ describe("PDFEngine", () => {
           files: ["path/to/file.docx", "path/to/file.bib"],
           properties: { landscape: true },
           pdfFormat: PdfFormat.A_1a,
+          pdfUA: true,
           merge: true,
         });
         expect(buffer).toEqual(Buffer.from("content"));
-        expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
       });
     });
   });

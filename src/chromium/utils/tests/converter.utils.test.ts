@@ -165,6 +165,16 @@ describe("ConverterUtils", () => {
       });
     });
 
+    describe("when pdf universal access parameter is passed", () => {
+      it("should append pdfua format", async () => {
+        await ConverterUtils.customize(data, {
+          pdfUA: true,
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        expect(data.append).toHaveBeenCalledWith("pdfua", "true");
+      });
+    });
+
     describe("when page properties parameter is passed", () => {
       it("should append page propertiers", async () => {
         await ConverterUtils.customize(data, {
@@ -260,6 +270,7 @@ describe("ConverterUtils", () => {
           header: "path/to/header.html",
           footer: "path/to/footer.html",
           pdfFormat: PdfFormat.A_1a,
+          pdfUA: true,
           emulatedMediaType: "screen",
           properties: { size: { width: 8.3, height: 11.7 } },
           waitDelay: "5s",
@@ -269,43 +280,44 @@ describe("ConverterUtils", () => {
           extraHttpHeaders: { "X-Custom-Header": "value" },
           failOnConsoleExceptions: true,
         });
-        expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
         expect(data.append).toHaveBeenNthCalledWith(1, "pdfa", "PDF/A-1a");
+        expect(data.append).toHaveBeenNthCalledWith(2, "pdfua", "true");
         expect(data.append).toHaveBeenNthCalledWith(
-          2,
+          3,
           "header.html",
           "path/to/header.html"
         );
         expect(data.append).toHaveBeenNthCalledWith(
-          3,
+          4,
           "footer.html",
           "path/to/footer.html"
         );
         expect(data.append).toHaveBeenNthCalledWith(
-          4,
+          5,
           "emulatedMediaType",
           "screen"
         );
-        expect(data.append).toHaveBeenNthCalledWith(5, "paperWidth", 8.3);
-        expect(data.append).toHaveBeenNthCalledWith(6, "paperHeight", 11.7);
-        expect(data.append).toHaveBeenNthCalledWith(7, "waitDelay", "5s");
+        expect(data.append).toHaveBeenNthCalledWith(6, "paperWidth", 8.3);
+        expect(data.append).toHaveBeenNthCalledWith(7, "paperHeight", 11.7);
+        expect(data.append).toHaveBeenNthCalledWith(8, "waitDelay", "5s");
         expect(data.append).toHaveBeenNthCalledWith(
-          8,
+          9,
           "waitForExpression",
           "document.readyState === 'complete'"
         );
         expect(data.append).toHaveBeenNthCalledWith(
-          9,
+          10,
           "userAgent",
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
         );
         expect(data.append).toHaveBeenNthCalledWith(
-          10,
+          11,
           "extraHttpHeaders",
           JSON.stringify({ "X-Custom-Header": "value" })
         );
         expect(data.append).toHaveBeenNthCalledWith(
-          11,
+          12,
           "failOnConsoleExceptions",
           "true"
         );

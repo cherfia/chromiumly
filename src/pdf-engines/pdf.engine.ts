@@ -20,25 +20,37 @@ export class PDFEngine {
     files,
     properties,
     pdfFormat,
+    pdfUA,
     merge,
   }: {
     files: PathLike[];
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
+    pdfUA?: boolean;
     merge?: boolean;
   }): Promise<Buffer> {
     const data = new FormData();
+
     if (pdfFormat) {
       data.append("pdfa", pdfFormat);
     }
+
+    if (pdfUA) {
+      data.append("pdfUA", String(pdfUA));
+    }
+
     if (merge) {
       data.append("merge", String(merge));
     }
+
     if (properties) {
       LibreOfficeUtils.injectPageProperties(data, properties);
     }
+
     await LibreOfficeUtils.injectFiles(files, data);
+
     const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
+
     return GotenbergUtils.fetch(endpoint, data);
   }
 

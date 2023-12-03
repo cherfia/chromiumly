@@ -23,6 +23,7 @@ export class MarkdownConverter extends Converter {
     footer,
     properties,
     pdfFormat,
+    pdfUA,
     emulatedMediaType,
     waitDelay,
     waitForExpression,
@@ -36,6 +37,7 @@ export class MarkdownConverter extends Converter {
     footer?: PathLike;
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
+    pdfUA?: boolean;
     emulatedMediaType?: EmulatedMediaType;
     waitDelay?: string;
     waitForExpression?: string;
@@ -55,6 +57,7 @@ export class MarkdownConverter extends Converter {
       footer,
       properties,
       pdfFormat,
+      pdfUA,
       emulatedMediaType,
       waitDelay,
       waitForExpression,

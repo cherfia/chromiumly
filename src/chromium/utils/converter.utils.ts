@@ -89,6 +89,10 @@ export class ConverterUtils {
       data.append("pdfa", options.pdfFormat);
     }
 
+    if (options.pdfUA) {
+      data.append("pdfua", String(options.pdfUA));
+    }
+
     if (options.header) {
       await promises.access(options.header, constants.R_OK);
       data.append("header.html", createReadStream(options.header));

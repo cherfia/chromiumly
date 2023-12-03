@@ -24,6 +24,7 @@ export class UrlConverter extends Converter {
     footer,
     properties,
     pdfFormat,
+    pdfUA,
     emulatedMediaType,
     waitDelay,
     waitForExpression,
@@ -36,6 +37,7 @@ export class UrlConverter extends Converter {
     footer?: PathLike;
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
+    pdfUA?: boolean;
     emulatedMediaType?: EmulatedMediaType;
     waitDelay?: string;
     waitForExpression?: string;
@@ -53,6 +55,7 @@ export class UrlConverter extends Converter {
       footer,
       properties,
       pdfFormat,
+      pdfUA,
       emulatedMediaType,
       waitDelay,
       waitForExpression,

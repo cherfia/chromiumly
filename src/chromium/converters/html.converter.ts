@@ -22,6 +22,7 @@ export class HtmlConverter extends Converter {
     footer,
     properties,
     pdfFormat,
+    pdfUA,
     emulatedMediaType,
     waitDelay,
     waitForExpression,
@@ -34,6 +35,7 @@ export class HtmlConverter extends Converter {
     footer?: PathLike;
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
+    pdfUA?: boolean;
     emulatedMediaType?: EmulatedMediaType;
     waitDelay?: string;
     waitForExpression?: string;
@@ -51,6 +53,7 @@ export class HtmlConverter extends Converter {
       footer,
       properties,
       pdfFormat,
+      pdfUA,
       emulatedMediaType,
       waitDelay,
       waitForExpression,
