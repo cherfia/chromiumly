@@ -3,7 +3,6 @@ import { constants, createReadStream, PathLike, promises } from "fs";
 import FormData from "form-data";
 
 import { GotenbergUtils, PdfFormat } from "../../common";
-import { IConverter } from "../interfaces/converter.interface";
 import {
   EmulatedMediaType,
   PageProperties,
@@ -12,7 +11,7 @@ import { ConverterUtils } from "../utils/converter.utils";
 import { Converter } from "./converter";
 import { ChromiumRoute } from "../../main.config";
 
-export class MarkdownConverter extends Converter implements IConverter {
+export class MarkdownConverter extends Converter {
   constructor() {
     super(ChromiumRoute.MARKDOWN);
   }
@@ -37,29 +36,17 @@ export class MarkdownConverter extends Converter implements IConverter {
     await promises.access(html, constants.R_OK);
     await promises.access(markdown, constants.R_OK);
     const data = new FormData();
-    if (pdfFormat) {
-      data.append("pdfFormat", pdfFormat);
-    }
+
     data.append("index.html", createReadStream(html));
     data.append("file.md", createReadStream(markdown));
 
-    if (header) {
-      await promises.access(header, constants.R_OK);
-      data.append("header.html", createReadStream(header));
-    }
-
-    if (footer) {
-      await promises.access(footer, constants.R_OK);
-      data.append("footer.html", createReadStream(footer));
-    }
-
-    if (emulatedMediaType) {
-      data.append("emulatedMediaType", emulatedMediaType);
-    }
-
-    if (properties) {
-      ConverterUtils.injectPageProperties(data, properties);
-    }
+    ConverterUtils.customize(data, {
+      header,
+      footer,
+      properties,
+      pdfFormat,
+      emulatedMediaType,
+    });
 
     return GotenbergUtils.fetch(this.endpoint, data);
   }
