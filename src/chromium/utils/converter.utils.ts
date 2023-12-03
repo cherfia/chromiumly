@@ -1,7 +1,11 @@
+import { constants, createReadStream, promises } from "fs";
 import FormData from "form-data";
 
 import { GotenbergUtils } from "../../common/gotenberg.utils";
-import { PageProperties } from "../interfaces/converter.types";
+import {
+  ConversionOptions,
+  PageProperties,
+} from "../interfaces/converter.types";
 
 export class ConverterUtils {
   public static injectPageProperties(
@@ -70,6 +74,33 @@ export class ConverterUtils {
         "nativePageRanges",
         `${pageProperties.nativePageRanges.from}-${pageProperties.nativePageRanges.to}`
       );
+    }
+  }
+
+  public static async customize(
+    data: FormData,
+    options: ConversionOptions
+  ): Promise<void> {
+    if (options.pdfFormat) {
+      data.append("pdfFormat", options.pdfFormat);
+    }
+
+    if (options.header) {
+      await promises.access(options.header, constants.R_OK);
+      data.append("header.html", createReadStream(options.header));
+    }
+
+    if (options.footer) {
+      await promises.access(options.footer, constants.R_OK);
+      data.append("footer.html", createReadStream(options.footer));
+    }
+
+    if (options.emulatedMediaType) {
+      data.append("emulatedMediaType", options.emulatedMediaType);
+    }
+
+    if (options.properties) {
+      ConverterUtils.injectPageProperties(data, options.properties);
     }
   }
 }
