@@ -27,8 +27,8 @@ export type PageProperties = {
 export type EmulatedMediaType = "screen" | "print";
 
 export type ConversionOptions = {
-  header?: PathLike;
-  footer?: PathLike;
+  header?: PathLike | Buffer;
+  footer?: PathLike | Buffer;
   properties?: PageProperties;
   pdfFormat?: PdfFormat;
   pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)

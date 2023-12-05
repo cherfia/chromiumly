@@ -43,10 +43,14 @@ export class HtmlConverter extends Converter {
     extraHttpHeaders?: Record<string, string>;
     failOnConsoleExceptions?: boolean;
   }): Promise<Buffer> {
-    await promises.access(html, constants.R_OK);
     const data = new FormData();
 
-    data.append("index.html", createReadStream(html));
+    if (Buffer.isBuffer(html)) {
+      data.append("files", html, "index.html");
+    } else {
+      await promises.access(html, constants.R_OK);
+      data.append("files", createReadStream(html), "index.html");
+    }
 
     ConverterUtils.customize(data, {
       header,

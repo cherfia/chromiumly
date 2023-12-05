@@ -44,6 +44,17 @@ describe("HtmlConverter", () => {
       });
     });
 
+    describe("when buffer is passed", () => {
+      it("should return a buffer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        mockFetch.mockResolvedValue(new Response("content"));
+        const buffer = await converter.convert({
+          html: Buffer.from("html"),
+        });
+        expect(buffer).toEqual(Buffer.from("content"));
+      });
+    });
+
     describe("when pdf format parameter is passed", () => {
       it("should return a buffer", async () => {
         mockPromisesAccess.mockResolvedValue();

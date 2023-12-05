@@ -35,13 +35,25 @@ describe("MarkdownConverter", () => {
         .mockImplementation((file) => file);
     });
 
-    describe("when file exists", () => {
+    describe("when files exist", () => {
       it("should return a buffer", async () => {
         mockPromisesAccess.mockResolvedValue();
         mockFetch.mockResolvedValue(new Response("content"));
         const buffer = await converter.convert({
           html: "path/to/index.html",
           markdown: "path/to/file.md",
+        });
+        expect(buffer).toEqual(Buffer.from("content"));
+      });
+    });
+
+    describe("when buffers passed", () => {
+      it("should return a buffer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        mockFetch.mockResolvedValue(new Response("content"));
+        const buffer = await converter.convert({
+          html: Buffer.from("html"),
+          markdown: Buffer.from("markdown"),
         });
         expect(buffer).toEqual(Buffer.from("content"));
       });

@@ -94,13 +94,23 @@ export class ConverterUtils {
     }
 
     if (options.header) {
-      await promises.access(options.header, constants.R_OK);
-      data.append("header.html", createReadStream(options.header));
+      const { header } = options;
+      if (Buffer.isBuffer(header)) {
+        data.append("files", header, "header.html");
+      } else {
+        await promises.access(options.header, constants.R_OK);
+        data.append("files", createReadStream(options.header), "header.html");
+      }
     }
 
     if (options.footer) {
-      await promises.access(options.footer, constants.R_OK);
-      data.append("footer.html", createReadStream(options.footer));
+      const { footer } = options;
+      if (Buffer.isBuffer(footer)) {
+        data.append("files", footer, "footer.html");
+      } else {
+        await promises.access(options.footer, constants.R_OK);
+        data.append("files", createReadStream(options.footer), "footer.html");
+      }
     }
 
     if (options.emulatedMediaType) {

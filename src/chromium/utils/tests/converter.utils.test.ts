@@ -127,7 +127,7 @@ describe("ConverterUtils", () => {
       });
     });
 
-    describe("when header parameter is passed", () => {
+    describe("when header parameter is passed as file", () => {
       it("should append header", async () => {
         mockPromisesAccess.mockResolvedValue();
         await ConverterUtils.customize(data, {
@@ -135,13 +135,29 @@ describe("ConverterUtils", () => {
         });
         expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
         expect(data.append).toHaveBeenCalledWith(
-          "header.html",
-          "path/to/header.html"
+          "files",
+          "path/to/header.html",
+          "header.html"
         );
       });
     });
 
-    describe("when footer parameter is passed", () => {
+    describe("when header parameter is passed as buffer", () => {
+      it("should append header", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        await ConverterUtils.customize(data, {
+          header: Buffer.from("header"),
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        expect(data.append).toHaveBeenCalledWith(
+          "files",
+          Buffer.from("header"),
+          "header.html"
+        );
+      });
+    });
+
+    describe("when footer parameter is passed as file", () => {
       it("should append footer", async () => {
         mockPromisesAccess.mockResolvedValue();
         await ConverterUtils.customize(data, {
@@ -149,8 +165,24 @@ describe("ConverterUtils", () => {
         });
         expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
         expect(data.append).toHaveBeenCalledWith(
-          "footer.html",
-          "path/to/footer.html"
+          "files",
+          "path/to/footer.html",
+          "footer.html"
+        );
+      });
+    });
+
+    describe("when footer parameter is passed as buffer", () => {
+      it("should append footer", async () => {
+        mockPromisesAccess.mockResolvedValue();
+        await ConverterUtils.customize(data, {
+          footer: Buffer.from("footer"),
+        });
+        expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        expect(data.append).toHaveBeenCalledWith(
+          "files",
+          Buffer.from("footer"),
+          "footer.html"
         );
       });
     });
@@ -285,13 +317,15 @@ describe("ConverterUtils", () => {
         expect(data.append).toHaveBeenNthCalledWith(2, "pdfua", "true");
         expect(data.append).toHaveBeenNthCalledWith(
           3,
-          "header.html",
-          "path/to/header.html"
+          "files",
+          "path/to/header.html",
+          "header.html"
         );
         expect(data.append).toHaveBeenNthCalledWith(
           4,
-          "footer.html",
-          "path/to/footer.html"
+          "files",
+          "path/to/footer.html",
+          "footer.html"
         );
         expect(data.append).toHaveBeenNthCalledWith(
           5,

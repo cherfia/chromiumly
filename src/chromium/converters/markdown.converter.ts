@@ -45,12 +45,21 @@ export class MarkdownConverter extends Converter {
     extraHttpHeaders?: Record<string, string>;
     failOnConsoleExceptions?: boolean;
   }): Promise<Buffer> {
-    await promises.access(html, constants.R_OK);
-    await promises.access(markdown, constants.R_OK);
     const data = new FormData();
 
-    data.append("index.html", createReadStream(html));
-    data.append("file.md", createReadStream(markdown));
+    if (Buffer.isBuffer(html)) {
+      data.append("files", html, "index.html");
+    } else {
+      await promises.access(html, constants.R_OK);
+      data.append("files", createReadStream(html), "index.html");
+    }
+
+    if (Buffer.isBuffer(markdown)) {
+      data.append("files", createReadStream(markdown), "file.md");
+    } else {
+      await promises.access(markdown, constants.R_OK);
+      data.append("file.md", createReadStream(markdown));
+    }
 
     ConverterUtils.customize(data, {
       header,
