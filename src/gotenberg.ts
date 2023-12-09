@@ -8,14 +8,14 @@ import config from "config";
 const envFile = `.env.${process.env.NODE_ENV}`;
 const envFileFallback = ".env";
 
-const dotenvConfig = dotenv.config({ path: path.resolve(envFile) });
+const dotenvConfig = dotenv.config({path: path.resolve(envFile)});
 
 // Fallback to loading the default environment file.
 if (dotenvConfig.error) {
-  dotenv.config({ path: path.resolve(envFileFallback) });
+    dotenv.config({path: path.resolve(envFileFallback)});
 }
 
 export class Gotenberg {
-  public static endpoint: string =
-    process.env.GOTENBERG_ENDPOINT || config.get<string>("gotenberg.endpoint");
+    public static endpoint: string =
+        process.env.GOTENBERG_ENDPOINT || config.get<string>("gotenberg.endpoint");
 }
