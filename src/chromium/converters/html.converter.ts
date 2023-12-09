@@ -1,71 +1,65 @@
-import { constants, createReadStream, PathLike, promises } from "fs";
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import FormData from "form-data";
 
-import { GotenbergUtils, PdfFormat } from "../../common";
+import {GotenbergUtils, PathLikeOrReadStream, PdfFormat} from "../../common";
 import {
-  EmulatedMediaType,
-  PageProperties,
+    EmulatedMediaType,
+    PageProperties,
 } from "../interfaces/converter.types";
-import { ConverterUtils } from "../utils/converter.utils";
-import { Converter } from "./converter";
-import { ChromiumRoute } from "../../main.config";
+import {ConverterUtils} from "../utils/converter.utils";
+import {Converter} from "./converter";
+import {ChromiumRoute} from "../../main.config";
 
 export class HtmlConverter extends Converter {
-  constructor() {
-    super(ChromiumRoute.HTML);
-  }
-
-  async convert({
-    html,
-    header,
-    footer,
-    properties,
-    pdfFormat,
-    pdfUA,
-    emulatedMediaType,
-    waitDelay,
-    waitForExpression,
-    userAgent,
-    extraHttpHeaders,
-    failOnConsoleExceptions,
-  }: {
-    html: PathLike;
-    header?: PathLike;
-    footer?: PathLike;
-    properties?: PageProperties;
-    pdfFormat?: PdfFormat;
-    pdfUA?: boolean;
-    emulatedMediaType?: EmulatedMediaType;
-    waitDelay?: string;
-    waitForExpression?: string;
-    userAgent?: string;
-    extraHttpHeaders?: Record<string, string>;
-    failOnConsoleExceptions?: boolean;
-  }): Promise<Buffer> {
-    const data = new FormData();
-
-    if (Buffer.isBuffer(html)) {
-      data.append("files", html, "index.html");
-    } else {
-      await promises.access(html, constants.R_OK);
-      data.append("files", createReadStream(html), "index.html");
+    constructor() {
+        super(ChromiumRoute.HTML);
     }
 
-    ConverterUtils.customize(data, {
-      header,
-      footer,
-      properties,
-      pdfFormat,
-      pdfUA,
-      emulatedMediaType,
-      waitDelay,
-      waitForExpression,
-      userAgent,
-      extraHttpHeaders,
-      failOnConsoleExceptions,
-    });
+    async convert({
+                      html,
+                      header,
+                      footer,
+                      properties,
+                      pdfFormat,
+                      pdfUA,
+                      emulatedMediaType,
+                      waitDelay,
+                      waitForExpression,
+                      userAgent,
+                      extraHttpHeaders,
+                      failOnConsoleExceptions,
+                  }: {
+        html: PathLikeOrReadStream;
+        header?: PathLikeOrReadStream;
+        footer?: PathLikeOrReadStream;
+        properties?: PageProperties;
+        pdfFormat?: PdfFormat;
+        pdfUA?: boolean;
+        emulatedMediaType?: EmulatedMediaType;
+        waitDelay?: string;
+        waitForExpression?: string;
+        userAgent?: string;
+        extraHttpHeaders?: Record<string, string>;
+        failOnConsoleExceptions?: boolean;
+    }): Promise<Buffer> {
+        const data = new FormData();
 
-    return GotenbergUtils.fetch(this.endpoint, data);
-  }
+        await ConverterUtils.addFile(data, html, "index.html")
+
+        await ConverterUtils.customize(data, {
+            header,
+            footer,
+            properties,
+            pdfFormat,
+            pdfUA,
+            emulatedMediaType,
+            waitDelay,
+            waitForExpression,
+            userAgent,
+            extraHttpHeaders,
+            failOnConsoleExceptions,
+        });
+
+        return GotenbergUtils.fetch(this.endpoint, data);
+    }
 }
