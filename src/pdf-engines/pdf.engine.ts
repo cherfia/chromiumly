@@ -11,7 +11,7 @@ import {PDFEngineUtils} from "./utils/engine.utils";
 export class PDFEngine {
     public static async merge({files}: { files: PathLike[] }): Promise<Buffer> {
         const data = new FormData();
-        await PDFEngineUtils.injectFiles(files, data);
+        await PDFEngineUtils.addFiles(files, data);
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
         return GotenbergUtils.fetch(endpoint, data);
     }
@@ -44,10 +44,10 @@ export class PDFEngine {
         }
 
         if (properties) {
-            LibreOfficeUtils.injectPageProperties(data, properties);
+            LibreOfficeUtils.addPageProperties(data, properties);
         }
 
-        await LibreOfficeUtils.injectFiles(files, data);
+        await LibreOfficeUtils.addFiles(files, data);
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
 
