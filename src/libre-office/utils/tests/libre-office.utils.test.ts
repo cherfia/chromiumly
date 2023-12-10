@@ -19,23 +19,35 @@ describe("LibreOfficeUtils", () => {
         jest.resetAllMocks();
     });
 
-    describe("injectFiles", () => {
+    describe("addFiles", () => {
         describe("when files exist", () => {
-            it("should append each file to data", async () => {
-                mockPromisesAccess.mockResolvedValue();
-                await LibreOfficeUtils.injectFiles(
-                    ["path/to/file.docx", "path/to/file.bib"],
-                    data
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-            });
+            describe("when files parameter contains paths", () => {
+                it("should append each file to data", async () => {
+                    mockPromisesAccess.mockResolvedValue();
+                    await LibreOfficeUtils.addFiles(
+                        ["path/to/file.docx", "path/to/file.bib"],
+                        data
+                    );
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                });
+            })
+            describe("when files parameter contains a buffer", () => {
+                it("should append each file to data", async () => {
+                    mockPromisesAccess.mockResolvedValue();
+                    await LibreOfficeUtils.addFiles(
+                        [Buffer.from("data"), "path/to/file.bib"],
+                        data
+                    );
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                });
+            })
         });
 
         describe("when one of the files has unsupported format", () => {
             it("should throw an error", async () => {
                 mockPromisesAccess.mockResolvedValue();
                 await expect(() =>
-                    LibreOfficeUtils.injectFiles(
+                    LibreOfficeUtils.addFiles(
                         ["path/to/file.rar", "path/to/file.pdf"],
                         data
                     )
@@ -49,7 +61,7 @@ describe("LibreOfficeUtils", () => {
                     "ENOENT: no such file or directory, access 'path/to/index.html'";
                 mockPromisesAccess.mockRejectedValue(new Error(errorMessage));
                 await expect(() =>
-                    LibreOfficeUtils.injectFiles(
+                    LibreOfficeUtils.addFiles(
                         ["path/to/file.pdf", "path/to/another-file.pdf"],
                         data
                     )
@@ -58,11 +70,11 @@ describe("LibreOfficeUtils", () => {
         });
     });
 
-    describe("injectPageProperties", () => {
+    describe("addPageProperties", () => {
         describe("Page landscape", () => {
             describe("when landscape parameter is set", () => {
                 it("should append landscape to data", () => {
-                    LibreOfficeUtils.injectPageProperties(data, {
+                    LibreOfficeUtils.addPageProperties(data, {
                         landscape: true,
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
@@ -74,7 +86,7 @@ describe("LibreOfficeUtils", () => {
         describe("Page ranges", () => {
             describe("when nativePageRanges is valid", () => {
                 it("should append nativePageRanges to data", () => {
-                    LibreOfficeUtils.injectPageProperties(data, {
+                    LibreOfficeUtils.addPageProperties(data, {
                         nativePageRanges: {from: 1, to: 6},
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);

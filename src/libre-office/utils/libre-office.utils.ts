@@ -1,27 +1,34 @@
-import {constants, createReadStream, PathLike, promises} from "fs";
+import {constants, createReadStream, promises, ReadStream} from "fs";
 import path from "path";
 
 import FormData from "form-data";
 
-import {GotenbergUtils} from "../../common";
+import {GotenbergUtils, PathLikeOrReadStream} from "../../common";
 import {LIBRE_OFFICE_EXTENSIONS} from "./constants";
 import {PageProperties} from "../interfaces/libre-office.types";
 
 export class LibreOfficeUtils {
-    public static async injectFiles(files: PathLike[], data: FormData) {
-        for (const file of files) {
-            await promises.access(file, constants.R_OK);
-            const filename = path.basename(file.toString());
-            const extension = path.extname(filename);
-            if (LIBRE_OFFICE_EXTENSIONS.includes(extension)) {
-                data.append(filename, createReadStream(file));
+    public static async addFiles(files: PathLikeOrReadStream[], data: FormData) {
+        for (const [key, file] of files.entries()) {
+            const filename = `file${key}`
+            if (Buffer.isBuffer(file)) {
+                data.append("files", file, filename);
+            } else if (file instanceof ReadStream) {
+                data.append("files", file, filename);
             } else {
-                throw new Error(`${extension} is not supported`);
+                await promises.access(file, constants.R_OK);
+                const filename = path.basename(file.toString());
+                const extension = path.extname(filename);
+                if (LIBRE_OFFICE_EXTENSIONS.includes(extension)) {
+                    data.append("files", createReadStream(file), filename);
+                } else {
+                    throw new Error(`${extension} is not supported`);
+                }
             }
         }
     }
 
-    public static injectPageProperties(
+    public static addPageProperties(
         data: FormData,
         pageProperties: PageProperties
     ): void {
