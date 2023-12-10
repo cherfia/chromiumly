@@ -1,19 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {createReadStream, promises} from "fs";
+import path from "path";
 import FormData from "form-data";
 import {ConverterUtils} from "../converter.utils";
 import {PdfFormat} from "../../../common";
 
 describe("ConverterUtils", () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
-    const mockPromisesAccess = jest.spyOn(promises, "access");
     const data = new FormData();
-
-    beforeEach(() => {
-        (createReadStream as jest.Mock) = jest
-            .fn()
-            .mockImplementation((file) => file);
-    });
 
     afterEach(() => {
         jest.resetAllMocks();
@@ -119,6 +113,47 @@ describe("ConverterUtils", () => {
         });
     });
 
+    describe("addFile", () => {
+        const __tmp__ = path.resolve(process.cwd(), "__tmp__");
+        const filePath = path.resolve(__tmp__, "file.html")
+
+        beforeAll(async () => {
+            await promises.mkdir(path.resolve(__tmp__), {recursive: true});
+            await promises.writeFile(filePath, "file");
+        })
+
+        afterAll(async () => {
+            await promises.rm(path.resolve(__tmp__), {recursive: true})
+        })
+        
+        describe("when file is passed as read stream", () => {
+            it("should append file to data", async () => {
+                const file = createReadStream(filePath)
+                await ConverterUtils.addFile(data, file, "file");
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith("files", file, "file");
+            })
+        })
+
+        describe("when file is passed as path", () => {
+            it("should append file to data", async () => {
+                await ConverterUtils.addFile(data, filePath, "file");
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+            })
+        })
+
+        describe("when file is passed as buffer", () => {
+            it("should append file to data", async () => {
+                const file = Buffer.from("data")
+                await ConverterUtils.addFile(data, file, "file");
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith("files", file, "file");
+            })
+        })
+
+
+    })
+
     describe("customize", () => {
         describe("when no option is passed", () => {
             it("should not append anything", async () => {
@@ -127,24 +162,8 @@ describe("ConverterUtils", () => {
             });
         });
 
-        describe("when header parameter is passed as file", () => {
+        describe("when header parameter is passed", () => {
             it("should append header", async () => {
-                mockPromisesAccess.mockResolvedValue();
-                await ConverterUtils.customize(data, {
-                    header: "path/to/header.html",
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    "files",
-                    "path/to/header.html",
-                    "header.html"
-                );
-            });
-        });
-
-        describe("when header parameter is passed as buffer", () => {
-            it("should append header", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 await ConverterUtils.customize(data, {
                     header: Buffer.from("header"),
                 });
@@ -157,24 +176,8 @@ describe("ConverterUtils", () => {
             });
         });
 
-        describe("when footer parameter is passed as file", () => {
+        describe("when footer parameter is passed", () => {
             it("should append footer", async () => {
-                mockPromisesAccess.mockResolvedValue();
-                await ConverterUtils.customize(data, {
-                    footer: "path/to/footer.html",
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    "files",
-                    "path/to/footer.html",
-                    "footer.html"
-                );
-            });
-        });
-
-        describe("when footer parameter is passed as buffer", () => {
-            it("should append footer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 await ConverterUtils.customize(data, {
                     footer: Buffer.from("footer"),
                 });
@@ -296,11 +299,9 @@ describe("ConverterUtils", () => {
 
         describe("when all options are passed", () => {
             it("should append all options", async () => {
-                mockPromisesAccess.mockResolvedValue();
-
                 await ConverterUtils.customize(data, {
-                    header: "path/to/header.html",
-                    footer: "path/to/footer.html",
+                    header: Buffer.from("header.html"),
+                    footer: Buffer.from("footer.html"),
                     pdfFormat: PdfFormat.A_1a,
                     pdfUA: true,
                     emulatedMediaType: "screen",
@@ -318,13 +319,13 @@ describe("ConverterUtils", () => {
                 expect(data.append).toHaveBeenNthCalledWith(
                     3,
                     "files",
-                    "path/to/header.html",
+                    Buffer.from("header.html"),
                     "header.html"
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     4,
                     "files",
-                    "path/to/footer.html",
+                    Buffer.from("footer.html"),
                     "footer.html"
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
