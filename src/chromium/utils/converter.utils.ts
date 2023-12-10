@@ -8,7 +8,16 @@ import {
 import {GotenbergUtils, PathLikeOrReadStream} from "../../common";
 import {ReadStream} from "fs";
 
+/**
+ * Utility class for handling common tasks related to conversion.
+ */
 export class ConverterUtils {
+    /**
+     * Adds page properties to the FormData object based on the provided PageProperties.
+     *
+     * @param {FormData} data - The FormData object to which page properties will be added.
+     * @param {PageProperties} pageProperties - The page properties to be added to the FormData.
+     */
     public static addPageProperties(
         data: FormData,
         pageProperties: PageProperties
@@ -82,6 +91,14 @@ export class ConverterUtils {
         }
     }
 
+    /**
+     * Adds a file to the FormData object.
+     *
+     * @param {FormData} data - The FormData object to which the file will be added.
+     * @param {PathLikeOrReadStream} file - The file to be added (either a PathLike or a ReadStream).
+     * @param {string} name - The name to be used for the file in the FormData.
+     * @returns {Promise<void>} A Promise that resolves once the file has been added.
+     */
     public static async addFile(data: FormData, file: PathLikeOrReadStream, name: string) {
         if (Buffer.isBuffer(file)) {
             data.append("files", file, name);
@@ -93,6 +110,13 @@ export class ConverterUtils {
         }
     }
 
+    /**
+     * Customizes the FormData object based on the provided conversion options.
+     *
+     * @param {FormData} data - The FormData object to be customized.
+     * @param {ConversionOptions} options - The conversion options to apply to the FormData.
+     * @returns {Promise<void>} A Promise that resolves once the customization is complete.
+     */
     public static async customize(
         data: FormData,
         options: ConversionOptions

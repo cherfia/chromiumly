@@ -15,7 +15,16 @@ if (dotenvConfig.error) {
     dotenv.config({path: path.resolve(envFileFallback)});
 }
 
+/**
+ * Class representing configuration for interacting with Gotenberg service.
+ */
 export class Gotenberg {
+    /**
+     * The Gotenberg service endpoint.
+     * Defaults to the value from the environment variable `GOTENBERG_ENDPOINT`, or falls back to the configuration file.
+     * @type {string}
+     */
     public static endpoint: string =
         process.env.GOTENBERG_ENDPOINT || config.get<string>("gotenberg.endpoint");
 }
+

@@ -7,7 +7,17 @@ import {GotenbergUtils, PathLikeOrReadStream} from "../../common";
 import {LIBRE_OFFICE_EXTENSIONS} from "./constants";
 import {PageProperties} from "../interfaces/libre-office.types";
 
+/**
+ * Utility class for handling common tasks related to LibreOffice conversions.
+ */
 export class LibreOfficeUtils {
+    /**
+     * Adds files to the FormData object for LibreOffice conversion.
+     *
+     * @param {PathLikeOrReadStream[]} files - An array of files to be added to the FormData.
+     * @param {FormData} data - The FormData object to which files will be added.
+     * @throws {Error} Throws an error if the file extension is not supported.
+     */
     public static async addFiles(files: PathLikeOrReadStream[], data: FormData) {
         for (const [key, file] of files.entries()) {
             const filename = `file${key}`
@@ -28,6 +38,12 @@ export class LibreOfficeUtils {
         }
     }
 
+    /**
+     * Adds page properties to the FormData object based on the provided PageProperties.
+     *
+     * @param {FormData} data - The FormData object to which page properties will be added.
+     * @param {PageProperties} pageProperties - The page properties to be added to the FormData.
+     */
     public static addPageProperties(
         data: FormData,
         pageProperties: PageProperties

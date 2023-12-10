@@ -4,7 +4,17 @@ import path from "path";
 import FormData from "form-data";
 import {PathLikeOrReadStream} from "../../common";
 
+/**
+ * Utility class for handling common tasks related to PDF engine operations.
+ */
 export class PDFEngineUtils {
+    /**
+     * Adds PDF files to the FormData object.
+     *
+     * @param {PathLikeOrReadStream[]} files - An array of PDF files to be added to the FormData.
+     * @param {FormData} data - The FormData object to which PDF files will be added.
+     * @throws {Error} Throws an error if the file extension is not supported.
+     */
     public static async addFiles(files: PathLikeOrReadStream[], data: FormData) {
         for (const [key, file] of files.entries()) {
             const filename = `file${key}`
