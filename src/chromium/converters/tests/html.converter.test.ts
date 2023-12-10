@@ -11,20 +11,7 @@ const {Response} = jest.requireActual("node-fetch");
 jest.mock("node-fetch", () => jest.fn());
 
 describe("HtmlConverter", () => {
-    const mockPromisesAccess = jest.spyOn(promises, "access");
-    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
-    const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
-
     const converter = new HtmlConverter();
-    beforeEach(() => {
-        (createReadStream as jest.Mock) = jest
-            .fn()
-            .mockImplementation((file) => file);
-    });
-
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
 
     describe("endpoint", () => {
         it("should route to Chromium HTML route", () => {
@@ -35,21 +22,23 @@ describe("HtmlConverter", () => {
     });
 
     describe("convert", () => {
-        describe("when file exists", () => {
-            it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response("content"));
-                const buffer = await converter.convert({html: "path/to/index.html"});
-                expect(buffer).toEqual(Buffer.from("content"));
-            });
+        const mockPromisesAccess = jest.spyOn(promises, "access");
+        const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+        const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
+        
+        beforeEach(() => {
+            (createReadStream as jest.Mock) = jest.fn()
         });
 
-        describe("when buffer is passed", () => {
+        afterEach(() => {
+            jest.resetAllMocks();
+        });
+
+        describe("when html parameter is passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
-                    html: Buffer.from("html"),
+                    html: Buffer.from("data"),
                 });
                 expect(buffer).toEqual(Buffer.from("content"));
             });
@@ -57,10 +46,9 @@ describe("HtmlConverter", () => {
 
         describe("when pdf format parameter is passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
-                    html: "path/to/index.html",
+                    html: Buffer.from("data"),
                     pdfFormat: PdfFormat.A_1a,
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
@@ -70,10 +58,9 @@ describe("HtmlConverter", () => {
 
         describe("when page properties parameter is passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
-                    html: "path/to/index.html",
+                    html: Buffer.from("data"),
                     properties: {size: {width: 8.3, height: 11.7}},
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
@@ -83,11 +70,10 @@ describe("HtmlConverter", () => {
 
         describe("when header parameter is passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
-                    html: "path/to/index.html",
-                    header: "path/to/header.html",
+                    html: Buffer.from("data"),
+                    header: Buffer.from("header"),
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(Buffer.from("content"));
@@ -96,11 +82,10 @@ describe("HtmlConverter", () => {
 
         describe("when footer parameter is passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
-                    html: "path/to/index.html",
-                    footer: "path/to/footer.html",
+                    html: Buffer.from("data"),
+                    footer: Buffer.from("footer"),
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(Buffer.from("content"));
@@ -109,10 +94,9 @@ describe("HtmlConverter", () => {
 
         describe("when emulatedMediaType parameter is passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
-                    html: "path/to/index.html",
+                    html: Buffer.from("data"),
                     emulatedMediaType: "screen",
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
@@ -125,9 +109,9 @@ describe("HtmlConverter", () => {
                 mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
-                    html: "path/to/index.html",
-                    header: "path/to/header.html",
-                    footer: "path/to/footer.html",
+                    html: Buffer.from("data"),
+                    header: Buffer.from("header"),
+                    footer: Buffer.from("footer"),
                     pdfFormat: PdfFormat.A_1a,
                     emulatedMediaType: "screen",
                     properties: {size: {width: 8.3, height: 11.7}},

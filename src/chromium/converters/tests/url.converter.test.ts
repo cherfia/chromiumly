@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {createReadStream, promises} from "fs";
+import {createReadStream} from "fs";
 import FormData from "form-data";
 import fetch from "node-fetch";
 
@@ -10,21 +10,7 @@ const {Response} = jest.requireActual("node-fetch");
 jest.mock("node-fetch", () => jest.fn());
 
 describe("HtmlConverter", () => {
-    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
-    const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
-    const mockPromisesAccess = jest.spyOn(promises, "access");
-
     const converter = new UrlConverter();
-
-    beforeEach(() => {
-        (createReadStream as jest.Mock) = jest
-            .fn()
-            .mockImplementation((file) => file);
-    });
-
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
 
     describe("endpoint", () => {
         it("should route to Chromium HTML route", () => {
@@ -35,6 +21,17 @@ describe("HtmlConverter", () => {
     });
 
     describe("convert", () => {
+        const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+        const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
+
+        beforeEach(() => {
+            (createReadStream as jest.Mock) = jest.fn()
+        });
+
+        afterEach(() => {
+            jest.resetAllMocks();
+        });
+
         describe("when URL is valid", () => {
             it("should return a buffer", async () => {
                 mockFetch.mockResolvedValueOnce(new Response("content"));
@@ -48,11 +45,9 @@ describe("HtmlConverter", () => {
         describe("when header parameter is passed", () => {
             it("should return a buffer", async () => {
                 mockFetch.mockResolvedValueOnce(new Response("content"));
-                mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
                     url: "http://www.example.com/",
-                    header: "path/to/header.html",
+                    header: Buffer.from("header"),
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(Buffer.from("content"));
@@ -62,11 +57,9 @@ describe("HtmlConverter", () => {
         describe("when footer parameter is passed", () => {
             it("should return a buffer", async () => {
                 mockFetch.mockResolvedValueOnce(new Response("content"));
-                mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
                     url: "http://www.example.com/",
-                    footer: "path/to/footer.html",
+                    footer: Buffer.from("footer"),
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(Buffer.from("content"));
@@ -99,7 +92,6 @@ describe("HtmlConverter", () => {
 
         describe("when emulatedMediaType parameter is passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
                     url: "http://www.example.com/",
@@ -112,12 +104,11 @@ describe("HtmlConverter", () => {
 
         describe("when all parameters are passed", () => {
             it("should return a buffer", async () => {
-                mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
                     url: "http://www.example.com/",
-                    header: "path/to/header.html",
-                    footer: "path/to/footer.html",
+                    header: Buffer.from("header"),
+                    footer: Buffer.from("footer"),
                     pdfFormat: PdfFormat.A_1a,
                     emulatedMediaType: "screen",
                     properties: {size: {width: 8.3, height: 11.7}},
