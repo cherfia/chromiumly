@@ -119,13 +119,13 @@ describe("ConverterUtils", () => {
 
         beforeAll(async () => {
             await promises.mkdir(path.resolve(__tmp__), {recursive: true});
-            await promises.writeFile(filePath, "file");
+            await promises.writeFile(filePath, "data");
         })
 
         afterAll(async () => {
             await promises.rm(path.resolve(__tmp__), {recursive: true})
         })
-        
+
         describe("when file is passed as read stream", () => {
             it("should append file to data", async () => {
                 const file = createReadStream(filePath)

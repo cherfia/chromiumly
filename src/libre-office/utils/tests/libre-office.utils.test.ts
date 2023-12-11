@@ -3,10 +3,13 @@ import {promises, createReadStream} from "fs";
 import {LibreOfficeUtils} from "../libre-office.utils";
 
 import FormData from "form-data";
+import FileType from "file-type";
 
 describe("LibreOfficeUtils", () => {
     const mockPromisesAccess = jest.spyOn(promises, "access");
     const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
+    const mockFromBuffer = jest.spyOn(FileType, "fromBuffer");
+
     const data = new FormData();
 
     beforeEach(() => {
@@ -33,7 +36,11 @@ describe("LibreOfficeUtils", () => {
             })
             describe("when files parameter contains a buffer", () => {
                 it("should append each file to data", async () => {
-                    mockPromisesAccess.mockResolvedValue();
+                    mockPromisesAccess.mockResolvedValueOnce();
+                    mockFromBuffer.mockResolvedValueOnce({
+                        ext: "docx",
+                        mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    })
                     await LibreOfficeUtils.addFiles(
                         [Buffer.from("data"), "path/to/file.bib"],
                         data
@@ -43,15 +50,28 @@ describe("LibreOfficeUtils", () => {
             })
         });
 
+        describe("when one of the files has undetermined format", () => {
+            it("should throw an error", async () => {
+                mockPromisesAccess.mockResolvedValueOnce();
+                mockFromBuffer.mockResolvedValueOnce(undefined
+                )
+
+                await expect(LibreOfficeUtils.addFiles(
+                    [Buffer.from("data"), "path/to/file.bib"],
+                    data
+                )).rejects.toThrow("File type could not be determined");
+            });
+        })
+
         describe("when one of the files has unsupported format", () => {
             it("should throw an error", async () => {
-                mockPromisesAccess.mockResolvedValue();
+                mockPromisesAccess.mockResolvedValueOnce();
                 await expect(() =>
                     LibreOfficeUtils.addFiles(
                         ["path/to/file.rar", "path/to/file.pdf"],
                         data
                     )
-                ).rejects.toThrow(".rar is not supported");
+                ).rejects.toThrow("rar is not supported");
             });
         });
 
@@ -59,7 +79,7 @@ describe("LibreOfficeUtils", () => {
             it("should throw an error", async () => {
                 const errorMessage =
                     "ENOENT: no such file or directory, access 'path/to/index.html'";
-                mockPromisesAccess.mockRejectedValue(new Error(errorMessage));
+                mockPromisesAccess.mockRejectedValueOnce(new Error(errorMessage));
                 await expect(() =>
                     LibreOfficeUtils.addFiles(
                         ["path/to/file.pdf", "path/to/another-file.pdf"],

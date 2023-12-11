@@ -1,6 +1,8 @@
 import {constants, createReadStream, promises, ReadStream} from "fs";
 import path from "path";
 
+import {fromStream, fromBuffer} from "file-type";
+
 import FormData from "form-data";
 
 import {GotenbergUtils, PathLikeOrReadStream} from "../../common";
@@ -19,21 +21,31 @@ export class LibreOfficeUtils {
      * @throws {Error} Throws an error if the file extension is not supported.
      */
     public static async addFiles(files: PathLikeOrReadStream[], data: FormData) {
-        for (const [key, file] of files.entries()) {
-            const filename = `file${key}`
-            if (Buffer.isBuffer(file)) {
-                data.append("files", file, filename);
-            } else if (file instanceof ReadStream) {
-                data.append("files", file, filename);
+        for (const [key, value] of files.entries()) {
+            let file = value;
+            let fileInfo;
+
+            if (Buffer.isBuffer(value)) {
+                fileInfo = await fromBuffer(value);
+            } else if (value instanceof ReadStream) {
+                fileInfo = await fromStream(value);
             } else {
-                await promises.access(file, constants.R_OK);
-                const filename = path.basename(file.toString());
-                const extension = path.extname(filename);
-                if (LIBRE_OFFICE_EXTENSIONS.includes(extension)) {
-                    data.append("files", createReadStream(file), filename);
-                } else {
-                    throw new Error(`${extension} is not supported`);
-                }
+                await promises.access(value, constants.R_OK);
+                const filename = path.basename(value.toString());
+                fileInfo = {ext: path.extname(filename).slice(1)};
+                file = createReadStream(value)
+            }
+
+            if (!fileInfo) {
+                throw new Error("File type could not be determined");
+            }
+
+            const extension = fileInfo.ext;
+
+            if (LIBRE_OFFICE_EXTENSIONS.includes(extension)) {
+                data.append("files", file, `${key}.${extension}`);
+            } else {
+                throw new Error(`${extension} is not supported`);
             }
         }
     }

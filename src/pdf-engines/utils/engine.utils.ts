@@ -17,7 +17,7 @@ export class PDFEngineUtils {
      */
     public static async addFiles(files: PathLikeOrReadStream[], data: FormData) {
         for (const [key, file] of files.entries()) {
-            const filename = `file${key}`
+            const filename = `file${key}.pdf`
             if (Buffer.isBuffer(file)) {
                 data.append("files", file, filename);
             } else if (file instanceof ReadStream) {
