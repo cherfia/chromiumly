@@ -65,7 +65,7 @@
     "typescript": "5.3.3"
   },
   "dependencies": {
-    "config": "3.3.9",
+    "config": "3.3.10",
     "dotenv": "16.3.1",
     "file-type": "16.5.4",
     "form-data": "4.0.0",
