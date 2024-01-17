@@ -49,7 +49,7 @@
     "@types/form-data": "2.5.0",
     "@types/jest": "29.5.11",
     "@types/node": "20.11.0",
-    "@types/node-fetch": "2.6.10",
+    "@types/node-fetch": "2.6.11",
     "@typescript-eslint/eslint-plugin": "6.19.0",
     "@typescript-eslint/parser": "6.19.0",
     "commitizen": "4.3.0",
