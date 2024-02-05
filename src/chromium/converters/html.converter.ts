@@ -44,6 +44,7 @@ export class HtmlConverter extends Converter {
      */
     async convert({
                       html,
+                      assets,
                       header,
                       footer,
                       properties,
@@ -57,6 +58,7 @@ export class HtmlConverter extends Converter {
                       failOnConsoleExceptions,
                   }: {
         html: PathLikeOrReadStream;
+        assets?: PathLikeOrReadStream[]
         header?: PathLikeOrReadStream;
         footer?: PathLikeOrReadStream;
         properties?: PageProperties;
@@ -72,6 +74,10 @@ export class HtmlConverter extends Converter {
         const data = new FormData();
 
         await ConverterUtils.addFile(data, html, "index.html");
+
+        if (assets) {
+            await Promise.all(assets.map((asset) => ConverterUtils.addFile(data, asset)))
+        }
 
         await ConverterUtils.customize(data, {
             header,

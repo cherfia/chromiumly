@@ -99,7 +99,7 @@ export class ConverterUtils {
      * @param {string} name - The name to be used for the file in the FormData.
      * @returns {Promise<void>} A Promise that resolves once the file has been added.
      */
-    public static async addFile(data: FormData, file: PathLikeOrReadStream, name: string) {
+    public static async addFile(data: FormData, file: PathLikeOrReadStream, name?: string) {
         if (Buffer.isBuffer(file)) {
             data.append("files", file, name);
         } else if (file instanceof ReadStream) {
