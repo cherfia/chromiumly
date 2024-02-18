@@ -33,6 +33,8 @@ jobs:
         run: yarn test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           flags: unittests
           name: codecov-chromiumly
