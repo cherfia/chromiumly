@@ -25,7 +25,12 @@ describe("HtmlConverter", () => {
         const mockPromisesAccess = jest.spyOn(promises, "access");
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const mockFormDataAppend = jest.spyOn(FormData.prototype, "append");
-        
+
+        const assets = [
+            { file: Buffer.from('asset1'), name: 'asset1' },
+            { file: Buffer.from('asset2'), name: 'asset2' }
+        ]
+
         beforeEach(() => {
             (createReadStream as jest.Mock) = jest.fn()
         });
@@ -92,6 +97,19 @@ describe("HtmlConverter", () => {
             });
         });
 
+        describe("when assets parameter is passed", () => {
+            it("should return a buffer", async () => {
+                mockFetch.mockResolvedValue(new Response("content"));
+                const buffer = await converter.convert({
+                    html: Buffer.from("data"),
+                    assets,
+                });
+
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+                expect(buffer).toEqual(Buffer.from("content"));
+            });
+        });
+
         describe("when emulatedMediaType parameter is passed", () => {
             it("should return a buffer", async () => {
                 mockFetch.mockResolvedValue(new Response("content"));
@@ -110,13 +128,14 @@ describe("HtmlConverter", () => {
                 mockFetch.mockResolvedValue(new Response("content"));
                 const buffer = await converter.convert({
                     html: Buffer.from("data"),
+                    assets,
                     header: Buffer.from("header"),
                     footer: Buffer.from("footer"),
                     pdfFormat: PdfFormat.A_1a,
                     emulatedMediaType: "screen",
                     properties: {size: {width: 8.3, height: 11.7}},
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(7);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
                 expect(buffer).toEqual(Buffer.from("content"));
             });
         });
