@@ -1,12 +1,12 @@
-import {promises} from "fs";
-import path from "path";
+import { promises } from 'fs';
+import path from 'path';
 
-import FormData from "form-data";
+import FormData from 'form-data';
 
-import {Chromiumly} from "../main.config";
-import {GotenbergUtils, PathLikeOrReadStream, PdfFormat} from "../common";
-import {LibreOfficeUtils, PageProperties} from "../libre-office";
-import {PDFEngineUtils} from "./utils/engine.utils";
+import { Chromiumly } from '../main.config';
+import { GotenbergUtils, PathLikeOrReadStream, PdfFormat } from '../common';
+import { LibreOfficeUtils, PageProperties } from '../libre-office';
+import { PDFEngineUtils } from './utils/engine.utils';
 
 /**
  * Class representing a PDF engine for various operations such as merging and conversion.
@@ -19,7 +19,11 @@ export class PDFEngine {
      * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to be merged.
      * @returns {Promise<Buffer>} A Promise resolving to the merged PDF content as a Buffer.
      */
-    public static async merge({files}: { files: PathLikeOrReadStream[] }): Promise<Buffer> {
+    public static async merge({
+        files
+    }: {
+        files: PathLikeOrReadStream[];
+    }): Promise<Buffer> {
         const data = new FormData();
         await PDFEngineUtils.addFiles(files, data);
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
@@ -38,12 +42,12 @@ export class PDFEngine {
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     public static async convert({
-                                    files,
-                                    properties,
-                                    pdfFormat,
-                                    pdfUA,
-                                    merge,
-                                }: {
+        files,
+        properties,
+        pdfFormat,
+        pdfUA,
+        merge
+    }: {
         files: PathLikeOrReadStream[];
         properties?: PageProperties;
         pdfFormat?: PdfFormat;
@@ -53,15 +57,15 @@ export class PDFEngine {
         const data = new FormData();
 
         if (pdfFormat) {
-            data.append("pdfa", pdfFormat);
+            data.append('pdfa', pdfFormat);
         }
 
         if (pdfUA) {
-            data.append("pdfUA", String(pdfUA));
+            data.append('pdfUA', String(pdfUA));
         }
 
         if (merge) {
-            data.append("merge", String(merge));
+            data.append('merge', String(merge));
         }
 
         if (properties) {
@@ -86,8 +90,8 @@ export class PDFEngine {
         filename: string,
         buffer: Buffer
     ): Promise<void> {
-        const __generated__ = path.resolve(process.cwd(), "__generated__");
-        await promises.mkdir(path.resolve(__generated__), {recursive: true});
+        const __generated__ = path.resolve(process.cwd(), '__generated__');
+        await promises.mkdir(path.resolve(__generated__), { recursive: true });
         await promises.writeFile(path.resolve(__generated__, filename), buffer);
     }
 }
