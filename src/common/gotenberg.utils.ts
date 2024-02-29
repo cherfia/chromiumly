@@ -1,5 +1,7 @@
-import FormData from "form-data";
-import fetch from "node-fetch";
+import { constants, createReadStream, ReadStream, promises } from 'fs';
+import FormData from 'form-data';
+import fetch from 'node-fetch';
+import { PathLikeOrReadStream } from './types';
 
 /**
  * Utility class for common tasks related to the Gotenberg service.
@@ -12,7 +14,10 @@ export class GotenbergUtils {
      * @param {string} message - The error message to throw if the condition is false.
      * @throws {Error} Throws an error with the specified message if the condition is false.
      */
-    public static assert(condition: boolean, message: string): asserts condition {
+    public static assert(
+        condition: boolean,
+        message: string
+    ): asserts condition {
         if (!condition) {
             throw new Error(message);
         }
@@ -26,13 +31,16 @@ export class GotenbergUtils {
      * @returns {Promise<Buffer>} A Promise that resolves to the response body as a Buffer.
      * @throws {Error} Throws an error if the HTTP response status is not OK.
      */
-    public static async fetch(endpoint: string, data: FormData): Promise<Buffer> {
+    public static async fetch(
+        endpoint: string,
+        data: FormData
+    ): Promise<Buffer> {
         const response = await fetch(endpoint, {
-            method: "post",
+            method: 'post',
             body: data,
             headers: {
-                ...data.getHeaders(),
-            },
+                ...data.getHeaders()
+            }
         });
 
         if (!response.ok) {
@@ -40,5 +48,28 @@ export class GotenbergUtils {
         }
 
         return response.buffer();
+    }
+
+    /**
+     * Adds a file to the FormData object.
+     *
+     * @param {FormData} data - The FormData object to which the file will be added.
+     * @param {PathLikeOrReadStream} file - The file to be added (either a PathLike or a ReadStream).
+     * @param {string} name - The name to be used for the file in the FormData.
+     * @returns {Promise<void>} A Promise that resolves once the file has been added.
+     */
+    public static async addFile(
+        data: FormData,
+        file: PathLikeOrReadStream,
+        name: string
+    ) {
+        if (Buffer.isBuffer(file)) {
+            data.append('files', file, name);
+        } else if (file instanceof ReadStream) {
+            data.append('files', file, name);
+        } else {
+            await promises.access(file, constants.R_OK);
+            data.append('files', createReadStream(file), name);
+        }
     }
 }
