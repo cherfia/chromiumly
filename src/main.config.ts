@@ -1,13 +1,13 @@
-import {Gotenberg} from "./gotenberg";
+import { Gotenberg } from './gotenberg';
 
 /**
  * Enum representing the available Chromium routes for conversion.
  * @enum {string}
  */
 export enum ChromiumRoute {
-    URL = "url",
-    HTML = "html",
-    MARKDOWN = "markdown",
+    URL = 'url',
+    HTML = 'html',
+    MARKDOWN = 'markdown'
 }
 
 /**
@@ -15,7 +15,7 @@ export enum ChromiumRoute {
  * @enum {string}
  */
 enum PdfEngineRoute {
-    MERGE = "merge",
+    MERGE = 'merge'
 }
 
 /**
@@ -23,7 +23,7 @@ enum PdfEngineRoute {
  * @enum {string}
  */
 enum LibreOfficeRoute {
-    CONVERT = "convert",
+    CONVERT = 'convert'
 }
 
 /**
@@ -40,19 +40,19 @@ export class Chromiumly {
      * The path for Chromium-related conversions.
      * @type {string}
      */
-    public static readonly CHROMIUM_PATH = "forms/chromium/convert";
+    public static readonly CHROMIUM_CONVERT_PATH = 'forms/chromium/convert';
 
     /**
      * The path for PDF engine-related operations.
      * @type {string}
      */
-    public static readonly PDF_ENGINES_PATH = "forms/pdfengines";
+    public static readonly PDF_ENGINES_PATH = 'forms/pdfengines';
 
     /**
      * The path for LibreOffice-related conversions.
      * @type {string}
      */
-    public static readonly LIBRE_OFFICE_PATH = "forms/libreoffice";
+    public static readonly LIBRE_OFFICE_PATH = 'forms/libreoffice';
 
     /**
      * Routes for Chromium conversions.
@@ -61,7 +61,7 @@ export class Chromiumly {
     public static readonly CHROMIUM_ROUTES = {
         url: ChromiumRoute.URL,
         html: ChromiumRoute.HTML,
-        markdown: ChromiumRoute.MARKDOWN,
+        markdown: ChromiumRoute.MARKDOWN
     };
 
     /**
@@ -69,7 +69,7 @@ export class Chromiumly {
      * @type {Object}
      */
     public static readonly PDF_ENGINE_ROUTES = {
-        merge: PdfEngineRoute.MERGE,
+        merge: PdfEngineRoute.MERGE
     };
 
     /**
@@ -77,6 +77,6 @@ export class Chromiumly {
      * @type {Object}
      */
     public static readonly LIBRE_OFFICE_ROUTES = {
-        convert: LibreOfficeRoute.CONVERT,
+        convert: LibreOfficeRoute.CONVERT
     };
 }

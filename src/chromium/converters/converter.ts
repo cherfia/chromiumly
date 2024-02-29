@@ -1,4 +1,4 @@
-import {Chromiumly, ChromiumRoute} from "../../main.config";
+import { Chromiumly, ChromiumRoute } from '../../main.config';
 
 /**
  * Abstract class representing a generic converter.
@@ -17,6 +17,6 @@ export abstract class Converter {
      * @param {ChromiumRoute} route - The ChromiumRoute enum value representing the conversion route.
      */
     constructor(route: ChromiumRoute) {
-        this.endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.CHROMIUM_PATH}/${Chromiumly.CHROMIUM_ROUTES[route]}`;
+        this.endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.CHROMIUM_CONVERT_PATH}/${Chromiumly.CHROMIUM_ROUTES[route]}`;
     }
 }
