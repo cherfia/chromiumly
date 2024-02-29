@@ -42,9 +42,9 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "7.23.3",
-    "@commitlint/cli": "18.4.3",
-    "@commitlint/config-conventional": "18.4.3",
-    "@commitlint/cz-commitlint": "^18.4.3",
+    "@commitlint/cli": "19.0.3",
+    "@commitlint/config-conventional": "19.0.3",
+    "@commitlint/cz-commitlint": "^19.0.0",
     "@release-it/conventional-changelog": "8.0.1",
     "@types/config": "3.3.3",
     "@types/dotenv": "8.2.0",
