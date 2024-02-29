@@ -117,6 +117,7 @@ file will look like.
 
 ```typescript
 type PageProperties = {
+  singlePage?: boolean; // Print the entire content in one single page (default false)
   size?: {
     width: number; // Paper width, in inches (default 8.5)
     height: number; //Paper height, in inches (default 11)
@@ -133,6 +134,26 @@ type PageProperties = {
   landscape?: boolean; // Set the paper orientation to landscape (default false)
   scale?: number; // The scale of the page rendering (default 1.0)
   nativePageRanges?: { from: number; to: number }; // Page ranges to print
+};
+```
+
+In addition to the `PageProperties` customization options, the `convert()` method also accepts a set of parameters to further enhance the versatility of the conversion process. Here's an overview of the full list of parameters:
+
+```typescript
+type ConversionOptions = {
+  properties?: PageProperties; // Customize the appearance of the generated PDF
+  pdfFormat?: PdfFormat; // Define the PDF format for the conversion
+  pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
+  userAgent?: string; // Customize the user agent string sent during conversion
+  header?: PathLikeOrReadStream; // Specify a custom header for the PDF
+  footer?: PathLikeOrReadStream; // Specify a custom footer for the PDF
+  emulatedMediaType?: EmulatedMediaType; // Specify the emulated media type for conversion
+  waitDelay?: string; // Duration (e.g., '5s') to wait when loading an HTML document before conversion
+  waitForExpression?: string; // JavaScript expression to wait before converting an HTML document into PDF
+  extraHttpHeaders?: Record<string, string>; // Include additional HTTP headers in the request
+  failOnHttpStatusCodes?: number[]; // List of HTTP status codes triggering a 409 Conflict response (default [499, 599])
+  failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
+  skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
 };
 ```
 
