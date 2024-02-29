@@ -1,4 +1,5 @@
-import {PathLikeOrReadStream, PdfFormat} from "../../common";
+import { PdfFormat } from '../../common';
+import { ChromiumOptions } from './common.types';
 
 type PageSize = {
     width: number; // Paper width, in inches (default 8.5)
@@ -13,6 +14,7 @@ type PageMargins = {
 };
 
 export type PageProperties = {
+    singlePage?: boolean; // Print the entire content in one single page (default false)
     size?: PageSize;
     margins?: PageMargins;
     preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
@@ -23,19 +25,9 @@ export type PageProperties = {
     nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
 
-export type EmulatedMediaType = "screen" | "print";
-
-
-export type ConversionOptions = {
-    header?: PathLikeOrReadStream;
-    footer?: PathLikeOrReadStream;
+export type ConversionOptions = ChromiumOptions & {
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
     pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
-    emulatedMediaType?: EmulatedMediaType;
-    waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before converting it into PDF
-    waitForExpression?: string; // JavaScript's expression to wait before converting an HTML document into PDF until it returns true.
     userAgent?: string;
-    extraHttpHeaders?: Record<string, string>;
-    failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
 };
