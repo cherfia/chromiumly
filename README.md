@@ -33,7 +33,7 @@ so.
 After that, you can start a default Docker container of [Gotenberg](https://gotenberg.dev/) as follows:
 
 ```bash
-docker run --rm -p 3000:3000 gotenberg/gotenberg:7
+docker run --rm -p 3000:3000 gotenberg/gotenberg:8
 ```
 
 ## Get Started
