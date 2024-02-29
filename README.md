@@ -75,11 +75,11 @@ a `url` to a `buffer` which contains the converted PDF file content.
 #### URL
 
 ```typescript
-import {UrlConverter} from "chromiumly";
+import { UrlConverter } from "chromiumly";
 
 const urlConverter = new UrlConverter();
 const buffer = await urlConverter.convert({
-    url: "https://www.example.com/",
+  url: "https://www.example.com/",
 });
 ```
 
@@ -88,13 +88,12 @@ const buffer = await urlConverter.convert({
 The only requirement is that the file name should be `index.html`.
 
 ```typescript
-import {HtmlConverter} from "chromiumly";
+import { HtmlConverter } from "chromiumly";
 
 const htmlConverter = new HtmlConverter();
 const buffer = await htmlConverter.convert({
-    html: "path/to/index.html",
+  html: "path/to/index.html",
 });
-
 ```
 
 #### Markdown
@@ -102,12 +101,12 @@ const buffer = await htmlConverter.convert({
 This route accepts an `index.html` file plus a markdown file.
 
 ```typescript
-import {MarkdownConverter} from "chromiumly";
+import { MarkdownConverter } from "chromiumly";
 
 const markdownConverter = new MarkdownConverter();
 const buffer = await markdownConverter.convert({
-    html: "path/to/index.html",
-    markdown: "path/to/file.md",
+  html: "path/to/index.html",
+  markdown: "path/to/file.md",
 });
 ```
 
@@ -118,22 +117,22 @@ file will look like.
 
 ```typescript
 type PageProperties = {
-    size?: {
-        width: number; // Paper width, in inches (default 8.5)
-        height: number; //Paper height, in inches (default 11)
-    };
-    margins?: {
-        top: number; // Top margin, in inches (default 0.39)
-        bottom: number; // Bottom margin, in inches (default 0.39)
-        left: number; // Left margin, in inches (default 0.39)
-        right: number; // Right margin, in inches (default 0.39)
-    };
-    preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
-    printBackground?: boolean; // Print the background graphics (default false)
-    omitBackground?: boolean; // Hide the default white background and allow generating PDFs with transparency (default false)
-    landscape?: boolean; // Set the paper orientation to landscape (default false)
-    scale?: number; // The scale of the page rendering (default 1.0)
-    nativePageRanges?: { from: number; to: number }; // Page ranges to print
+  size?: {
+    width: number; // Paper width, in inches (default 8.5)
+    height: number; //Paper height, in inches (default 11)
+  };
+  margins?: {
+    top: number; // Top margin, in inches (default 0.39)
+    bottom: number; // Bottom margin, in inches (default 0.39)
+    left: number; // Left margin, in inches (default 0.39)
+    right: number; // Right margin, in inches (default 0.39)
+  };
+  preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
+  printBackground?: boolean; // Print the background graphics (default false)
+  omitBackground?: boolean; // Hide the default white background and allow generating PDFs with transparency (default false)
+  landscape?: boolean; // Set the paper orientation to landscape (default false)
+  scale?: number; // The scale of the page rendering (default 1.0)
+  nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
 ```
 
@@ -150,10 +149,10 @@ documents to PDF files. You can find the file extensions
 accepted [here](https://gotenberg.dev/docs/modules/libreoffice#route).
 
 ```typescript
-import {PDFEngine} from "chromiumly";
+import { PDFEngine } from "chromiumly";
 
 const buffer = await PDFEngine.convert({
-    files: ["path/to/file.docx", "path/to/file.png"],
+  files: ["path/to/file.docx", "path/to/file.png"],
 });
 ```
 
@@ -171,10 +170,10 @@ as: [PDFtk](https://gitlab.com/pdftk-java/pdftk), [PDFcpu](https://github.com/pd
 and [UNO](https://github.com/unoconv/unoconv).
 
 ```typescript
-import {PDFEngine} from "chromiumly";
+import { PDFEngine } from "chromiumly";
 
 const buffer = await PDFEngine.merge({
-    files: ["path/to/file.docx", "path/to/file.png"],
+  files: ["path/to/file.docx", "path/to/file.png"],
 });
 ```
 
@@ -190,15 +189,15 @@ Please note that all the PDF files can be found `__generated__` folder in the ro
 The following is a short snippet of how to use the library.
 
 ```typescript
-import {PDFEngine, UrlConverter} from "chromiumly";
+import { PDFEngine, UrlConverter } from "chromiumly";
 
 async function run() {
-    const urlConverter = new UrlConverter();
-    const buffer = await urlConverter.convert({
-        url: "https://gotenberg.dev/",
-    });
+  const urlConverter = new UrlConverter();
+  const buffer = await urlConverter.convert({
+    url: "https://gotenberg.dev/",
+  });
 
-    await PDFEngine.generate("gotenberg.pdf", buffer);
+  await PDFEngine.generate("gotenberg.pdf", buffer);
 }
 
 run();

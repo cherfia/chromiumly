@@ -1,21 +1,17 @@
-
-
 ## [2.6.0](https://github.com/cherfia/chromiumly/compare/v2.5.1...v2.6.0) (2024-02-19)
-
 
 ### Features
 
-* support assets for html conversion ([dc6ff25](https://github.com/cherfia/chromiumly/commit/dc6ff25b243ccef701b9becc6105469985c5ca37))
-
+- support assets for html conversion ([dc6ff25](https://github.com/cherfia/chromiumly/commit/dc6ff25b243ccef701b9becc6105469985c5ca37))
 
 ### Bug Fixes
 
-* **deps:** update dependency config to v3.3.10 ([8a973ee](https://github.com/cherfia/chromiumly/commit/8a973eea856b75cc0ce371c70124d4b57a4d5eba))
-* **deps:** update dependency config to v3.3.11 ([a73c105](https://github.com/cherfia/chromiumly/commit/a73c10521b0c43db7bced41878c74f2941824d3b))
-* **deps:** update dependency dotenv to v16.3.2 ([4ec1c87](https://github.com/cherfia/chromiumly/commit/4ec1c878f673ac3e2315d21012e128f4f17f1708))
-* **deps:** update dependency dotenv to v16.4.1 ([d562ae3](https://github.com/cherfia/chromiumly/commit/d562ae3d29ad8dae2c12b8c34d0b7ed57b5009fe))
-* **deps:** update dependency dotenv to v16.4.2 ([3fcf7fd](https://github.com/cherfia/chromiumly/commit/3fcf7fd8da73765cec84f943b514fa5cc89917e7))
-* **deps:** update dependency dotenv to v16.4.4 ([fa81e92](https://github.com/cherfia/chromiumly/commit/fa81e92ccfa391fc8b8d9263f4f26366a155fa20))
+- **deps:** update dependency config to v3.3.10 ([8a973ee](https://github.com/cherfia/chromiumly/commit/8a973eea856b75cc0ce371c70124d4b57a4d5eba))
+- **deps:** update dependency config to v3.3.11 ([a73c105](https://github.com/cherfia/chromiumly/commit/a73c10521b0c43db7bced41878c74f2941824d3b))
+- **deps:** update dependency dotenv to v16.3.2 ([4ec1c87](https://github.com/cherfia/chromiumly/commit/4ec1c878f673ac3e2315d21012e128f4f17f1708))
+- **deps:** update dependency dotenv to v16.4.1 ([d562ae3](https://github.com/cherfia/chromiumly/commit/d562ae3d29ad8dae2c12b8c34d0b7ed57b5009fe))
+- **deps:** update dependency dotenv to v16.4.2 ([3fcf7fd](https://github.com/cherfia/chromiumly/commit/3fcf7fd8da73765cec84f943b514fa5cc89917e7))
+- **deps:** update dependency dotenv to v16.4.4 ([fa81e92](https://github.com/cherfia/chromiumly/commit/fa81e92ccfa391fc8b8d9263f4f26366a155fa20))
 
 ### Changelog
 
