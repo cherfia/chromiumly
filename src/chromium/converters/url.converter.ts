@@ -1,13 +1,11 @@
-import {URL} from "url";
-import FormData from "form-data";
-import {GotenbergUtils, PdfFormat, PathLikeOrReadStream} from "../../common";
-import {
-    EmulatedMediaType,
-    PageProperties,
-} from "../interfaces/converter.types";
-import {ConverterUtils} from "../utils/converter.utils";
-import {Converter} from "./converter";
-import {ChromiumRoute} from "../../main.config";
+import { URL } from 'url';
+import FormData from 'form-data';
+import { GotenbergUtils, PdfFormat, PathLikeOrReadStream } from '../../common';
+import { PageProperties } from '../interfaces/converter.types';
+import { ConverterUtils } from '../utils/converter.utils';
+import { Converter } from './converter';
+import { ChromiumRoute } from '../../main.config';
+import { EmulatedMediaType } from '../interfaces/common.types';
 
 /**
  * Class representing a URL converter that extends the base Converter class.
@@ -39,23 +37,27 @@ export class UrlConverter extends Converter {
      * @param {string} [options.waitForExpression] - JavaScript expression to wait for before completing the conversion.
      * @param {string} [options.userAgent] - User agent string to use during the conversion.
      * @param {Record<string, string>} [options.extraHttpHeaders] - Additional HTTP headers for the conversion.
+     * @param {number[]} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during conversion.
+     * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     async convert({
-                      url,
-                      header,
-                      footer,
-                      properties,
-                      pdfFormat,
-                      pdfUA,
-                      emulatedMediaType,
-                      waitDelay,
-                      waitForExpression,
-                      userAgent,
-                      extraHttpHeaders,
-                      failOnConsoleExceptions,
-                  }: {
+        url,
+        header,
+        footer,
+        properties,
+        pdfFormat,
+        pdfUA,
+        emulatedMediaType,
+        waitDelay,
+        waitForExpression,
+        userAgent,
+        extraHttpHeaders,
+        failOnHttpStatusCodes,
+        failOnConsoleExceptions,
+        skipNetworkIdleEvent
+    }: {
         url: string;
         header?: PathLikeOrReadStream;
         footer?: PathLikeOrReadStream;
@@ -67,12 +69,14 @@ export class UrlConverter extends Converter {
         waitForExpression?: string;
         userAgent?: string;
         extraHttpHeaders?: Record<string, string>;
+        failOnHttpStatusCodes?: number[];
         failOnConsoleExceptions?: boolean;
+        skipNetworkIdleEvent?: boolean;
     }): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
 
-        data.append("url", _url.href);
+        data.append('url', _url.href);
 
         await ConverterUtils.customize(data, {
             header,
@@ -85,7 +89,9 @@ export class UrlConverter extends Converter {
             waitForExpression,
             userAgent,
             extraHttpHeaders,
+            failOnHttpStatusCodes,
             failOnConsoleExceptions,
+            skipNetworkIdleEvent
         });
 
         return GotenbergUtils.fetch(this.endpoint, data);
