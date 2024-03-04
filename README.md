@@ -62,15 +62,17 @@ GOTENBERG_ENDPOINT=http://localhost:3000
 ## Modules
 
 Chromiumly introduces different classes that serve as wrappers to
-Gotenberg's [modules](https://gotenberg.dev/docs/modules/api#modules). These classes encompass methods featuring an
+Gotenberg's [routes](https://gotenberg.dev/docs/routes). These classes encompass methods featuring an
 input file parameter, such as `html`, `header`, `footer`, and `markdown`, capable of accepting inputs in the form of a
 `string` (i.e. file path), `Buffer`, or `ReadStream`.
 
 ### Chormium
 
 There are three different classes that come with a single method (i.e.`convert`) which calls one of
-Chromium's [routes](https://gotenberg.dev/docs/modules/chromium#routes) to convert `html` and `markdown` files, or
+Chromium's [Conversion routes](https://gotenberg.dev/docs/routes#convert-with-chromium) to convert `html` and `markdown` files, or
 a `url` to a `buffer` which contains the converted PDF file content.
+
+Similarly, a new set of classes have been added to harness the recently introduced Gotenberg [Screenshot routes](https://gotenberg.dev/docs/routes#screenshots-route). These classes include a single method called `capture`, which allows capturing full-page screenshots of `html`, `markdown`, and `url`.
 
 #### URL
 
@@ -79,6 +81,15 @@ import { UrlConverter } from "chromiumly";
 
 const urlConverter = new UrlConverter();
 const buffer = await urlConverter.convert({
+  url: "https://www.example.com/",
+});
+```
+
+```typescript
+import { UrlScreenshot } from "chromiumly";
+
+const screenshot = new UrlScreenshot();
+const buffer = await screenshot.capture({
   url: "https://www.example.com/",
 });
 ```
@@ -92,6 +103,15 @@ import { HtmlConverter } from "chromiumly";
 
 const htmlConverter = new HtmlConverter();
 const buffer = await htmlConverter.convert({
+  html: "path/to/index.html",
+});
+```
+
+```typescript
+import { HtmlScreenshot } from "chromiumly";
+
+const screenshot = new HtmlScreenshot();
+const buffer = await screenshot.capture({
   html: "path/to/index.html",
 });
 ```
@@ -110,7 +130,19 @@ const buffer = await markdownConverter.convert({
 });
 ```
 
+```typescript
+import { MarkdownScreenshot } from "chromiumly";
+
+const screenshot = new MarkdownScreenshot();
+const buffer = await screenshot.capture({
+  html: "path/to/index.html",
+  markdown: "path/to/file.md",
+});
+```
+
 ### Customization
+
+#### Conversion
 
 `convert()` method takes an optional `properties` parameter of the following type which dictates how the PDF generated
 file will look like.
@@ -157,17 +189,47 @@ type ConversionOptions = {
 };
 ```
 
+#### Screenshot
+
+Similarly, the `capture()` method takes an optional `properties` parameter of the specified type, influencing the appearance of the captured screenshot file.
+
+```typescript
+type ImageProperties = {
+  format: "png" | "jpeg" | "webp"; //The image compression format, either "png", "jpeg" or "webp".
+  quality?: number; // The compression quality from range 0 to 100 (jpeg only).
+  omitBackground?: boolean; // Hide the default white background and allow generating screenshots with transparency.
+};
+```
+
+Furthermore, alongside the customization options offered by `ImageProperties`, the `capture()` method accommodates a variety of parameters to expand the versatility of the screenshot process. Below is a comprehensive overview of all parameters available:
+
+```typescript
+type ScreenshotOptions = {
+  properties?: ImageProperties;
+  header?: PathLikeOrReadStream;
+  footer?: PathLikeOrReadStream;
+  emulatedMediaType?: EmulatedMediaType;
+  waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before convertion.
+  waitForExpression?: string; // JavaScript's expression to wait before converting an HTML document into PDF until it returns true.
+  extraHttpHeaders?: Record<string, string>;
+  failOnHttpStatusCodes?: number[]; // Return a 409 Conflict response if the HTTP status code is in the list (default [499,599])
+  failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
+  skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
+  optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
+};
+```
+
 ### PDF Engine
 
-The `PDFEngine` combines the functionality of both
-Gotenberg's [PDF Engines](https://gotenberg.dev/docs/modules/pdf-engines)
-and [LibreOffice](https://gotenberg.dev/docs/modules/libreoffice) modules to manipulate different file formats.
+The `PDFEngine` combines the functionality of
+Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route)
+and [LibreOffice](https://gotenberg.dev/docs/routes#convert-with-libreoffice) modules to manipulate different file formats.
 
 #### convert
 
-This method interacts with [LibreOffice](https://gotenberg.dev/docs/modules/libreoffice) module to convert different
+This method interacts with [LibreOffice](https://gotenberg.dev/docs/routes#convert-with-libreoffice) module to convert different
 documents to PDF files. You can find the file extensions
-accepted [here](https://gotenberg.dev/docs/modules/libreoffice#route).
+accepted [here](https://gotenberg.dev/docs/routes#convert-with-libreoffice#route).
 
 ```typescript
 import { PDFEngine } from "chromiumly";
@@ -185,7 +247,7 @@ Similarly to Chromium's module `convert` method, this method takes the following
 
 #### merge
 
-This method interacts with [PDF Engines](https://gotenberg.dev/docs/modules/pdf-engines) module which gathers different
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#merge-pdfs-route) module which gathers different
 engines that can manipulate and merge PDF files such
 as: [PDFtk](https://gitlab.com/pdftk-java/pdftk), [PDFcpu](https://github.com/pdfcpu/pdfcpu), [QPDF](https://github.com/qpdf/qpdf),
 and [UNO](https://github.com/unoconv/unoconv).
