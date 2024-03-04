@@ -365,9 +365,11 @@ describe('GotenbergUtils', () => {
                     userAgent:
                         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
+                    failOnHttpStatusCodes: [499, 599],
+                    skipNetworkIdleEvent: true,
                     failOnConsoleExceptions: true
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(14);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -423,7 +425,17 @@ describe('GotenbergUtils', () => {
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     12,
+                    'failOnHttpStatusCodes',
+                    JSON.stringify([499, 599])
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    13,
                     'failOnConsoleExceptions',
+                    'true'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    14,
+                    'skipNetworkIdleEvent',
                     'true'
                 );
             });

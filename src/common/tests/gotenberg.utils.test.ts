@@ -1,3 +1,5 @@
+import { createReadStream, promises } from 'fs';
+import path from 'path';
 import fetch from 'node-fetch';
 import FormData from 'form-data';
 
@@ -8,6 +10,9 @@ const { Response, FetchError } = jest.requireActual('node-fetch');
 jest.mock('node-fetch', () => jest.fn());
 
 describe('GotenbergUtils', () => {
+    const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
+    const data = new FormData();
+
     afterEach(() => {
         jest.resetAllMocks();
     });
@@ -72,6 +77,47 @@ describe('GotenbergUtils', () => {
                         GotenbergUtils.fetch(endpoint, data)
                     ).rejects.toThrow('500 Internal server error');
                 });
+            });
+        });
+    });
+
+    describe('addFile', () => {
+        const mockPromisesAccess = jest.spyOn(promises, 'access');
+        const __tmp__ = path.resolve(process.cwd(), '__tmp__');
+        const filePath = path.resolve(__tmp__, 'file.html');
+
+        beforeAll(async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await promises.mkdir(path.resolve(__tmp__), { recursive: true });
+            await promises.writeFile(filePath, 'data');
+        });
+
+        afterAll(async () => {
+            await promises.rm(path.resolve(__tmp__), { recursive: true });
+        });
+
+        describe('when file is passed as read stream', () => {
+            it('should append file to data', async () => {
+                const file = createReadStream(filePath);
+                await GotenbergUtils.addFile(data, file, 'file');
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith('files', file, 'file');
+            });
+        });
+
+        describe('when file is passed as path', () => {
+            it('should append file to data', async () => {
+                await GotenbergUtils.addFile(data, filePath, 'file');
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        describe('when file is passed as buffer', () => {
+            it('should append file to data', async () => {
+                const file = Buffer.from('data');
+                await GotenbergUtils.addFile(data, file, 'file');
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith('files', file, 'file');
             });
         });
     });
