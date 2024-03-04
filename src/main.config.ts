@@ -43,6 +43,12 @@ export class Chromiumly {
     public static readonly CHROMIUM_CONVERT_PATH = 'forms/chromium/convert';
 
     /**
+     * The path for Chromium-related screenshots.
+     * @type {string}
+     */
+    public static readonly CHROMIUM_SCREENSHOT_PATH =
+        'forms/chromium/screenshot';
+    /**
      * The path for PDF engine-related operations.
      * @type {string}
      */
