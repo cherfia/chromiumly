@@ -11,6 +11,29 @@
 A lightweight Typescript library that interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert
 a variety of document formats to PDF files.
 
+# Table of Contents
+
+1. [Introduction](#introduction)
+   - [Install](#install)
+   - [Prerequisites](#prerequisites)
+   - [Get Started](#get-started)
+2. [Configuration](#configuration)
+   - [dotenv](#dotenv)
+   - [config](#config)
+3. [Modules](#modules)
+   - [Chromium](#chromium)
+     - [URL](#url)
+     - [HTML](#html)
+     - [Markdown](#markdown)
+   - [Customization](#customization)
+     - [Conversion](#conversion)
+     - [Screenshot](#screenshot)
+   - [PDF Engine](#pdf-engine)
+     - [convert](#convert)
+     - [merge](#merge)
+     - [generate](#generate)
+4. [Snippet](#snippet)
+
 ## Install
 
 Using npm:
