@@ -718,14 +718,14 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@commitlint/cli@^19.0.3":
-  version "19.1.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-19.1.0.tgz#56d7baa098a29e2a909b46e35021f2ab68ec5a51"
-  integrity sha512-SYGm8HGbVzrlSYeB6oo6pG1Ec6bOMJcDsXgNGa4vgZQsPj6nJkcbTWlIRmtmIk0tHi0d5sCljGuQ+g/0NCPv7w==
+  version "19.2.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-19.2.0.tgz#90a77b5b27b29d0f78960406b483e9d2da673e68"
+  integrity sha512-8XnQDMyQR+1/ldbmIyhonvnDS2enEw48Wompo/967fsEvy9Vj5/JbDutzmSBKxANWDVeEbR9QQm0yHpw6ArrFw==
   dependencies:
     "@commitlint/format" "^19.0.3"
     "@commitlint/lint" "^19.1.0"
-    "@commitlint/load" "^19.1.0"
-    "@commitlint/read" "^19.0.3"
+    "@commitlint/load" "^19.2.0"
+    "@commitlint/read" "^19.2.0"
     "@commitlint/types" "^19.0.3"
     execa "^8.0.1"
     yargs "^17.0.0"
@@ -755,12 +755,12 @@
     ajv "^8.11.0"
 
 "@commitlint/cz-commitlint@^19.0.3":
-  version "19.1.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/cz-commitlint/-/cz-commitlint-19.1.0.tgz#4740b078b2913f477ef85a34bc87fc15ff299577"
-  integrity sha512-ABbOmQbckCjBv1xkcsPVNMWikcdMXY3QF491xut1zar+K9Fj5XjUfAvDeJMe/wBigs+6lu8vymnLzLUNwbMDPQ==
+  version "19.2.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/cz-commitlint/-/cz-commitlint-19.2.0.tgz#1977918a8adff5f8247bf02f4a6f603fd9a0b664"
+  integrity sha512-kudzHMY9/GxflGyAWMiisiBq2UkyQL1D1eWjGKoC66qQ+5jxRYeDaiVwTdPxYMnmehftNcpksZATDYKqdPP0Wg==
   dependencies:
     "@commitlint/ensure" "^19.0.3"
-    "@commitlint/load" "^19.1.0"
+    "@commitlint/load" "^19.2.0"
     "@commitlint/types" "^19.0.3"
     chalk "^5.3.0"
     lodash.isplainobject "^4.0.6"
@@ -832,17 +832,17 @@
     lodash.uniq "^4.5.0"
     resolve-from "^5.0.0"
 
-"@commitlint/load@^19.1.0":
-  version "19.1.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-19.1.0.tgz#08403b6ea33e50b013dba0ab9631fd67fde67e30"
-  integrity sha512-rWqnvNDpeshX8JfUC/qjpDkQB78qF+4uHcJmIRJMwvlj6zWce08SP/TPKN3GlNKgXhAawwcAPxXL9qOTTdiOBA==
+"@commitlint/load@^19.2.0":
+  version "19.2.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-19.2.0.tgz#3ca51fdead4f1e1e09c9c7df343306412b1ef295"
+  integrity sha512-XvxxLJTKqZojCxaBQ7u92qQLFMMZc4+p9qrIq/9kJDy8DOrEa7P1yx7Tjdc2u2JxIalqT4KOGraVgCE7eCYJyQ==
   dependencies:
     "@commitlint/config-validator" "^19.0.3"
     "@commitlint/execute-rule" "^19.0.0"
     "@commitlint/resolve-extends" "^19.1.0"
     "@commitlint/types" "^19.0.3"
     chalk "^5.3.0"
-    cosmiconfig "^8.3.6"
+    cosmiconfig "^9.0.0"
     cosmiconfig-typescript-loader "^5.0.0"
     lodash.isplainobject "^4.0.6"
     lodash.merge "^4.6.2"
@@ -862,13 +862,14 @@
     conventional-changelog-angular "^7.0.0"
     conventional-commits-parser "^5.0.0"
 
-"@commitlint/read@^19.0.3":
-  version "19.0.3"
-  resolved "https://registry.yarnpkg.com/@commitlint/read/-/read-19.0.3.tgz#b04abaa4daae2ba84f5f77a3800a6c3bc27cd94d"
-  integrity sha512-b5AflTyAXkUx5qKw4TkjjcOccXZHql3JqMi522knTQktq2AubKXFz60Sws+K4FsefwPws6fGz9mqiI/NvsvxFA==
+"@commitlint/read@^19.2.0":
+  version "19.2.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/read/-/read-19.2.0.tgz#68b1ff24ed315b0078499615e97b8048e1b12b1a"
+  integrity sha512-HlGeEd/jyp2a5Fb9mvtsaDm5hFCmj80dJYjLQkpG3DzWneWBc37YU3kM8Za1D1HUazZaTkdsWq73M3XDE4CvCA==
   dependencies:
     "@commitlint/top-level" "^19.0.0"
     "@commitlint/types" "^19.0.3"
+    execa "^8.0.1"
     git-raw-commits "^4.0.0"
     minimist "^1.2.8"
 
@@ -1645,14 +1646,7 @@
     "@types/node" "*"
     form-data "^4.0.0"
 
-"@types/node@*":
-  version "20.11.26"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.26.tgz#3fbda536e51d5c79281e1d9657dcb0131baabd2d"
-  integrity sha512-YwOMmyhNnAWijOBQweOJnQPl068Oqd4K3OFbTc6AHJwzweUwwWG3GIFY74OKks2PJUDkQPeddOQES9mLn1CTEQ==
-  dependencies:
-    undici-types "~5.26.4"
-
-"@types/node@20.11.28":
+"@types/node@*", "@types/node@20.11.28":
   version "20.11.28"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.28.tgz#4fd5b2daff2e580c12316e457473d68f15ee6f66"
   integrity sha512-M/GPWVS2wLkSkNHVeLkrF2fD5Lx5UC4PxA0uZcKc6QqbIQUJyW1jVjueJYi1z8n0I5PxYrtpnPnWglE+y9A0KA==
@@ -2616,7 +2610,7 @@ cosmiconfig-typescript-loader@^5.0.0:
   dependencies:
     jiti "^1.19.1"
 
-cosmiconfig@9.0.0:
+cosmiconfig@9.0.0, cosmiconfig@^9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-9.0.0.tgz#34c3fc58287b915f3ae905ab6dc3de258b55ad9d"
   integrity sha512-itvL5h8RETACmOTFc4UfIyB2RfEHi71Ax6E/PivVxq9NseKbOWpeyHEOIbmAw1rs8Ak0VursQNww7lf7YtUwzg==
