@@ -68,6 +68,42 @@ describe('PDFEngine', () => {
         });
     });
 
+    describe('readMetadata', () => {
+        it('should return a buffer', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            mockFetch.mockResolvedValue(new Response('content'));
+            const buffer = await PDFEngine.readMetadata(['path/to/file.pdf']);
+            expect(buffer).toEqual(Buffer.from('content'));
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('writeMetadata', () => {
+        it('should return a buffer', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            mockFetch.mockResolvedValue(new Response('content'));
+            const buffer = await PDFEngine.writeMetadata({
+                files: ['path/to/file.pdf'],
+                metadata: {
+                    Author: 'John Doe',
+                    Copyright: 'John Doe',
+                    CreationDate: Date.now(),
+                    Creator: 'Chromiumly',
+                    Keywords: ['first', 'second'],
+                    Marked: true,
+                    ModDate: Date.now(),
+                    PDFVersion: 1.7,
+                    Producer: 'Chromiumly',
+                    Subject: 'Sample',
+                    Title: 'Sample',
+                    Trapped: 'Unknown'
+                }
+            });
+            expect(buffer).toEqual(Buffer.from('content'));
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        });
+    });
+
     describe('generate', () => {
         const mockFilename = 'test.pdf';
         const mockBuffer = Buffer.from('mock pdf content');

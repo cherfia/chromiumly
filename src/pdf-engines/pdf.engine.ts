@@ -84,6 +84,48 @@ export class PDFEngine {
     }
 
     /**
+     * Reads metadata from the provided files.
+     *
+     * @param {PathLikeOrReadStream[]} files An array of PathLikes or ReadStreams to the PDF files.
+     * @returns {Promise<Buffer>} A Promise resolving to the metadata buffer.
+     */
+    public static async readMetadata(
+        files: PathLikeOrReadStream[]
+    ): Promise<Buffer> {
+        const data = new FormData();
+
+        await PDFEngineUtils.addFiles(files, data);
+
+        const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readMetadata}`;
+
+        return GotenbergUtils.fetch(endpoint, data);
+    }
+
+    /**
+     * Writes metadata to the provided PDF files.
+     *
+     * @param {PathLikeOrReadStream[]} files An array of PathLikes or ReadStreams to the PDF files.
+     * @param {Record<string, unknown>} metadata Metadata object to write.
+     * @returns {Promise<Buffer>} A Promise that resolves to the PDF file containing metadata as a buffer.
+     */
+    public static async writeMetadata({
+        files,
+        metadata
+    }: {
+        files: PathLikeOrReadStream[];
+        metadata: Record<string, unknown>;
+    }): Promise<Buffer> {
+        const data = new FormData();
+        data.append('metadata', JSON.stringify(metadata));
+
+        await PDFEngineUtils.addFiles(files, data);
+
+        const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeMetadata}`;
+
+        return GotenbergUtils.fetch(endpoint, data);
+    }
+
+    /**
      * Generates a PDF file from a buffer and saves it to the "__generated__" directory.
      *
      * @param {string} filename - The filename for the generated PDF.
