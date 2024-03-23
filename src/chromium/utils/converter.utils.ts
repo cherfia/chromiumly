@@ -176,5 +176,8 @@ export class ConverterUtils {
                 String(options.skipNetworkIdleEvent)
             );
         }
+        if (options.metadata) {
+            data.append('metadata', JSON.stringify(options.metadata));
+        }
     }
 }

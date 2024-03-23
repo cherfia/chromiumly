@@ -1,6 +1,11 @@
 import FormData from 'form-data';
 
-import { GotenbergUtils, PdfFormat, PathLikeOrReadStream } from '../../common';
+import {
+    GotenbergUtils,
+    PdfFormat,
+    PathLikeOrReadStream,
+    Metadata
+} from '../../common';
 import { PageProperties } from '../interfaces/converter.types';
 import { ConverterUtils } from '../utils/converter.utils';
 import { Converter } from './converter';
@@ -41,6 +46,7 @@ export class MarkdownConverter extends Converter {
      * @param {number []} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during conversion.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
+     * @param {Metadata} options.metadata - Metadata to be written.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     async convert({
@@ -58,7 +64,8 @@ export class MarkdownConverter extends Converter {
         extraHttpHeaders,
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
-        skipNetworkIdleEvent
+        skipNetworkIdleEvent,
+        metadata
     }: {
         html: PathLikeOrReadStream;
         markdown: PathLikeOrReadStream;
@@ -83,6 +90,7 @@ export class MarkdownConverter extends Converter {
         failOnHttpStatusCodes?: number[];
         failOnConsoleExceptions?: boolean;
         skipNetworkIdleEvent?: boolean;
+        metadata?: Metadata;
     }): Promise<Buffer> {
         const data = new FormData();
 
@@ -103,7 +111,8 @@ export class MarkdownConverter extends Converter {
             extraHttpHeaders,
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
-            skipNetworkIdleEvent
+            skipNetworkIdleEvent,
+            metadata
         });
 
         return GotenbergUtils.fetch(this.endpoint, data);

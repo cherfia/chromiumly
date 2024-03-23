@@ -1,6 +1,11 @@
 import FormData from 'form-data';
 
-import { GotenbergUtils, PathLikeOrReadStream, PdfFormat } from '../../common';
+import {
+    GotenbergUtils,
+    Metadata,
+    PathLikeOrReadStream,
+    PdfFormat
+} from '../../common';
 import { PageProperties } from '../interfaces/converter.types';
 import { ConverterUtils } from '../utils/converter.utils';
 import { Converter } from './converter';
@@ -40,6 +45,7 @@ export class HtmlConverter extends Converter {
      * @param {number[]} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during conversion.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
+     * @param {Metadata} options.metadata - Metadata to be written.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     async convert({
@@ -57,7 +63,8 @@ export class HtmlConverter extends Converter {
         extraHttpHeaders,
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
-        skipNetworkIdleEvent
+        skipNetworkIdleEvent,
+        metadata
     }: {
         html: PathLikeOrReadStream;
         assets?: { file: PathLikeOrReadStream; name: string }[];
@@ -82,6 +89,7 @@ export class HtmlConverter extends Converter {
         failOnHttpStatusCodes?: number[];
         failOnConsoleExceptions?: boolean;
         skipNetworkIdleEvent?: boolean;
+        metadata?: Metadata;
     }): Promise<Buffer> {
         const data = new FormData();
 
@@ -108,7 +116,8 @@ export class HtmlConverter extends Converter {
             extraHttpHeaders,
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
-            skipNetworkIdleEvent
+            skipNetworkIdleEvent,
+            metadata
         });
 
         return GotenbergUtils.fetch(this.endpoint, data);

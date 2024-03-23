@@ -1,4 +1,4 @@
-import { PdfFormat } from '../../common';
+import { Metadata, PdfFormat } from '../../common';
 import { ChromiumOptions } from './common.types';
 
 type PageSize = {
@@ -30,4 +30,5 @@ export type ConversionOptions = ChromiumOptions & {
     pdfFormat?: PdfFormat;
     pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
     userAgent?: string;
+    metadata?: Metadata;
 };

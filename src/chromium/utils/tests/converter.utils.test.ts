@@ -351,6 +351,19 @@ describe('GotenbergUtils', () => {
             });
         });
 
+        describe('when metadata parameter is passed', () => {
+            it('should append metadata', async () => {
+                await ConverterUtils.customize(data, {
+                    metadata: { Author: 'John Doe' }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'metadata',
+                    JSON.stringify({ Author: 'John Doe' })
+                );
+            });
+        });
+
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ConverterUtils.customize(data, {
@@ -367,9 +380,10 @@ describe('GotenbergUtils', () => {
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
                     failOnHttpStatusCodes: [499, 599],
                     skipNetworkIdleEvent: true,
-                    failOnConsoleExceptions: true
+                    failOnConsoleExceptions: true,
+                    metadata: { Author: 'John Doe' }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(14);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(15);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -437,6 +451,11 @@ describe('GotenbergUtils', () => {
                     14,
                     'skipNetworkIdleEvent',
                     'true'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    15,
+                    'metadata',
+                    JSON.stringify({ Author: 'John Doe' })
                 );
             });
         });
