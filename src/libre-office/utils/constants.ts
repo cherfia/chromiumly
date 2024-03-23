@@ -78,5 +78,6 @@ export const LIBRE_OFFICE_EXTENSIONS = [
     'odp',
     'odg',
     'dotx',
-    'xltx'
+    'xltx',
+    'key'
 ];
