@@ -4,7 +4,12 @@ import path from 'path';
 import FormData from 'form-data';
 
 import { Chromiumly } from '../main.config';
-import { GotenbergUtils, PathLikeOrReadStream, PdfFormat } from '../common';
+import {
+    GotenbergUtils,
+    PathLikeOrReadStream,
+    PdfFormat,
+    Metadata
+} from '../common';
 import { LibreOfficeUtils, PageProperties } from '../libre-office';
 import { PDFEngineUtils } from './utils/engine.utils';
 
@@ -113,7 +118,7 @@ export class PDFEngine {
         metadata
     }: {
         files: PathLikeOrReadStream[];
-        metadata: Record<string, unknown>;
+        metadata: Metadata;
     }): Promise<Buffer> {
         const data = new FormData();
         data.append('metadata', JSON.stringify(metadata));
