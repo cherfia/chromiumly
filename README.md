@@ -30,6 +30,8 @@ a variety of document formats to PDF files.
      - [Screenshot](#screenshot)
    - [PDF Engine](#pdf-engine)
      - [convert](#convert)
+     - [readMetadata](#readmetadata)
+     - [writeMetadata](#writemetadata)
      - [merge](#merge)
      - [generate](#generate)
 4. [Snippet](#snippet)
