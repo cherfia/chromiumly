@@ -109,8 +109,8 @@ export class PDFEngine {
     /**
      * Writes metadata to the provided PDF files.
      *
-     * @param {PathLikeOrReadStream[]} files An array of PathLikes or ReadStreams to the PDF files.
-     * @param {Record<string, unknown>} metadata Metadata object to write.
+     * @param {PathLikeOrReadStream[]} files - An array of PathLikes or ReadStreams to the PDF files.
+     * @param {Metadata} metadata - Metadata to be written.
      * @returns {Promise<Buffer>} A Promise that resolves to the PDF file containing metadata as a buffer.
      */
     public static async writeMetadata({
