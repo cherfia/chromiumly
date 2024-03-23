@@ -50,6 +50,10 @@ export class PDFEngine {
     }: {
         files: PathLikeOrReadStream[];
         properties?: PageProperties;
+        /**
+         * @deprecated Starting from Gotenberg version 8.0.0, LibreOffice no longer provides support for pdfFormat.
+         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
+         */
         pdfFormat?: PdfFormat;
         pdfUA?: boolean;
         merge?: boolean;

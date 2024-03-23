@@ -64,11 +64,19 @@ export class HtmlConverter extends Converter {
         header?: PathLikeOrReadStream;
         footer?: PathLikeOrReadStream;
         properties?: PageProperties;
+        /**
+         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for pdfFormat.
+         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
+         */
         pdfFormat?: PdfFormat;
         pdfUA?: boolean;
         emulatedMediaType?: EmulatedMediaType;
         waitDelay?: string;
         waitForExpression?: string;
+        /**
+         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for userAgent.
+         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
+         */
         userAgent?: string;
         extraHttpHeaders?: Record<string, string>;
         failOnHttpStatusCodes?: number[];
