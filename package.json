@@ -67,7 +67,7 @@
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
     "tslib": "2.6.2",
-    "typescript": "5.4.2"
+    "typescript": "5.4.3"
   },
   "dependencies": {
     "config": "3.3.11",
