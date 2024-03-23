@@ -209,6 +209,7 @@ type ConversionOptions = {
   failOnHttpStatusCodes?: number[]; // List of HTTP status codes triggering a 409 Conflict response (default [499, 599])
   failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
+  metadata?: Metadata; // Metadata to be written.
 };
 ```
 
@@ -282,6 +283,41 @@ const buffer = await PDFEngine.merge({
   files: ["path/to/file.docx", "path/to/file.png"],
 });
 ```
+
+#### readMetadata
+
+This method reads metadata from the provided PDF files.
+
+```typescript
+import { PDFEngine } from "chromiumly";
+
+const metadataBuffer = await PDFEngine.readMetadata([
+  "path/to/file_1.pdf",
+  "path/to/file_2.pdf",
+]);
+```
+
+#### writeMetadata
+
+This method writes metadata to the provided PDF files.
+
+```typescript
+import { PDFEngine } from "chromiumly";
+
+const buffer = await PDFEngine.writeMetadata({
+  files: [
+  "path/to/file_1.pdf",
+  "path/to/file_2.pdf",
+  ],
+  metadata: {
+    Author: 'Taha Cherfia',
+    Tite: 'Chromiumly'
+    Keywords: ['pdf', 'html', 'gotenberg'],
+  }
+});
+```
+
+Please consider referring to [ExifTool](https://exiftool.org/TagNames/XMP.html#pdf) for a comprehensive list of accessible metadata options.
 
 #### generate
 
