@@ -81,5 +81,12 @@ export class LibreOfficeUtils {
                 `${pageProperties.nativePageRanges.from}-${pageProperties.nativePageRanges.to}`
             );
         }
+
+        if (pageProperties.exportFormFields === false) {
+            data.append(
+                'exportFormFields',
+                String(pageProperties.exportFormFields)
+            );
+        }
     }
 }
