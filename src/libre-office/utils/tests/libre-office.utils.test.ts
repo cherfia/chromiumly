@@ -109,6 +109,21 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
+        describe('Export form fields', () => {
+            describe('when exportFormFields parameter is set', () => {
+                it('should append exportFormFields to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportFormFields: false
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportFormFields',
+                        'false'
+                    );
+                });
+            });
+        });
+
         describe('Page ranges', () => {
             describe('when nativePageRanges is valid', () => {
                 it('should append nativePageRanges to data', () => {
