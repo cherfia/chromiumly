@@ -8,3 +8,4 @@ export {
     UrlScreenshot
 } from './chromium';
 export { PDFEngines } from './pdf-engines';
+export { LibreOffice } from './libre-office';
