@@ -21,6 +21,7 @@ a variety of document formats to PDF files.
    - [dotenv](#dotenv)
    - [config](#config)
 3. [Modules](#modules)
+
    - [Chromium](#chromium)
      - [URL](#url)
      - [HTML](#html)
@@ -28,12 +29,14 @@ a variety of document formats to PDF files.
    - [Customization](#customization)
      - [Conversion](#conversion)
      - [Screenshot](#screenshot)
-   - [PDF Engine](#pdf-engine)
+   - [LibreOffice](#libreoffice)
+   - [PDFEngines](#pdfengines)
      - [convert](#convert)
+     - [merge](#merge)
      - [readMetadata](#readmetadata)
      - [writeMetadata](#writemetadata)
-     - [merge](#merge)
      - [generate](#generate)
+
 4. [Snippet](#snippet)
 
 ## Install
