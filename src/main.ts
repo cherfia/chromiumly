@@ -7,4 +7,4 @@ export {
     UrlConverter,
     UrlScreenshot
 } from './chromium';
-export { PDFEngine } from './pdf-engines';
+export { PDFEngines } from './pdf-engines';

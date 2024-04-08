@@ -348,7 +348,7 @@ Please note that all the PDF files can be found `__generated__` folder in the ro
 The following is a short snippet of how to use the library.
 
 ```typescript
-import { PDFEngine, UrlConverter } from "chromiumly";
+import { PDFEngines, UrlConverter } from "chromiumly";
 
 async function run() {
   const urlConverter = new UrlConverter();
@@ -356,7 +356,7 @@ async function run() {
     url: "https://gotenberg.dev/",
   });
 
-  await PDFEngine.generate("gotenberg.pdf", buffer);
+  await PDFEngines.generate("gotenberg.pdf", buffer);
 }
 
 run();

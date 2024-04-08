@@ -11,7 +11,7 @@ import { PDFEngines } from '../pdf-engines';
 const { Response } = jest.requireActual('node-fetch');
 jest.mock('node-fetch', () => jest.fn());
 
-describe('PDFEngine', () => {
+describe('PDFEngines', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
     const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
