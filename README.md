@@ -8,7 +8,7 @@
 [![downloads](https://img.shields.io/npm/dt/chromiumly.svg?color=brightgreen&style=flat-square)](https://npm-stat.com/charts.html?package=chromiumly)
 ![licence](https://img.shields.io/github/license/cherfia/chromiumly?style=flat-square)
 
-A lightweight Typescript library that interacts with [Gotenberg](https://gotenberg.dev/)'s different modules to convert
+A lightweight Typescript library that interacts with [Gotenberg](https://gotenberg.dev/)'s different routes to convert
 a variety of document formats to PDF files.
 
 # Table of Contents
@@ -245,44 +245,59 @@ type ScreenshotOptions = {
 };
 ```
 
-### PDF Engine
+### LibreOffice
 
-The `PDFEngine` combines the functionality of
-Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route)
-and [LibreOffice](https://gotenberg.dev/docs/routes#convert-with-libreoffice) modules to manipulate different file formats.
-
-#### convert
-
-This method interacts with [LibreOffice](https://gotenberg.dev/docs/routes#convert-with-libreoffice) module to convert different
-documents to PDF files. You can find the file extensions
+The `LibreOffice` class comes with a single method `convert`. This method interacts with [LibreOffice](https://gotenberg.dev/docs/routes#convert-with-libreoffice) route to convert different documents to PDF files. You can find the file extensions
 accepted [here](https://gotenberg.dev/docs/routes#convert-with-libreoffice#route).
 
 ```typescript
-import { PDFEngine } from "chromiumly";
+import { LibreOffice } from "chromiumly";
 
-const buffer = await PDFEngine.convert({
+const buffer = await LibreOffice.convert({
   files: ["path/to/file.docx", "path/to/file.png"],
 });
 ```
 
-Similarly to Chromium's module `convert` method, this method takes the following optional parameters :
+Similarly to Chromium's route `convert` method, this method takes the following optional parameters :
 
 - `properties`: changes how the PDF generated file will look like.
-- `pdfFormat`: PDF format of the conversion resulting file (i.e. `PDF/A-1a`, `PDF/A-2b`, `PDF/A-3b`).
-- `merge`: merge all the resulting files from the conversion into an individual PDF file.
+- `pdfa`: PDF format of the conversion resulting file (i.e. `PDF/A-1a`, `PDF/A-2b`, `PDF/A-3b`).
+- `pdfUA`: enables PDF for Universal Access for optimal accessibility.
+- `merge`: merges all the resulting files from the conversion into an individual PDF file.
+- `metadata`: writes metadata to the generated PDF file.
+
+### PDFEngines
+
+The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) routes to manupilate PDF files.
+
+#### convert
+
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) convertion route to transform PDF files into the requested PDF/A format and/or PDF/UA.
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const buffer = await PDFEngines.convert({
+  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
+  pdfa: PdfFormat.A_2b,
+  pdfUA: true,
+});
+```
 
 #### merge
 
-This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#merge-pdfs-route) module which gathers different
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#merge-pdfs-route) merge route which gathers different
 engines that can manipulate and merge PDF files such
 as: [PDFtk](https://gitlab.com/pdftk-java/pdftk), [PDFcpu](https://github.com/pdfcpu/pdfcpu), [QPDF](https://github.com/qpdf/qpdf),
 and [UNO](https://github.com/unoconv/unoconv).
 
 ```typescript
-import { PDFEngine } from "chromiumly";
+import { PDFEngines } from "chromiumly";
 
-const buffer = await PDFEngine.merge({
-  files: ["path/to/file.docx", "path/to/file.png"],
+const buffer = await PDFEngines.merge({
+  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
+  pdfa: PdfFormat.A_2b,
+  pdfUA: true,
 });
 ```
 
@@ -291,9 +306,9 @@ const buffer = await PDFEngine.merge({
 This method reads metadata from the provided PDF files.
 
 ```typescript
-import { PDFEngine } from "chromiumly";
+import { PDFEngines } from "chromiumly";
 
-const metadataBuffer = await PDFEngine.readMetadata([
+const metadataBuffer = await PDFEngines.readMetadata([
   "path/to/file_1.pdf",
   "path/to/file_2.pdf",
 ]);
@@ -304,9 +319,9 @@ const metadataBuffer = await PDFEngine.readMetadata([
 This method writes metadata to the provided PDF files.
 
 ```typescript
-import { PDFEngine } from "chromiumly";
+import { PDFEngines } from "chromiumly";
 
-const buffer = await PDFEngine.writeMetadata({
+const buffer = await PDFEngines.writeMetadata({
   files: [
   "path/to/file_1.pdf",
   "path/to/file_2.pdf",
