@@ -10,13 +10,12 @@ import {
     PdfFormat,
     Metadata
 } from '../common';
-import { LibreOfficeUtils, PageProperties } from '../libre-office';
-import { PDFEngineUtils } from './utils/engine.utils';
+import { PDFEnginesUtils } from './utils/pdf-engines.utils';
 
 /**
- * Class representing a PDF engine for various operations such as merging and conversion.
+ * Class uses PDF engines for various operations such as merging and conversion.
  */
-export class PDFEngine {
+export class PDFEngines {
     /**
      * Merges multiple PDF files into a single PDF document.
      *
@@ -25,12 +24,23 @@ export class PDFEngine {
      * @returns {Promise<Buffer>} A Promise resolving to the merged PDF content as a Buffer.
      */
     public static async merge({
-        files
+        files,
+        pdfa,
+        pdfUA,
+        metadata
     }: {
         files: PathLikeOrReadStream[];
+        pdfa?: PdfFormat;
+        pdfUA?: boolean;
+        metadata?: Metadata;
     }): Promise<Buffer> {
         const data = new FormData();
-        await PDFEngineUtils.addFiles(files, data);
+        await PDFEnginesUtils.addFiles(files, data);
+        await PDFEnginesUtils.customize(data, {
+            pdfa,
+            pdfUA,
+            metadata
+        });
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
         return GotenbergUtils.fetch(endpoint, data);
     }
@@ -40,48 +50,26 @@ export class PDFEngine {
      *
      * @param {Object} options - Options for the conversion operation.
      * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the files to be converted to PDF.
-     * @param {PageProperties} [options.properties] - Page properties for the conversion.
-     * @param {PdfFormat} [options.pdfFormat] - PDF format options.
+     * @param {pdfa} [options.pdfa] - PDF format options.
      * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
-     * @param {boolean} [options.merge] - Indicates whether to merge the resulting PDFs.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     public static async convert({
         files,
-        properties,
-        pdfFormat,
-        pdfUA,
-        merge
+        pdfa,
+        pdfUA
     }: {
         files: PathLikeOrReadStream[];
-        properties?: PageProperties;
-        /**
-         * @deprecated Starting from Gotenberg version 8.0.0, LibreOffice no longer provides support for pdfFormat.
-         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
-         */
-        pdfFormat?: PdfFormat;
+        pdfa?: PdfFormat;
         pdfUA?: boolean;
-        merge?: boolean;
     }): Promise<Buffer> {
         const data = new FormData();
 
-        if (pdfFormat) {
-            data.append('pdfa', pdfFormat);
-        }
-
-        if (pdfUA) {
-            data.append('pdfUA', String(pdfUA));
-        }
-
-        if (merge) {
-            data.append('merge', String(merge));
-        }
-
-        if (properties) {
-            LibreOfficeUtils.addPageProperties(data, properties);
-        }
-
-        await LibreOfficeUtils.addFiles(files, data);
+        await PDFEnginesUtils.addFiles(files, data);
+        await PDFEnginesUtils.customize(data, {
+            pdfa,
+            pdfUA
+        });
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
 
@@ -99,7 +87,7 @@ export class PDFEngine {
     ): Promise<Buffer> {
         const data = new FormData();
 
-        await PDFEngineUtils.addFiles(files, data);
+        await PDFEnginesUtils.addFiles(files, data);
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readMetadata}`;
 
@@ -123,7 +111,7 @@ export class PDFEngine {
         const data = new FormData();
         data.append('metadata', JSON.stringify(metadata));
 
-        await PDFEngineUtils.addFiles(files, data);
+        await PDFEnginesUtils.addFiles(files, data);
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeMetadata}`;
 

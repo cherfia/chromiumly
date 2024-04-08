@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import path from 'path';
 
 import { PdfFormat } from '../../common';
-import { PDFEngine } from '../pdf.engine';
+import { PDFEngines } from '../pdf-engines';
 
 const { Response } = jest.requireActual('node-fetch');
 jest.mock('node-fetch', () => jest.fn());
@@ -31,8 +31,8 @@ describe('PDFEngine', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await PDFEngine.convert({
-                    files: ['path/to/file.docx', 'path/to/file.bib']
+                const buffer = await PDFEngines.convert({
+                    files: ['path/to/file_1.pdf', 'path/to/file_2.pdf']
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
@@ -43,15 +43,13 @@ describe('PDFEngine', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await PDFEngine.convert({
-                    files: ['path/to/file.docx', 'path/to/file.bib'],
-                    properties: { landscape: true },
-                    pdfFormat: PdfFormat.A_1a,
-                    pdfUA: true,
-                    merge: true
+                const buffer = await PDFEngines.convert({
+                    files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
+                    pdfa: PdfFormat.A_2b,
+                    pdfUA: true
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
             });
         });
     });
@@ -60,11 +58,14 @@ describe('PDFEngine', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
             mockFetch.mockResolvedValue(new Response('content'));
-            const buffer = await PDFEngine.merge({
-                files: ['path/to/file.pdf', 'path/to/another-file.pdf']
+            const buffer = await PDFEngines.merge({
+                files: ['path/to/file.pdf', 'path/to/another-file.pdf'],
+                pdfa: PdfFormat.A_2b,
+                pdfUA: true,
+                metadata: { Author: 'John Doe' }
             });
             expect(buffer).toEqual(Buffer.from('content'));
-            expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
         });
     });
 
@@ -72,7 +73,7 @@ describe('PDFEngine', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
             mockFetch.mockResolvedValue(new Response('content'));
-            const buffer = await PDFEngine.readMetadata(['path/to/file.pdf']);
+            const buffer = await PDFEngines.readMetadata(['path/to/file.pdf']);
             expect(buffer).toEqual(Buffer.from('content'));
             expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
         });
@@ -82,7 +83,7 @@ describe('PDFEngine', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
             mockFetch.mockResolvedValue(new Response('content'));
-            const buffer = await PDFEngine.writeMetadata({
+            const buffer = await PDFEngines.writeMetadata({
                 files: ['path/to/file.pdf'],
                 metadata: {
                     Author: 'John Doe',
@@ -127,7 +128,7 @@ describe('PDFEngine', () => {
                 .spyOn(fs, 'writeFile')
                 .mockResolvedValueOnce();
 
-            await PDFEngine.generate(mockFilename, mockBuffer);
+            await PDFEngines.generate(mockFilename, mockBuffer);
 
             expect(mockPromisesMkDir).toHaveBeenCalledWith(mockGeneratedDir, {
                 recursive: true
@@ -145,7 +146,7 @@ describe('PDFEngine', () => {
             );
 
             await expect(
-                PDFEngine.generate(mockFilename, mockBuffer)
+                PDFEngines.generate(mockFilename, mockBuffer)
             ).rejects.toThrow('Cannot create directory');
         });
 
@@ -155,7 +156,7 @@ describe('PDFEngine', () => {
             );
 
             await expect(
-                PDFEngine.generate(mockFilename, mockBuffer)
+                PDFEngines.generate(mockFilename, mockBuffer)
             ).rejects.toThrow('Failed to write to file');
         });
     });

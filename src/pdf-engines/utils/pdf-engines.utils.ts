@@ -3,11 +3,15 @@ import path from 'path';
 
 import FormData from 'form-data';
 import { PathLikeOrReadStream } from '../../common';
+import {
+    ConversionOptions,
+    MergeOptions
+} from '../interfaces/pdf-engines.types';
 
 /**
  * Utility class for handling common tasks related to PDF engine operations.
  */
-export class PDFEngineUtils {
+export class PDFEnginesUtils {
     /**
      * Adds PDF files to the FormData object.
      *
@@ -35,6 +39,30 @@ export class PDFEngineUtils {
                     throw new Error(`${extension} is not supported`);
                 }
             }
+        }
+    }
+
+    /**
+     * Customizes the FormData object based on the provided conversion options.
+     *
+     * @param {FormData} data - The FormData object to be customized.
+     * @param {ConversionOptions | MergeOptions} options - The options to apply to the FormData.
+     * @returns {Promise<void>} A Promise that resolves once the customization is complete.
+     */
+    public static async customize(
+        data: FormData,
+        options: ConversionOptions | MergeOptions
+    ): Promise<void> {
+        if (options.pdfa) {
+            data.append('pdfa', options.pdfa);
+        }
+
+        if (options.pdfUA) {
+            data.append('pdfUA', String(options.pdfUA));
+        }
+
+        if ('metadata' in options && options.metadata) {
+            data.append('metadata', JSON.stringify(options.metadata));
         }
     }
 }

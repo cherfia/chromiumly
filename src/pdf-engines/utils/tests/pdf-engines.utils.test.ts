@@ -1,10 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
 import FormData from 'form-data';
+import { PDFEnginesUtils } from '../pdf-engines.utils';
 
-import { PDFEngineUtils } from '../engine.utils';
-
-describe('PDFEngineUtils', () => {
+describe('PDFEnginesUtils', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
     const data = new FormData();
@@ -24,7 +23,7 @@ describe('PDFEngineUtils', () => {
             describe('when files parameter contains paths', () => {
                 it('should append each file to data', async () => {
                     mockPromisesAccess.mockResolvedValue();
-                    await PDFEngineUtils.addFiles(
+                    await PDFEnginesUtils.addFiles(
                         ['path/to/file.pdf', 'path/to/another-file.pdf'],
                         data
                     );
@@ -34,7 +33,7 @@ describe('PDFEngineUtils', () => {
             describe('when files parameter contains a buffer', () => {
                 it('should append each file to data', async () => {
                     mockPromisesAccess.mockResolvedValue();
-                    await PDFEngineUtils.addFiles(
+                    await PDFEnginesUtils.addFiles(
                         [Buffer.from('data'), 'path/to/another-file.pdf'],
                         data
                     );
@@ -47,7 +46,7 @@ describe('PDFEngineUtils', () => {
             it('should throw an error', async () => {
                 mockPromisesAccess.mockResolvedValue();
                 await expect(() =>
-                    PDFEngineUtils.addFiles(
+                    PDFEnginesUtils.addFiles(
                         ['path/to/file.docx', 'path/to/file.pdf'],
                         data
                     )
@@ -61,7 +60,7 @@ describe('PDFEngineUtils', () => {
                     "ENOENT: no such file or directory, access 'path/to/index.html'";
                 mockPromisesAccess.mockRejectedValue(new Error(errorMessage));
                 await expect(() =>
-                    PDFEngineUtils.addFiles(
+                    PDFEnginesUtils.addFiles(
                         ['path/to/file.pdf', 'path/to/another-file.pdf'],
                         data
                     )
