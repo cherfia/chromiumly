@@ -7,7 +7,10 @@ import FormData from 'form-data';
 
 import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
 import { LIBRE_OFFICE_EXTENSIONS } from './constants';
-import { PageProperties } from '../interfaces/libre-office.types';
+import {
+    ConversionOptions,
+    PageProperties
+} from '../interfaces/libre-office.types';
 
 /**
  * Utility class for handling common tasks related to LibreOffice conversions.
@@ -87,6 +90,38 @@ export class LibreOfficeUtils {
                 'exportFormFields',
                 String(pageProperties.exportFormFields)
             );
+        }
+    }
+
+    /**
+     * Customizes the FormData object based on the provided conversion options.
+     *
+     * @param {FormData} data - The FormData object to be customized.
+     * @param {ConversionOptions} options - The conversion options to apply to the FormData.
+     * @returns {Promise<void>} A Promise that resolves once the customization is complete.
+     */
+    public static async customize(
+        data: FormData,
+        options: ConversionOptions
+    ): Promise<void> {
+        if (options.pdfa) {
+            data.append('pdfa', options.pdfa);
+        }
+
+        if (options.pdfUA) {
+            data.append('pdfUA', String(options.pdfUA));
+        }
+
+        if (options.merge) {
+            data.append('merge', String(options.merge));
+        }
+
+        if (options.metadata) {
+            data.append('metadata', JSON.stringify(options.metadata));
+        }
+
+        if (options.properties) {
+            LibreOfficeUtils.addPageProperties(data, options.properties);
         }
     }
 }
