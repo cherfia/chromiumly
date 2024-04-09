@@ -1,21 +1,33 @@
-import { constants, createReadStream, promises, ReadStream } from 'fs';
+import { constants, createReadStream, promises } from 'fs';
 import path from 'path';
-
-import { fromStream, fromBuffer } from 'file-type';
 
 import FormData from 'form-data';
 
-import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
+import { GotenbergUtils } from '../../common';
 import { LIBRE_OFFICE_EXTENSIONS } from './constants';
 import {
     ConversionOptions,
-    PageProperties
+    PageProperties,
+    PathLikeOrReadStream
 } from '../interfaces/libre-office.types';
 
 /**
  * Utility class for handling common tasks related to LibreOffice conversions.
  */
 export class LibreOfficeUtils {
+    private static async getFileInfo(file: PathLikeOrReadStream) {
+        if (typeof file === 'string') {
+            await promises.access(file, constants.R_OK);
+            const filename = path.basename(path.parse(file).base);
+            return {
+                data: createReadStream(file),
+                ext: path.extname(filename).slice(1)
+            };
+        } else {
+            return { data: file.data, ext: file.ext };
+        }
+    }
+
     /**
      * Adds files to the FormData object for LibreOffice conversion.
      *
@@ -27,33 +39,15 @@ export class LibreOfficeUtils {
         files: PathLikeOrReadStream[],
         data: FormData
     ) {
-        for (const [key, value] of files.entries()) {
-            let file = value;
-            let fileInfo;
-
-            if (Buffer.isBuffer(value)) {
-                fileInfo = await fromBuffer(value);
-            } else if (value instanceof ReadStream) {
-                fileInfo = await fromStream(value);
-            } else {
-                await promises.access(value, constants.R_OK);
-                const filename = path.basename(value.toString());
-                fileInfo = { ext: path.extname(filename).slice(1) };
-                file = createReadStream(value);
-            }
-
-            if (!fileInfo) {
-                throw new Error('File type could not be determined');
-            }
-
-            const extension = fileInfo.ext;
-
-            if (LIBRE_OFFICE_EXTENSIONS.includes(extension)) {
-                data.append('files', file, `${key}.${extension}`);
-            } else {
-                throw new Error(`${extension} is not supported`);
-            }
-        }
+        await Promise.all(
+            files.map(async (file, key) => {
+                const fileInfo = await this.getFileInfo(file);
+                if (!LIBRE_OFFICE_EXTENSIONS.includes(fileInfo.ext)) {
+                    throw new Error(`${fileInfo.ext} is not supported`);
+                }
+                data.append('files', fileInfo.data, `${key}.${fileInfo.ext}`);
+            })
+        );
     }
 
     /**

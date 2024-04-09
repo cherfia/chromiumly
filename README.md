@@ -251,13 +251,17 @@ type ScreenshotOptions = {
 ### LibreOffice
 
 The `LibreOffice` class comes with a single method `convert`. This method interacts with [LibreOffice](https://gotenberg.dev/docs/routes#convert-with-libreoffice) route to convert different documents to PDF files. You can find the file extensions
-accepted [here](https://gotenberg.dev/docs/routes#convert-with-libreoffice#route).
+accepted [here](https://gotenberg.dev/docs/routes#convert-with-libreoffice).
 
 ```typescript
 import { LibreOffice } from "chromiumly";
 
 const buffer = await LibreOffice.convert({
-  files: ["path/to/file.docx", "path/to/file.png"],
+  files: [
+    "path/to/file.docx",
+    "path/to/file.png",
+    { data: xlsxFileBuffer, ext: "xlsx" },
+  ],
 });
 ```
 

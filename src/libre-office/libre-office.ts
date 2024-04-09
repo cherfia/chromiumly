@@ -1,13 +1,11 @@
 import FormData from 'form-data';
 
 import { Chromiumly } from '../main.config';
+import { GotenbergUtils, PdfFormat, Metadata } from '../common';
 import {
-    GotenbergUtils,
-    PathLikeOrReadStream,
-    PdfFormat,
-    Metadata
-} from '../common';
-import { PageProperties } from './interfaces/libre-office.types';
+    PageProperties,
+    PathLikeOrReadStream
+} from './interfaces/libre-office.types';
 import { LibreOfficeUtils } from './utils/libre-office.utils';
 
 /**
