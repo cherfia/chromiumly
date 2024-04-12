@@ -137,5 +137,20 @@ describe('LibreOfficeUtils', () => {
                 });
             });
         });
+
+        describe('Single page sheets', () => {
+            describe('when singlePageSheets parameter is set', () => {
+                it('should append singlePageSheets to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        singlePageSheets: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'singlePageSheets',
+                        'true'
+                    );
+                });
+            });
+        });
     });
 });

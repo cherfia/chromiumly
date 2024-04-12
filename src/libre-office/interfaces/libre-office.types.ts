@@ -144,6 +144,7 @@ export type PageProperties = {
     landscape?: boolean; // Set the paper orientation to landscape (default false)
     nativePageRanges?: { from: number; to: number }; // Page ranges to print
     exportFormFields?: boolean; // Set whether to export the form fields or to use the inputted/selected content of the fields (default true)
+    singlePageSheets?: boolean; // Set whether to render the entire spreadsheet as a single page. (default false)
 };
 
 export type ConversionOptions = {

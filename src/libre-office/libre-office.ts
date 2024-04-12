@@ -51,6 +51,11 @@ export class LibreOffice {
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
 
-        return GotenbergUtils.fetch(endpoint, data);
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 }

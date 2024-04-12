@@ -85,6 +85,13 @@ export class LibreOfficeUtils {
                 String(pageProperties.exportFormFields)
             );
         }
+
+        if (pageProperties.singlePageSheets) {
+            data.append(
+                'singlePageSheets',
+                String(pageProperties.singlePageSheets)
+            );
+        }
     }
 
     /**
