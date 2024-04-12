@@ -42,7 +42,12 @@ export class PDFEngines {
             metadata
         });
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
-        return GotenbergUtils.fetch(endpoint, data);
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 
     /**
@@ -73,7 +78,12 @@ export class PDFEngines {
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
 
-        return GotenbergUtils.fetch(endpoint, data);
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 
     /**
@@ -91,7 +101,12 @@ export class PDFEngines {
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readMetadata}`;
 
-        return GotenbergUtils.fetch(endpoint, data);
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 
     /**
@@ -115,7 +130,12 @@ export class PDFEngines {
 
         const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeMetadata}`;
 
-        return GotenbergUtils.fetch(endpoint, data);
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 
     /**

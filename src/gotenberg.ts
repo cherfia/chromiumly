@@ -20,11 +20,35 @@ if (dotenvConfig.error) {
  */
 export class Gotenberg {
     /**
-     * The Gotenberg service endpoint.
-     * Defaults to the value from the environment variable `GOTENBERG_ENDPOINT`, or falls back to the configuration file.
+     * The endpoint for the Gotenberg service.
      * @type {string}
      */
-    public static endpoint: string =
-        process.env.GOTENBERG_ENDPOINT ||
-        config.get<string>('gotenberg.endpoint');
+    static get endpoint(): string {
+        return (
+            process.env.GOTENBERG_ENDPOINT ||
+            config.get<string>('gotenberg.endpoint')
+        );
+    }
+
+    /**
+     * The username for basic authentication with the Gotenberg service.
+     * @type {string | undefined}
+     */
+    static get username(): string | undefined {
+        const hasUsername = config.has('gotenberg.api.basicAuth.username');
+        return hasUsername
+            ? config.get<string>('gotenberg.api.basicAuth.username')
+            : process.env.GOTENBERG_API_BASIC_AUTH_USERNAME;
+    }
+
+    /**
+     * The password for basic authentication with the Gotenberg service.
+     * @type {string | undefined}
+     */
+    static get password(): string | undefined {
+        const hasPassword = config.has('gotenberg.api.basicAuth.password');
+        return hasPassword
+            ? config.get<string>('gotenberg.api.basicAuth.password')
+            : process.env.GOTENBERG_API_BASIC_AUTH_PASSWORD;
+    }
 }

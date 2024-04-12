@@ -1,5 +1,11 @@
 {
   "gotenberg": {
-    "endpoint": "http://localhost:3000"
+    "endpoint": "http://localhost:3000",
+    "api": {
+      "basicAuth": {
+        "username": "user",
+        "password": "pass"
+      }
+    }
   }
 }

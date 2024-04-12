@@ -27,20 +27,31 @@ export class GotenbergUtils {
      * Performs a POST request to the specified Gotenberg endpoint with the provided FormData.
      *
      * @param {string} endpoint - The Gotenberg endpoint URL.
+     * @param {string} username - The username for basic authentication.
+     * @param {string} password - The password for basic authentication.
      * @param {FormData} data - The FormData object to be sent in the POST request.
      * @returns {Promise<Buffer>} A Promise that resolves to the response body as a Buffer.
      * @throws {Error} Throws an error if the HTTP response status is not OK.
      */
     public static async fetch(
         endpoint: string,
-        data: FormData
+        data: FormData,
+        username?: string,
+        password?: string
     ): Promise<Buffer> {
+        const headers: Record<string, string> = { ...data.getHeaders() };
+
+        if (username && password) {
+            const authHeader =
+                'Basic ' +
+                Buffer.from(username + ':' + password).toString('base64');
+            headers['Authorization'] = authHeader;
+        }
+
         const response = await fetch(endpoint, {
             method: 'post',
             body: data,
-            headers: {
-                ...data.getHeaders()
-            }
+            headers
         });
 
         if (!response.ok) {

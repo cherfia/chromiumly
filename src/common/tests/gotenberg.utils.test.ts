@@ -39,11 +39,18 @@ describe('GotenbergUtils', () => {
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const data = new FormData();
         const endpoint = 'http://localhost:3000/forms/chromium/convert/html';
+        const basicAuthUsername = 'username';
+        const basicAuthPassword = 'pass';
 
         describe('when fetch request succeeds', () => {
             it('should return a buffer', async () => {
                 mockFetch.mockResolvedValueOnce(new Response('content'));
-                const response = await GotenbergUtils.fetch(endpoint, data);
+                const response = await GotenbergUtils.fetch(
+                    endpoint,
+                    data,
+                    basicAuthUsername,
+                    basicAuthPassword
+                );
                 await expect(response).toEqual(Buffer.from('content'));
             });
         });
@@ -57,7 +64,12 @@ describe('GotenbergUtils', () => {
                         new FetchError(errorMessage)
                     );
                     await expect(() =>
-                        GotenbergUtils.fetch(endpoint, data)
+                        GotenbergUtils.fetch(
+                            endpoint,
+                            data,
+                            basicAuthUsername,
+                            basicAuthPassword
+                        )
                     ).rejects.toThrow(errorMessage);
                 });
             });
@@ -74,7 +86,12 @@ describe('GotenbergUtils', () => {
                         )
                     );
                     await expect(() =>
-                        GotenbergUtils.fetch(endpoint, data)
+                        GotenbergUtils.fetch(
+                            endpoint,
+                            data,
+                            basicAuthUsername,
+                            basicAuthPassword
+                        )
                     ).rejects.toThrow('500 Internal server error');
                 });
             });

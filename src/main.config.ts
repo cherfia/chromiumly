@@ -39,6 +39,20 @@ export class Chromiumly {
     public static readonly GOTENBERG_ENDPOINT = Gotenberg.endpoint;
 
     /**
+     * The username for basic authentication with the Gotenberg service.
+     * @type {string | undefined}
+     */
+    public static readonly GOTENBERG_API_BASIC_AUTH_USERNAME =
+        Gotenberg.username;
+
+    /**
+     * The password for basic authentication with the Gotenberg service.
+     * @type {string | undefined}
+     */
+    public static readonly GOTENBERG_API_BASIC_AUTH_PASSWORD =
+        Gotenberg.password;
+
+    /**
      * The path for Chromium-related conversions.
      * @type {string}
      */
