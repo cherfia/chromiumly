@@ -20,7 +20,8 @@ a variety of document formats to PDF files.
 2. [Configuration](#configuration)
    - [dotenv](#dotenv)
    - [config](#config)
-3. [Modules](#modules)
+3. [Basic Authentication](#basic-authentication)
+4. [Modules](#modules)
 
    - [Chromium](#chromium)
      - [URL](#url)
@@ -37,7 +38,7 @@ a variety of document formats to PDF files.
      - [writeMetadata](#writemetadata)
      - [generate](#generate)
 
-4. [Snippet](#snippet)
+5. [Snippet](#snippet)
 
 ## Install
 
@@ -83,6 +84,42 @@ GOTENBERG_ENDPOINT=http://localhost:3000
 {
   "gotenberg": {
     "endpoint": "http://localhost:3000"
+  }
+}
+```
+
+### Basic Authentication
+
+Gotenberg introduces basic authentication support starting from version [8.4.0](https://github.com/gotenberg/gotenberg/releases/tag/v8.4.0). Suppose you are running a Docker container using the command below:
+
+```bash
+docker run --rm -p 3000:3000 \
+-e GOTENBERG_API_BASIC_AUTH_USERNAME=user \
+-e GOTENBERG_API_BASIC_AUTH_PASSWORD=pass \
+gotenberg/gotenberg:8.4.0 gotenberg --api-enable-basic-auth
+
+```
+
+To integrate this setup with Chromiumly, you need to update your configuration as outlined below:
+
+```bash
+GOTENBERG_ENDPOINT=http://localhost:3000
+GOTENBERG_API_BASIC_AUTH_USERNAME=user
+GOTENBERG_API_BASIC_AUTH_PASSWORD=pass
+```
+
+Or
+
+```json
+{
+  "gotenberg": {
+    "endpoint": "http://localhost:3000",
+    "api": {
+      "basicAuth": {
+        "username": "user",
+        "password": "pass"
+      }
+    }
   }
 }
 ```
@@ -215,6 +252,7 @@ type ConversionOptions = {
   failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
   metadata?: Metadata; // Metadata to be written.
+  cookies?: Cookie[]; // Cookies to be written.
 };
 ```
 
