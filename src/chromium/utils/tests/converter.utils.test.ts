@@ -364,6 +364,39 @@ describe('GotenbergUtils', () => {
             });
         });
 
+        describe('when cookies parameter is passed', () => {
+            it('should append cookies', async () => {
+                await ConverterUtils.customize(data, {
+                    cookies: [
+                        {
+                            name: 'sample_id',
+                            value: 'sample_value',
+                            domain: 'example.com',
+                            path: '/',
+                            secure: true,
+                            httpOnly: true,
+                            sameSite: 'Strict'
+                        }
+                    ]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'cookies',
+                    JSON.stringify([
+                        {
+                            name: 'sample_id',
+                            value: 'sample_value',
+                            domain: 'example.com',
+                            path: '/',
+                            secure: true,
+                            httpOnly: true,
+                            sameSite: 'Strict'
+                        }
+                    ])
+                );
+            });
+        });
+
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ConverterUtils.customize(data, {

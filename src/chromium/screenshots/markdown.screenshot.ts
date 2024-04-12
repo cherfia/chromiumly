@@ -4,7 +4,7 @@ import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
 import { ImageProperties } from '../interfaces/screenshot.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';
 import { Screenshot } from './screenshot';
-import { ChromiumRoute } from '../../main.config';
+import { ChromiumRoute, Chromiumly } from '../../main.config';
 import { EmulatedMediaType } from '../interfaces/common.types';
 
 /**
@@ -90,6 +90,11 @@ export class MarkdownScreenshot extends Screenshot {
             optimizeForSpeed
         });
 
-        return GotenbergUtils.fetch(this.endpoint, data);
+        return GotenbergUtils.fetch(
+            this.endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 }

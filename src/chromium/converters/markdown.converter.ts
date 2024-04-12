@@ -6,10 +6,10 @@ import {
     PathLikeOrReadStream,
     Metadata
 } from '../../common';
-import { PageProperties } from '../interfaces/converter.types';
+import { Cookie, PageProperties } from '../interfaces/converter.types';
 import { ConverterUtils } from '../utils/converter.utils';
 import { Converter } from './converter';
-import { ChromiumRoute } from '../../main.config';
+import { ChromiumRoute, Chromiumly } from '../../main.config';
 import { EmulatedMediaType } from '../interfaces/common.types';
 
 /**
@@ -47,6 +47,7 @@ export class MarkdownConverter extends Converter {
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during conversion.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {Metadata} options.metadata - Metadata to be written.
+     * @param {Cookie[]} options.cookies - Cookies to be written.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     async convert({
@@ -65,7 +66,8 @@ export class MarkdownConverter extends Converter {
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
-        metadata
+        metadata,
+        cookies
     }: {
         html: PathLikeOrReadStream;
         markdown: PathLikeOrReadStream;
@@ -91,6 +93,7 @@ export class MarkdownConverter extends Converter {
         failOnConsoleExceptions?: boolean;
         skipNetworkIdleEvent?: boolean;
         metadata?: Metadata;
+        cookies?: Cookie[];
     }): Promise<Buffer> {
         const data = new FormData();
 
@@ -112,9 +115,15 @@ export class MarkdownConverter extends Converter {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             skipNetworkIdleEvent,
-            metadata
+            metadata,
+            cookies
         });
 
-        return GotenbergUtils.fetch(this.endpoint, data);
+        return GotenbergUtils.fetch(
+            this.endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 }

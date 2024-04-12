@@ -179,5 +179,9 @@ export class ConverterUtils {
         if (options.metadata) {
             data.append('metadata', JSON.stringify(options.metadata));
         }
+
+        if (options.cookies) {
+            data.append('cookies', JSON.stringify(options.cookies));
+        }
     }
 }

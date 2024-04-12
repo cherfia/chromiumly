@@ -1,7 +1,7 @@
 import FormData from 'form-data';
 
 import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
-import { ChromiumRoute } from '../../main.config';
+import { ChromiumRoute, Chromiumly } from '../../main.config';
 import { EmulatedMediaType } from '../interfaces/common.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';
 import { Screenshot } from './screenshot';
@@ -95,6 +95,11 @@ export class HtmlScreenshot extends Screenshot {
             optimizeForSpeed
         });
 
-        return GotenbergUtils.fetch(this.endpoint, data);
+        return GotenbergUtils.fetch(
+            this.endpoint,
+            data,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
+            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+        );
     }
 }

@@ -25,10 +25,21 @@ export type PageProperties = {
     nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
 
+export type Cookie = {
+    name: string;
+    value: string;
+    domain: string;
+    path?: string;
+    secure?: boolean;
+    httpOnly?: boolean;
+    sameSite?: 'Strict' | 'Lax' | 'None';
+};
+
 export type ConversionOptions = ChromiumOptions & {
     properties?: PageProperties;
     pdfFormat?: PdfFormat;
     pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
     userAgent?: string;
     metadata?: Metadata;
+    cookies?: Cookie[];
 };
