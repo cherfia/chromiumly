@@ -8,6 +8,16 @@
       "enabled": false
     },
     {
+      "description": "Lock inquirer version to 8",
+      "matchPackageNames": ["inquirer"],
+      "enabled": false
+    },
+    {
+      "description": "Lock eslint version to 8.57.0",
+      "matchPackageNames": ["eslint"],
+      "enabled": false
+    },
+    {
       "description": "Enable auto-merge",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true,
