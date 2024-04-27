@@ -42,8 +42,8 @@ describe('GotenbergUtils', () => {
         });
 
         describe('Image quality', () => {
-            describe('when omitBackground parameter is set', () => {
-                it('should append omitBackground to data', () => {
+            describe('when quality parameter is set', () => {
+                it('should append quality to data', () => {
                     ScreenshotUtils.addImageProperties(data, {
                         format: 'jpeg',
                         quality: 50
@@ -54,6 +54,60 @@ describe('GotenbergUtils', () => {
                         2,
                         'quality',
                         50
+                    );
+                });
+            });
+        });
+
+        describe('Image width', () => {
+            describe('when width parameter is set', () => {
+                it('should append width to data', () => {
+                    ScreenshotUtils.addImageProperties(data, {
+                        format: 'jpeg',
+                        width: 800
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(data.append).toHaveBeenCalledWith('format', 'jpeg');
+                    expect(data.append).toHaveBeenNthCalledWith(
+                        2,
+                        'width',
+                        800
+                    );
+                });
+            });
+        });
+
+        describe('Image height', () => {
+            describe('when height parameter is set', () => {
+                it('should append height to data', () => {
+                    ScreenshotUtils.addImageProperties(data, {
+                        format: 'jpeg',
+                        height: 600
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(data.append).toHaveBeenCalledWith('format', 'jpeg');
+                    expect(data.append).toHaveBeenNthCalledWith(
+                        2,
+                        'height',
+                        600
+                    );
+                });
+            });
+        });
+
+        describe('Image clip', () => {
+            describe('when clip parameter is set', () => {
+                it('should append clip to data', () => {
+                    ScreenshotUtils.addImageProperties(data, {
+                        format: 'png',
+                        clip: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(data.append).toHaveBeenCalledWith('format', 'png');
+                    expect(data.append).toHaveBeenNthCalledWith(
+                        2,
+                        'clip',
+                        'true'
                     );
                 });
             });
