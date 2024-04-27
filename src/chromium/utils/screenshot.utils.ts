@@ -41,6 +41,18 @@ export class ScreenshotUtils {
                 String(imageProperties.omitBackground)
             );
         }
+
+        if (imageProperties.width) {
+            data.append('width', imageProperties.width);
+        }
+
+        if (imageProperties.height) {
+            data.append('height', imageProperties.height);
+        }
+
+        if (imageProperties.clip) {
+            data.append('clip', String(imageProperties.clip));
+        }
     }
 
     /**
