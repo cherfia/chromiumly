@@ -17,6 +17,6 @@ export abstract class Screenshot {
      * @param {ChromiumRoute} route - The ChromiumRoute enum value representing the screenshot route.
      */
     constructor(route: ChromiumRoute) {
-        this.endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.CHROMIUM_SCREENSHOT_PATH}/${Chromiumly.CHROMIUM_ROUTES[route]}`;
+        this.endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.CHROMIUM_SCREENSHOT_PATH}/${Chromiumly.CHROMIUM_ROUTES[route]}`;
     }
 }

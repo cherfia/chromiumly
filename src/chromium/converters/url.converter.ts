@@ -118,8 +118,8 @@ export class UrlConverter extends Converter {
         return GotenbergUtils.fetch(
             this.endpoint,
             data,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword()
         );
     }
 }

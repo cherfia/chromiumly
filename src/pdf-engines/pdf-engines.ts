@@ -41,12 +41,12 @@ export class PDFEngines {
             pdfUA,
             metadata
         });
-        const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
         return GotenbergUtils.fetch(
             endpoint,
             data,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword()
         );
     }
 
@@ -76,13 +76,13 @@ export class PDFEngines {
             pdfUA
         });
 
-        const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
 
         return GotenbergUtils.fetch(
             endpoint,
             data,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword()
         );
     }
 
@@ -99,13 +99,13 @@ export class PDFEngines {
 
         await PDFEnginesUtils.addFiles(files, data);
 
-        const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readMetadata}`;
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readMetadata}`;
 
         return GotenbergUtils.fetch(
             endpoint,
             data,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword()
         );
     }
 
@@ -128,13 +128,13 @@ export class PDFEngines {
 
         await PDFEnginesUtils.addFiles(files, data);
 
-        const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeMetadata}`;
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeMetadata}`;
 
         return GotenbergUtils.fetch(
             endpoint,
             data,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword()
         );
     }
 

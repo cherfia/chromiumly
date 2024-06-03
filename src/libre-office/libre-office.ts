@@ -49,13 +49,13 @@ export class LibreOffice {
             metadata
         });
 
-        const endpoint = `${Chromiumly.GOTENBERG_ENDPOINT}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
 
         return GotenbergUtils.fetch(
             endpoint,
             data,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_USERNAME,
-            Chromiumly.GOTENBERG_API_BASIC_AUTH_PASSWORD
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword()
         );
     }
 }

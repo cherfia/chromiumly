@@ -36,20 +36,20 @@ export class Chromiumly {
      * The Gotenberg service endpoint.
      * @type {string}
      */
-    public static readonly GOTENBERG_ENDPOINT = Gotenberg.endpoint;
+    private static gotenbergEndpoint: string | undefined = Gotenberg.endpoint;
 
     /**
      * The username for basic authentication with the Gotenberg service.
      * @type {string | undefined}
      */
-    public static readonly GOTENBERG_API_BASIC_AUTH_USERNAME =
+    private static gotenbergApiBasicAuthUsername: string | undefined =
         Gotenberg.username;
 
     /**
      * The password for basic authentication with the Gotenberg service.
      * @type {string | undefined}
      */
-    public static readonly GOTENBERG_API_BASIC_AUTH_PASSWORD =
+    private static gotenbergApiBasicAuthPassword: string | undefined =
         Gotenberg.password;
 
     /**
@@ -64,6 +64,7 @@ export class Chromiumly {
      */
     public static readonly CHROMIUM_SCREENSHOT_PATH =
         'forms/chromium/screenshot';
+
     /**
      * The path for PDF engine-related operations.
      * @type {string}
@@ -103,4 +104,54 @@ export class Chromiumly {
     public static readonly LIBRE_OFFICE_ROUTES = {
         convert: LibreOfficeRoute.CONVERT
     };
+
+    /**
+     * Configures the Gotenberg service endpoint and other optional parameters.
+     * @param {Object} config - Configuration object.
+     * @param {string} config.endpoint - The Gotenberg service endpoint.
+     * @param {string} [config.username] - The username for basic authentication.
+     * @param {string} [config.password] - The password for basic authentication.
+     */
+    public static configure(config: {
+        endpoint: string;
+        username?: string;
+        password?: string;
+    }): void {
+        this.gotenbergEndpoint = config.endpoint;
+
+        if (config.username !== undefined) {
+            this.gotenbergApiBasicAuthUsername = config.username;
+        }
+        if (config.password !== undefined) {
+            this.gotenbergApiBasicAuthPassword = config.password;
+        }
+    }
+
+    /**
+     * Gets the Gotenberg service endpoint.
+     * @returns {string}
+     */
+    public static getGotenbergEndpoint(): string {
+        if (!this.gotenbergEndpoint)
+            throw new Error(
+                'Gotenberg endpoint is not set. Please ensure that the Gotenberg service endpoint is configured correctly in your environment variables or through the configure method.'
+            );
+        return this.gotenbergEndpoint;
+    }
+
+    /**
+     * Gets the username for basic authentication.
+     * @returns {string | undefined}
+     */
+    public static getGotenbergApiBasicAuthUsername(): string | undefined {
+        return this.gotenbergApiBasicAuthUsername;
+    }
+
+    /**
+     * Gets the password for basic authentication.
+     * @returns {string | undefined}
+     */
+    public static getGotenbergApiBasicAuthPassword(): string | undefined {
+        return this.gotenbergApiBasicAuthPassword;
+    }
 }

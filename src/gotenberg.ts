@@ -23,11 +23,11 @@ export class Gotenberg {
      * The endpoint for the Gotenberg service.
      * @type {string}
      */
-    static get endpoint(): string {
-        return (
-            process.env.GOTENBERG_ENDPOINT ||
-            config.get<string>('gotenberg.endpoint')
-        );
+    static get endpoint(): string | undefined {
+        const hasEndpoint = config.has('gotenberg.endpoint');
+        return hasEndpoint
+            ? config.get<string>('gotenberg.endpoint')
+            : process.env.GOTENBERG_ENDPOINT;
     }
 
     /**

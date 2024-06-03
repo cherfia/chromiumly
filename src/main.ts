@@ -1,3 +1,5 @@
+export { Chromiumly } from './main.config';
+
 export { PdfFormat } from './common/constants';
 export {
     HtmlConverter,
