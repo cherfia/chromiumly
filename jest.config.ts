@@ -6,5 +6,6 @@ const config: Config.InitialOptions = {
   reporters: ["default", "jest-junit"],
   coverageDirectory: "./coverage/",
   collectCoverage: true,
+  setupFilesAfterEnv: ["./setupTests.ts"],
 };
 export default config;
