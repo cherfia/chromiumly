@@ -20,6 +20,7 @@ a variety of document formats to PDF files.
 2. [Configuration](#configuration)
    - [dotenv](#dotenv)
    - [config](#config)
+   - [code](#code)
 3. [Basic Authentication](#basic-authentication)
 4. [Modules](#modules)
 
