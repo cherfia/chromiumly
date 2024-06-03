@@ -70,10 +70,12 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "config": "3.3.11",
-    "dotenv": "16.4.5",
     "form-data": "4.0.0",
     "node-fetch": "2.7.0"
+  },
+  "peerDependencies": {
+    "config": "3.3.11",
+    "dotenv": "16.4.5"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
