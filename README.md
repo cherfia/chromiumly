@@ -69,8 +69,8 @@ docker run --rm -p 3000:3000 gotenberg/gotenberg:8
 
 ### Configuration
 
-Chromiumly supports both [dotenv](https://www.npmjs.com/package/dotenv)
-and [config](https://www.npmjs.com/package/config) configuration libraries to add Gotenberg endpoint to your project.
+Chromiumly supports configurations via both [dotenv](https://www.npmjs.com/package/dotenv)
+and [config](https://www.npmjs.com/package/config) configuration libraries or directly via code to add Gotenberg endpoint to your project.
 
 #### dotenv
 
@@ -86,6 +86,14 @@ GOTENBERG_ENDPOINT=http://localhost:3000
     "endpoint": "http://localhost:3000"
   }
 }
+```
+
+#### code
+
+```typescript
+import { Chromiumly } from "chromiumly";
+
+Chromiumly.configure({ endpoint: "http://localhost:3000" });
 ```
 
 ### Basic Authentication
@@ -122,6 +130,16 @@ Or
     }
   }
 }
+```
+
+Or
+
+```typescript
+Chromiumly.configure({
+  endpoint: "http://localhost:3000",
+  username: "user",
+  password: "pass",
+});
 ```
 
 ## Modules
