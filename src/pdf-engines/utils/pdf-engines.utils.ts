@@ -23,23 +23,25 @@ export class PDFEnginesUtils {
         files: PathLikeOrReadStream[],
         data: FormData
     ) {
-        for (const [key, file] of files.entries()) {
-            const filename = `file${key}.pdf`;
-            if (Buffer.isBuffer(file)) {
-                data.append('files', file, filename);
-            } else if (file instanceof ReadStream) {
-                data.append('files', file, filename);
-            } else {
-                await promises.access(file, constants.R_OK);
-                const filename = path.basename(file.toString());
-                const extension = path.extname(filename);
-                if (extension === '.pdf') {
-                    data.append(filename, createReadStream(file));
+        await Promise.all(
+            files.map(async (file, key) => {
+                const filename = `file${key}.pdf`;
+                if (Buffer.isBuffer(file)) {
+                    data.append('files', file, filename);
+                } else if (file instanceof ReadStream) {
+                    data.append('files', file, filename);
                 } else {
-                    throw new Error(`${extension} is not supported`);
+                    await promises.access(file, constants.R_OK);
+                    const _filename = path.basename(file.toString());
+                    const extension = path.extname(_filename);
+                    if (extension === '.pdf') {
+                        data.append(_filename, createReadStream(file));
+                    } else {
+                        throw new Error(`${extension} is not supported`);
+                    }
                 }
-            }
-        }
+            })
+        );
     }
 
     /**
