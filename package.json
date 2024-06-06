@@ -21,9 +21,13 @@
     "gotenberg",
     "chromium",
     "LibreOffice",
+    "screenshots",
     "html",
     "markdown",
-    "pdf"
+    "pdf",
+    "docx",
+    "pptx",
+    "xlsx"
   ],
   "scripts": {
     "clean": "rm -rf dist build",
