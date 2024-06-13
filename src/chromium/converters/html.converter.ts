@@ -127,7 +127,7 @@ export class HtmlConverter extends Converter {
         return GotenbergUtils.fetch(
             this.endpoint,
             data,
-            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword()
         );
     }
