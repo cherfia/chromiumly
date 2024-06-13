@@ -77,8 +77,16 @@
     "node-fetch": "2.7.0"
   },
   "peerDependencies": {
-    "config": "3.3.11",
-    "dotenv": "16.4.5"
+    "config": "3.x",
+    "dotenv": "16.x"
+  },
+  "peerDependenciesMeta": {
+    "config": {
+      "optional": true
+    },
+    "dotenv": {
+      "optional": true
+    }
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
