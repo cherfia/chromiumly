@@ -74,19 +74,9 @@
   },
   "dependencies": {
     "form-data": "4.0.0",
-    "node-fetch": "2.7.0"
-  },
-  "peerDependencies": {
+    "node-fetch": "2.7.0",
     "config": "3.x",
     "dotenv": "16.x"
-  },
-  "peerDependenciesMeta": {
-    "config": {
-      "optional": true
-    },
-    "dotenv": {
-      "optional": true
-    }
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
