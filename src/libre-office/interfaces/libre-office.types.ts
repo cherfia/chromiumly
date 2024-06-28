@@ -153,4 +153,6 @@ export type ConversionOptions = {
     pdfa?: PdfFormat;
     pdfUA?: boolean;
     metadata?: Metadata;
+    losslessImageCompression?: boolean; // Allow turning lossless compression on or off (default to false).
+    reduceImageResolution?: boolean; // Allow turning on or off image resolution reduction (default to true).
 };

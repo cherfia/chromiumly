@@ -46,10 +46,12 @@ describe('LibreOffice', () => {
                     pdfa: PdfFormat.A_2b,
                     pdfUA: true,
                     metadata: { author: 'John Doe' },
-                    merge: true
+                    merge: true,
+                    losslessImageCompression: true,
+                    reduceImageResolution: false
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(7);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
             });
         });
     });

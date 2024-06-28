@@ -110,7 +110,7 @@ export class LibreOfficeUtils {
         }
 
         if (options.pdfUA) {
-            data.append('pdfUA', String(options.pdfUA));
+            data.append('pdfua', String(options.pdfUA));
         }
 
         if (options.merge) {
@@ -119,6 +119,20 @@ export class LibreOfficeUtils {
 
         if (options.metadata) {
             data.append('metadata', JSON.stringify(options.metadata));
+        }
+
+        if (options.losslessImageCompression) {
+            data.append(
+                'losslessImageCompression',
+                String(options.losslessImageCompression)
+            );
+        }
+
+        if (options.reduceImageResolution === false) {
+            data.append(
+                'reduceImageResolution',
+                String(options.reduceImageResolution)
+            );
         }
 
         if (options.properties) {

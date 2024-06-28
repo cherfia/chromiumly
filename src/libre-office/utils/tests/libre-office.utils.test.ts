@@ -3,6 +3,7 @@ import { promises, createReadStream } from 'fs';
 import { LibreOfficeUtils } from '../libre-office.utils';
 
 import FormData from 'form-data';
+import { PdfFormat } from '../../../common';
 
 describe('LibreOfficeUtils', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
@@ -150,6 +151,99 @@ describe('LibreOfficeUtils', () => {
                         'true'
                     );
                 });
+            });
+        });
+    });
+
+    describe('customize', () => {
+        describe('when no option is passed', () => {
+            it('should not append anything', async () => {
+                await LibreOfficeUtils.customize(data, {});
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(0);
+            });
+        });
+
+        describe('when pdf format parameter is passed', () => {
+            it('should append pdf format', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    pdfa: PdfFormat.A_2b
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith('pdfa', 'PDF/A-2b');
+            });
+        });
+
+        describe('when pdf universal access parameter is passed', () => {
+            it('should append pdfua format', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    pdfUA: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith('pdfua', 'true');
+            });
+        });
+
+        describe('when merge parameter is passed', () => {
+            it('should append merge', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    merge: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith('merge', 'true');
+            });
+        });
+
+        describe('when metadata parameter is passed', () => {
+            it('should append metadata', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    metadata: { Author: 'John Doe' }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'metadata',
+                    JSON.stringify({ Author: 'John Doe' })
+                );
+            });
+        });
+
+        describe('when lossless image compression is passed', () => {
+            it('should append losslessImageCompression', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    losslessImageCompression: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'losslessImageCompression',
+                    'true'
+                );
+            });
+        });
+
+        describe('when reduce image resolution is passed', () => {
+            it('should append reduceImageResolution', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    reduceImageResolution: false
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'reduceImageResolution',
+                    'false'
+                );
+            });
+        });
+
+        describe('when page properties are passed', () => {
+            it('should append page properties', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    properties: {
+                        singlePageSheets: true
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'singlePageSheets',
+                    'true'
+                );
             });
         });
     });
