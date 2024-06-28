@@ -332,6 +332,8 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `pdfUA`: enables PDF for Universal Access for optimal accessibility.
 - `merge`: merges all the resulting files from the conversion into an individual PDF file.
 - `metadata`: writes metadata to the generated PDF file.
+- `lolosslessImageCompression`: allows turning lossless compression on or off to tweak image conversion performance.
+- `reduceImageResolution`: allows turning on or off image resolution reduction to tweak image conversion performance.
 
 ### PDFEngines
 
