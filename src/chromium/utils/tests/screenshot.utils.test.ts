@@ -2,7 +2,7 @@
 import FormData from 'form-data';
 import { ScreenshotUtils } from './../screenshot.utils';
 
-describe('GotenbergUtils', () => {
+describe('ScreenshotUtils', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
     const data = new FormData();
 

@@ -5,7 +5,7 @@ import FormData from 'form-data';
 import { ConverterUtils } from '../converter.utils';
 import { GotenbergUtils, PdfFormat } from '../../../common';
 
-describe('GotenbergUtils', () => {
+describe('ConverterUtils', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
     const data = new FormData();
 
