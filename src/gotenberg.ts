@@ -3,28 +3,16 @@ process.env.SUPPRESS_NO_CONFIG_WARNING = 'y';
 
 import * as path from 'path';
 
-// Define types for required and optional properties
-type Config = {
-    has(path: string): boolean;
-    get<T>(path: string): T;
-};
-
+// Load environment variables from .env file (optional)
 let dotenv;
-let config: Config | undefined;
 
 try {
     dotenv = require('dotenv');
-} catch (error) {
+} catch {
     // Ignore error if dotenv is not available
 }
 
-try {
-    config = require('config');
-} catch (error) {
-    // Ignore error if config is not available
-}
-
-// Load endpoint from environment-specific file (e.g., .env.development) if dotenv is available
+// Load endpoint from environment-specific file (e.g., .env.production) if dotenv is available
 if (dotenv) {
     const envFile = `.env.${process.env.NODE_ENV}`;
     const envFileFallback = '.env';
@@ -36,6 +24,42 @@ if (dotenv) {
         dotenv.config({ path: path.resolve(envFileFallback) });
     }
 }
+
+// Load configuration from a config file (optional)
+type Config = {
+    has(path: string): boolean;
+    get<T>(path: string): T;
+};
+
+let config: Config | undefined;
+
+const loadConfig = () => {
+    try {
+        config = require('config');
+    } catch (error) {
+        // Ignore error if the config module is not available or if a warning is present
+        if (error instanceof Error && error.message.includes('WARNING')) {
+            return;
+        }
+    }
+};
+
+// Temporarily suppress warnings during configuration loading
+const _consoleError = console.error;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+console.error = (message: any, ...optionalParams: any[]) => {
+    if (typeof message === 'string' && message.includes('WARNING')) {
+        return;
+    } else {
+        _consoleError.apply(console, [message, ...optionalParams]);
+    }
+};
+
+loadConfig();
+
+// Restore console.error after suppressing warnings
+console.error = _consoleError;
 
 /**
  * Class representing configuration for interacting with Gotenberg service.
