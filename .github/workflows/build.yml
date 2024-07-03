@@ -24,7 +24,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: npx commitlint --from ${{ github.event.pull_request.head.sha }}^${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
       - name: Install Dependencies
-        run: yarn
+        run: yarn --ignore-optional
       - name: Lint Code
         run: yarn lint
       - name: Build Code
