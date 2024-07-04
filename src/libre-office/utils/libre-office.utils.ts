@@ -92,6 +92,94 @@ export class LibreOfficeUtils {
                 String(pageProperties.singlePageSheets)
             );
         }
+
+        if (pageProperties.allowDuplicateFieldNames) {
+            data.append(
+                'allowDuplicateFieldNames',
+                String(pageProperties.allowDuplicateFieldNames)
+            );
+        }
+
+        if (pageProperties.exportBookmarks === false) {
+            data.append(
+                'exportBookmarks',
+                String(pageProperties.exportBookmarks)
+            );
+        }
+
+        if (pageProperties.exportBookmarksToPdfDestination) {
+            data.append(
+                'exportBookmarksToPdfDestination',
+                String(pageProperties.exportBookmarksToPdfDestination)
+            );
+        }
+
+        if (pageProperties.exportPlaceholders) {
+            data.append(
+                'exportPlaceholders',
+                String(pageProperties.exportPlaceholders)
+            );
+        }
+
+        if (pageProperties.exportNotes) {
+            data.append('exportNotes', String(pageProperties.exportNotes));
+        }
+
+        if (pageProperties.exportNotesPages) {
+            data.append(
+                'exportNotesPages',
+                String(pageProperties.exportNotesPages)
+            );
+        }
+
+        if (pageProperties.exportOnlyNotesPages) {
+            data.append(
+                'exportOnlyNotesPages',
+                String(pageProperties.exportOnlyNotesPages)
+            );
+        }
+
+        if (pageProperties.exportNotesInMargin) {
+            data.append(
+                'exportNotesInMargin',
+                String(pageProperties.exportNotesInMargin)
+            );
+        }
+
+        if (pageProperties.convertOooTargetToPdfTarget) {
+            data.append(
+                'convertOooTargetToPdfTarget',
+                String(pageProperties.convertOooTargetToPdfTarget)
+            );
+        }
+
+        if (pageProperties.exportLinksRelativeFsys) {
+            data.append(
+                'exportLinksRelativeFsys',
+                String(pageProperties.exportLinksRelativeFsys)
+            );
+        }
+
+        if (pageProperties.exportHiddenSlides) {
+            data.append(
+                'exportHiddenSlides',
+                String(pageProperties.exportHiddenSlides)
+            );
+        }
+
+        if (pageProperties.skipEmptyPages) {
+            data.append(
+                'skipEmptyPages',
+                String(pageProperties.skipEmptyPages)
+            );
+        }
+
+        if (pageProperties.addOriginalDocumentAsStream) {
+            data.append(
+                'addOriginalDocumentAsStream',
+                String(pageProperties.addOriginalDocumentAsStream)
+            );
+        }
     }
 
     /**

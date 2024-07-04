@@ -141,10 +141,23 @@ type FileInfo = {
 export type PathLikeOrReadStream = string | FileInfo;
 
 export type PageProperties = {
-    landscape?: boolean; // Set the paper orientation to landscape (default false)
+    landscape?: boolean; // Paper orientation landscape (default false)
     nativePageRanges?: { from: number; to: number }; // Page ranges to print
-    exportFormFields?: boolean; // Set whether to export the form fields or to use the inputted/selected content of the fields (default true)
-    singlePageSheets?: boolean; // Set whether to render the entire spreadsheet as a single page. (default false)
+    exportFormFields?: boolean; // Export form fields or inputted content (default true)
+    singlePageSheets?: boolean; // Render entire spreadsheet as single page (default false)
+    allowDuplicateFieldNames?: boolean; // Allow multiple form fields with same name
+    exportBookmarks?: boolean; // Export bookmarks to PDF
+    exportBookmarksToPdfDestination?: boolean; // Export bookmarks as Named Destination in PDF
+    exportPlaceholders?: boolean; // Export placeholder fields (visual markings only)
+    exportNotes?: boolean; // Export notes to PDF
+    exportNotesPages?: boolean; // Export notes pages (Impress documents only)
+    exportOnlyNotesPages?: boolean; // Export only notes pages if exportNotesPages is true
+    exportNotesInMargin?: boolean; // Export notes in margin to PDF
+    convertOooTargetToPdfTarget?: boolean; // Change .od[tpgs] extension to .pdf in links
+    exportLinksRelativeFsys?: boolean; // Export file system hyperlinks as relative
+    exportHiddenSlides?: boolean; // Export hidden slides (Impress only)
+    skipEmptyPages?: boolean; // Suppress automatically inserted empty pages (Writer only)
+    addOriginalDocumentAsStream?: boolean; // Insert original document as a stream in PDF
 };
 
 export type ConversionOptions = {

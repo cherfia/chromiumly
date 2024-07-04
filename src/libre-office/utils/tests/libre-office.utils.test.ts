@@ -153,6 +153,201 @@ describe('LibreOfficeUtils', () => {
                 });
             });
         });
+
+        describe('allow duplicate field names', () => {
+            describe('when allowDuplicateFieldNames parameter is set', () => {
+                it('should append allowDuplicateFieldNames to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        allowDuplicateFieldNames: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'allowDuplicateFieldNames',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('export bookmarks', () => {
+            describe('when exportBookmarks parameter is set', () => {
+                it('should append exportBookmarks to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportBookmarks: false
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportBookmarks',
+                        'false'
+                    );
+                });
+            });
+        });
+
+        describe('export bookmarks to pdf destination', () => {
+            describe('when exportBookmarksToPdfDestination parameter is set', () => {
+                it('should append exportBookmarksToPdfDestination to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportBookmarksToPdfDestination: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportBookmarksToPdfDestination',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('export placeholders', () => {
+            describe('when exportPlaceholders parameter is set', () => {
+                it('should append exportPlaceholders to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportPlaceholders: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportPlaceholders',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('export notes', () => {
+            describe('when exportNotes parameter is set', () => {
+                it('should append exportNotes to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportNotes: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportNotes',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('export notes pages', () => {
+            describe('when exportNotesPages parameter is set', () => {
+                it('should append exportNotesPages to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportNotesPages: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportNotesPages',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('export only notes pages', () => {
+            describe('when exportOnlyNotesPages parameter is set', () => {
+                it('should append exportOnlyNotesPages to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportOnlyNotesPages: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportOnlyNotesPages',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('export notes in margin', () => {
+            describe('when exportNotesInMargin parameter is set', () => {
+                it('should append exportNotesInMargin to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportNotesInMargin: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportNotesInMargin',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('convert Ooo target to pdf target', () => {
+            describe('when convertOooTargetToPdfTarget parameter is set', () => {
+                it('should append convertOooTargetToPdfTarget to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        convertOooTargetToPdfTarget: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'convertOooTargetToPdfTarget',
+                        'true'
+                    );
+                });
+            });
+        });
+
+        describe('export links relative fsys', () => {
+            describe('when exportLinksRelativeFsys parameter is set', () => {
+                it('should append exportLinksRelativeFsys to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        exportLinksRelativeFsys: true
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(data.append).toHaveBeenCalledWith(
+                        'exportLinksRelativeFsys',
+                        'true'
+                    );
+                });
+            });
+        });
+    });
+
+    describe('export hidden slides', () => {
+        describe('when exportHiddenSlides parameter is set', () => {
+            it('should append exportHiddenSlides to data', () => {
+                LibreOfficeUtils.addPageProperties(data, {
+                    exportHiddenSlides: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'exportHiddenSlides',
+                    'true'
+                );
+            });
+        });
+    });
+
+    describe('skip empty pages', () => {
+        describe('when skipEmptyPages parameter is set', () => {
+            it('should append skipEmptyPages to data', () => {
+                LibreOfficeUtils.addPageProperties(data, {
+                    skipEmptyPages: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'skipEmptyPages',
+                    'true'
+                );
+            });
+        });
+    });
+
+    describe('add original document as stream', () => {
+        describe('when addOriginalDocumentAsStream parameter is set', () => {
+            it('should append addOriginalDocumentAsStream to data', () => {
+                LibreOfficeUtils.addPageProperties(data, {
+                    addOriginalDocumentAsStream: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'addOriginalDocumentAsStream',
+                    'true'
+                );
+            });
+        });
     });
 
     describe('customize', () => {
