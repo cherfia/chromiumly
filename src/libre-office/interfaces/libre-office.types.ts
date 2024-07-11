@@ -167,5 +167,7 @@ export type ConversionOptions = {
     pdfUA?: boolean;
     metadata?: Metadata;
     losslessImageCompression?: boolean; // Allow turning lossless compression on or off (default to false).
-    reduceImageResolution?: boolean; // Allow turning on or off image resolution reduction (default to true).
+    reduceImageResolution?: boolean; // Allow turning on or off image resolution reduction (default to false).
+    quality?: number; // Specify the quality of the JPG export. A higher value produces a higher-quality image and a larger file. Between 1 and 100.
+    maxImageResolution?: 75 | 150 | 300 | 600 | 1200; // Specify if all images will be reduced to the given value in DPI
 };

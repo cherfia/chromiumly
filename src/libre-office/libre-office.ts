@@ -24,6 +24,8 @@ export class LibreOffice {
      * @param {Metadata} [options.metadata] - Metadata to be included in the converted PDF.
      * @param {boolean} [options.losslessImageCompression] - Indicates whether to use lossless image compression.
      * @param {boolean} [options.reduceImageResolution] - Indicates whether to reduce image resolution.
+     * @param {number} [options.quality] - Quality of the JPG export.
+     * @param {75 | 150 | 300 | 600 | 1200} [options.maxImageResolution] - Maximum image resolution for the converted PDF.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     public static async convert({
@@ -34,7 +36,9 @@ export class LibreOffice {
         merge,
         metadata,
         losslessImageCompression,
-        reduceImageResolution
+        reduceImageResolution,
+        quality,
+        maxImageResolution
     }: {
         files: PathLikeOrReadStream[];
         properties?: PageProperties;
@@ -44,6 +48,8 @@ export class LibreOffice {
         metadata?: Metadata;
         losslessImageCompression?: boolean;
         reduceImageResolution?: boolean;
+        quality?: number;
+        maxImageResolution?: 75 | 150 | 300 | 600 | 1200;
     }): Promise<Buffer> {
         const data = new FormData();
 
@@ -55,7 +61,9 @@ export class LibreOffice {
             pdfUA,
             metadata,
             losslessImageCompression,
-            reduceImageResolution
+            reduceImageResolution,
+            quality,
+            maxImageResolution
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;

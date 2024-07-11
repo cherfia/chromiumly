@@ -216,11 +216,27 @@ export class LibreOfficeUtils {
             );
         }
 
-        if (options.reduceImageResolution === false) {
+        if (options.reduceImageResolution) {
             data.append(
                 'reduceImageResolution',
                 String(options.reduceImageResolution)
             );
+        }
+
+        if (options.quality) {
+            GotenbergUtils.assert(
+                options.quality >= 1 && options.quality <= 100,
+                'Invalid compression quality. Please provide a value between 1 and 100.'
+            );
+            data.append('quality', options.quality);
+        }
+
+        if (options.maxImageResolution) {
+            GotenbergUtils.assert(
+                options.reduceImageResolution === true,
+                'Compression quality is only supported when the reduceImageResolution property is enabled.'
+            );
+            data.append('maxImageResolution', options.maxImageResolution);
         }
 
         if (options.properties) {
