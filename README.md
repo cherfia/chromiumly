@@ -334,6 +334,8 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `metadata`: writes metadata to the generated PDF file.
 - `lolosslessImageCompression`: allows turning lossless compression on or off to tweak image conversion performance.
 - `reduceImageResolution`: allows turning on or off image resolution reduction to tweak image conversion performance.
+- `quality`: specifies the quality of the JPG export. The value ranges from 1 to 100, with higher values producing higher-quality images and larger file sizes.
+- `maxImageResolution`: specifies if all images will be reduced to the specified DPI value. Possible values are: `75`, `150`, `300`, `600`, and `1200`.
 
 ### PDFEngines
 
