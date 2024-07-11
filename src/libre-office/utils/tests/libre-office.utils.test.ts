@@ -417,12 +417,36 @@ describe('LibreOfficeUtils', () => {
         describe('when reduce image resolution is passed', () => {
             it('should append reduceImageResolution', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    reduceImageResolution: false
+                    reduceImageResolution: true
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                 expect(data.append).toHaveBeenCalledWith(
                     'reduceImageResolution',
-                    'false'
+                    'true'
+                );
+            });
+        });
+
+        describe('when quality is passed', () => {
+            it('should append quality', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    quality: 100
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith('quality', 100);
+            });
+        });
+
+        describe('when maximum image resolution is passed', () => {
+            it('should maxImageResolution quality', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    reduceImageResolution: true,
+                    maxImageResolution: 75
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(data.append).toHaveBeenCalledWith(
+                    'maxImageResolution',
+                    75
                 );
             });
         });

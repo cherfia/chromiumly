@@ -48,10 +48,12 @@ describe('LibreOffice', () => {
                     metadata: { author: 'John Doe' },
                     merge: true,
                     losslessImageCompression: true,
-                    reduceImageResolution: false
+                    reduceImageResolution: true,
+                    quality: 50,
+                    maxImageResolution: 75
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
             });
         });
     });
