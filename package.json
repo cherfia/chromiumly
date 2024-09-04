@@ -49,7 +49,7 @@
     "@commitlint/config-conventional": "^19.0.3",
     "@commitlint/cz-commitlint": "^19.0.3",
     "@release-it/conventional-changelog": "8.0.1",
-    "@types/config": "3.3.4",
+    "@types/config": "3.3.5",
     "@types/dotenv": "8.2.0",
     "@types/form-data": "2.5.0",
     "@types/jest": "29.5.12",
