@@ -123,5 +123,9 @@ export class ScreenshotUtils {
         if (options.optimizeForSpeed) {
             data.append('optimizeForSpeed', String(options.optimizeForSpeed));
         }
+
+        if (options.cookies) {
+            data.append('cookies', JSON.stringify(options.cookies));
+        }
     }
 }

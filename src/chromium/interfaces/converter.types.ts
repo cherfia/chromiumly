@@ -1,5 +1,5 @@
 import { Metadata, PdfFormat } from '../../common';
-import { ChromiumOptions } from './common.types';
+import { ChromiumOptions, Cookie } from './common.types';
 
 type PageSize = {
     width: number; // Paper width, in inches (default 8.5)
@@ -23,16 +23,6 @@ export type PageProperties = {
     landscape?: boolean; // Set the paper orientation to landscape (default false)
     scale?: number; // The scale of the page rendering (default 1.0)
     nativePageRanges?: { from: number; to: number }; // Page ranges to print
-};
-
-export type Cookie = {
-    name: string;
-    value: string;
-    domain: string;
-    path?: string;
-    secure?: boolean;
-    httpOnly?: boolean;
-    sameSite?: 'Strict' | 'Lax' | 'None';
 };
 
 export type ConversionOptions = ChromiumOptions & {

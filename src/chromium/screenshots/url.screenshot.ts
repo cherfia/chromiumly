@@ -5,7 +5,7 @@ import { ImageProperties } from '../interfaces/screenshot.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';
 import { Screenshot } from './screenshot';
 import { ChromiumRoute, Chromiumly } from '../../main.config';
-import { EmulatedMediaType } from '../interfaces/common.types';
+import { Cookie, EmulatedMediaType } from '../interfaces/common.types';
 
 /**
  * Class representing a URL screenshot that extends the base screenshot class.
@@ -38,6 +38,7 @@ export class UrlScreenshot extends Screenshot {
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during screenshot.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
+     * @param {Cookie[]} options.cookies - Cookies to be written.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
      */
     async capture({
@@ -52,7 +53,8 @@ export class UrlScreenshot extends Screenshot {
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
-        optimizeForSpeed
+        optimizeForSpeed,
+        cookies
     }: {
         url: string;
         header?: PathLikeOrReadStream;
@@ -66,6 +68,7 @@ export class UrlScreenshot extends Screenshot {
         failOnConsoleExceptions?: boolean;
         skipNetworkIdleEvent?: boolean;
         optimizeForSpeed?: boolean;
+        cookies?: Cookie[];
     }): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -83,7 +86,8 @@ export class UrlScreenshot extends Screenshot {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             skipNetworkIdleEvent,
-            optimizeForSpeed
+            optimizeForSpeed,
+            cookies
         });
 
         return GotenbergUtils.fetch(
