@@ -305,6 +305,7 @@ type ScreenshotOptions = {
   failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
   optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
+  cookies?: Cookie[]; // Cookies to be written.
 };
 ```
 

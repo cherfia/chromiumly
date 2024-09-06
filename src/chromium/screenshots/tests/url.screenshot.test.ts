@@ -137,9 +137,16 @@ describe('URLScreenshot', () => {
                     skipNetworkIdleEvent: true,
                     failOnConsoleExceptions: true,
                     properties: { format: 'jpeg', quality: 50 },
-                    optimizeForSpeed: true
+                    optimizeForSpeed: true,
+                    cookies: [
+                        {
+                            name: 'cookie',
+                            value: 'value',
+                            domain: 'example.com'
+                        }
+                    ]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(10);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });

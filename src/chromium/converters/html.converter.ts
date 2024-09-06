@@ -6,11 +6,11 @@ import {
     PathLikeOrReadStream,
     PdfFormat
 } from '../../common';
-import { Cookie, PageProperties } from '../interfaces/converter.types';
+import { PageProperties } from '../interfaces/converter.types';
 import { ConverterUtils } from '../utils/converter.utils';
 import { Converter } from './converter';
 import { ChromiumRoute, Chromiumly } from '../../main.config';
-import { EmulatedMediaType } from '../interfaces/common.types';
+import { EmulatedMediaType, Cookie } from '../interfaces/common.types';
 
 /**
  * Class representing an HTML converter that extends the base Converter class.
