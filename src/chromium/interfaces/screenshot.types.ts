@@ -9,7 +9,10 @@ export type ImageProperties = {
     clip?: boolean; // Define whether to clip the screenshot according to the device dimensions (default false).
 };
 
-export type ScreenshotOptions = ChromiumOptions & {
+export type ScreenshotOptions = Omit<
+    ChromiumOptions,
+    'assets' | 'header' | 'footer'
+> & {
     properties?: ImageProperties;
     optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
 };

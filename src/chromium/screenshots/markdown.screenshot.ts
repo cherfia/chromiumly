@@ -28,8 +28,6 @@ export class MarkdownScreenshot extends Screenshot {
      * @param {Object} options - Screenshot options.
      * @param {PathLikeOrReadStream} options.html - PathLike or ReadStream of the HTML content to be screenshoted.
      * @param {PathLikeOrReadStream} options.markdown - PathLike or ReadStream of the Markdown content to be screenshoted.
-     * @param {PathLikeOrReadStream} [options.header] - PathLike or ReadStream of the header HTML content.
-     * @param {PathLikeOrReadStream} [options.footer] - PathLike or ReadStream of the footer HTML content.
      * @param {ImageProperties} [options.properties] - Image properties for the screenshot.
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the screenshot.
      * @param {string} [options.waitDelay] - Delay before the screenshot process starts.
@@ -44,8 +42,6 @@ export class MarkdownScreenshot extends Screenshot {
     async capture({
         html,
         markdown,
-        header,
-        footer,
         properties,
         emulatedMediaType,
         waitDelay,
@@ -77,8 +73,6 @@ export class MarkdownScreenshot extends Screenshot {
         await GotenbergUtils.addFile(data, markdown, 'file.md');
 
         await ScreenshotUtils.customize(data, {
-            header,
-            footer,
             properties,
             emulatedMediaType,
             waitDelay,

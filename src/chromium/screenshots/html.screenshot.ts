@@ -27,8 +27,6 @@ export class HtmlScreenshot extends Screenshot {
      *
      * @param {Object} options - Screenshot options.
      * @param {PathLikeOrReadStream} options.html - PathLike or ReadStream of the HTML content to be screenshoted.
-     * @param {PathLikeOrReadStream} [options.header] - PathLike or ReadStream of the header HTML content.
-     * @param {PathLikeOrReadStream} [options.footer] - PathLike or ReadStream of the footer HTML content.
      * @param {ImageProperties} [options.properties] - Image properties for the screenshot.
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the screenshot.
      * @param {string} [options.waitDelay] - Delay before the screenshot process starts.
@@ -42,9 +40,6 @@ export class HtmlScreenshot extends Screenshot {
      */
     async capture({
         html,
-        assets,
-        header,
-        footer,
         properties,
         emulatedMediaType,
         waitDelay,
@@ -56,9 +51,6 @@ export class HtmlScreenshot extends Screenshot {
         optimizeForSpeed
     }: {
         html: PathLikeOrReadStream;
-        assets?: { file: PathLikeOrReadStream; name: string }[];
-        header?: PathLikeOrReadStream;
-        footer?: PathLikeOrReadStream;
         properties?: ImageProperties;
         emulatedMediaType?: EmulatedMediaType;
         waitDelay?: string;
@@ -73,17 +65,7 @@ export class HtmlScreenshot extends Screenshot {
 
         await GotenbergUtils.addFile(data, html, 'index.html');
 
-        if (assets?.length) {
-            await Promise.all(
-                assets.map(({ file, name }) =>
-                    GotenbergUtils.addFile(data, file, name)
-                )
-            );
-        }
-
         await ScreenshotUtils.customize(data, {
-            header,
-            footer,
             properties,
             emulatedMediaType,
             waitDelay,

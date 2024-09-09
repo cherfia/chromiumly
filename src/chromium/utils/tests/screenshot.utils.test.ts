@@ -122,34 +122,6 @@ describe('ScreenshotUtils', () => {
             });
         });
 
-        describe('when header parameter is passed', () => {
-            it('should append header', async () => {
-                await ScreenshotUtils.customize(data, {
-                    header: Buffer.from('header')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    'files',
-                    Buffer.from('header'),
-                    'header.html'
-                );
-            });
-        });
-
-        describe('when footer parameter is passed', () => {
-            it('should append footer', async () => {
-                await ScreenshotUtils.customize(data, {
-                    footer: Buffer.from('footer')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    'files',
-                    Buffer.from('footer'),
-                    'footer.html'
-                );
-            });
-        });
-
         describe('when emulatedMediaType parameter is passed', () => {
             it('should append emulatedMediaType', async () => {
                 await ScreenshotUtils.customize(data, {
@@ -258,8 +230,6 @@ describe('ScreenshotUtils', () => {
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ScreenshotUtils.customize(data, {
-                    header: Buffer.from('header.html'),
-                    footer: Buffer.from('footer.html'),
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
                     skipNetworkIdleEvent: true,
@@ -273,62 +243,50 @@ describe('ScreenshotUtils', () => {
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
                     optimizeForSpeed: true
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(10);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
-                    'files',
-                    Buffer.from('header.html'),
-                    'header.html'
-                );
-                expect(data.append).toHaveBeenNthCalledWith(
-                    2,
-                    'files',
-                    Buffer.from('footer.html'),
-                    'footer.html'
-                );
-                expect(data.append).toHaveBeenNthCalledWith(
-                    3,
                     'emulatedMediaType',
                     'screen'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    4,
+                    2,
                     'format',
                     'jpeg'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(5, 'quality', 50);
+                expect(data.append).toHaveBeenNthCalledWith(3, 'quality', 50);
                 expect(data.append).toHaveBeenNthCalledWith(
-                    6,
+                    4,
                     'waitDelay',
                     '5s'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    7,
+                    5,
                     'waitForExpression',
                     "document.readyState === 'complete'"
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    8,
+                    6,
                     'extraHttpHeaders',
                     JSON.stringify({ 'X-Custom-Header': 'value' })
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    9,
+                    7,
                     'failOnHttpStatusCodes',
                     JSON.stringify([499, 599])
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    10,
+                    8,
                     'failOnConsoleExceptions',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    11,
+                    9,
                     'skipNetworkIdleEvent',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    12,
+                    10,
                     'optimizeForSpeed',
                     'true'
                 );

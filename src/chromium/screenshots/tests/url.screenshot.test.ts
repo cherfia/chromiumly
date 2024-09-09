@@ -41,30 +41,6 @@ describe('URLScreenshot', () => {
             });
         });
 
-        describe('when header parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockFetch.mockResolvedValueOnce(new Response('content'));
-                const buffer = await screenshot.capture({
-                    url: 'http://www.example.com/',
-                    header: Buffer.from('header')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
-            });
-        });
-
-        describe('when footer parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockFetch.mockResolvedValueOnce(new Response('content'));
-                const buffer = await screenshot.capture({
-                    url: 'http://www.example.com/',
-                    footer: Buffer.from('footer')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
-            });
-        });
-
         describe('when image properties parameter is passed', () => {
             it('should return a buffer', async () => {
                 mockFetch.mockResolvedValueOnce(new Response('content'));
@@ -130,8 +106,6 @@ describe('URLScreenshot', () => {
                 mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
-                    header: Buffer.from('header'),
-                    footer: Buffer.from('footer'),
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
                     skipNetworkIdleEvent: true,
@@ -146,7 +120,7 @@ describe('URLScreenshot', () => {
                         }
                     ]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });

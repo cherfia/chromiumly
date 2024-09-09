@@ -66,16 +66,6 @@ export class ScreenshotUtils {
         data: FormData,
         options: ScreenshotOptions
     ): Promise<void> {
-        if (options.header) {
-            const { header } = options;
-            await GotenbergUtils.addFile(data, header, 'header.html');
-        }
-
-        if (options.footer) {
-            const { footer } = options;
-            await GotenbergUtils.addFile(data, footer, 'footer.html');
-        }
-
         if (options.emulatedMediaType) {
             data.append('emulatedMediaType', options.emulatedMediaType);
         }

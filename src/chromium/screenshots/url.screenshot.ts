@@ -1,6 +1,6 @@
 import { URL } from 'url';
 import FormData from 'form-data';
-import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
+import { GotenbergUtils } from '../../common';
 import { ImageProperties } from '../interfaces/screenshot.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';
 import { Screenshot } from './screenshot';
@@ -27,8 +27,6 @@ export class UrlScreenshot extends Screenshot {
      *
      * @param {Object} options - Screenshot options.
      * @param {string} options.url - The URL of the content to be screenshoted
-     * @param {PathLikeOrReadStream} [options.header] - PathLike or ReadStream of the header HTML content.
-     * @param {PathLikeOrReadStream} [options.footer] - PathLike or ReadStream of the footer HTML content.
      * @param {ImageProperties} [options.properties] - Image properties for the screenshot.
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the screenshot.
      * @param {string} [options.waitDelay] - Delay before the screenshot process starts.
@@ -43,8 +41,6 @@ export class UrlScreenshot extends Screenshot {
      */
     async capture({
         url,
-        header,
-        footer,
         properties,
         emulatedMediaType,
         waitDelay,
@@ -57,8 +53,6 @@ export class UrlScreenshot extends Screenshot {
         cookies
     }: {
         url: string;
-        header?: PathLikeOrReadStream;
-        footer?: PathLikeOrReadStream;
         properties?: ImageProperties;
         emulatedMediaType?: EmulatedMediaType;
         waitDelay?: string;
@@ -76,8 +70,6 @@ export class UrlScreenshot extends Screenshot {
         data.append('url', _url.href);
 
         await ScreenshotUtils.customize(data, {
-            header,
-            footer,
             properties,
             emulatedMediaType,
             waitDelay,

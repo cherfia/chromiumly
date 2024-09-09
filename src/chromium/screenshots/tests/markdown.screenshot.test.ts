@@ -57,32 +57,6 @@ describe('MarkdownScreenshot', () => {
             });
         });
 
-        describe('when header parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await screenshot.capture({
-                    html: Buffer.from('data'),
-                    markdown: Buffer.from('markdown'),
-                    header: Buffer.from('header')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
-            });
-        });
-
-        describe('when footer parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await screenshot.capture({
-                    html: Buffer.from('data'),
-                    markdown: Buffer.from('markdown'),
-                    footer: Buffer.from('footer')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
-            });
-        });
-
         describe('when emulatedMediaType parameter is passed', () => {
             it('should return a buffer', async () => {
                 mockFetch.mockResolvedValue(new Response('content'));
@@ -129,8 +103,6 @@ describe('MarkdownScreenshot', () => {
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
-                    header: Buffer.from('header'),
-                    footer: Buffer.from('footer'),
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
                     skipNetworkIdleEvent: true,
@@ -138,7 +110,7 @@ describe('MarkdownScreenshot', () => {
                     properties: { format: 'jpeg', quality: 50 },
                     optimizeForSpeed: true
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });

@@ -25,11 +25,6 @@ describe('HtmlScreenshot', () => {
         const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
-        const assets = [
-            { file: Buffer.from('asset1'), name: 'asset1' },
-            { file: Buffer.from('asset2'), name: 'asset2' }
-        ];
-
         beforeEach(() => {
             (createReadStream as jest.Mock) = jest.fn();
         });
@@ -55,43 +50,6 @@ describe('HtmlScreenshot', () => {
                     html: Buffer.from('data'),
                     properties: { format: 'jpeg', quality: 50 }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
-            });
-        });
-
-        describe('when header parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await screenshot.capture({
-                    html: Buffer.from('data'),
-                    header: Buffer.from('header')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
-            });
-        });
-
-        describe('when footer parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await screenshot.capture({
-                    html: Buffer.from('data'),
-                    footer: Buffer.from('footer')
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
-            });
-        });
-
-        describe('when assets parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await screenshot.capture({
-                    html: Buffer.from('data'),
-                    assets
-                });
-
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
@@ -151,9 +109,6 @@ describe('HtmlScreenshot', () => {
                 mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
-                    assets,
-                    header: Buffer.from('header'),
-                    footer: Buffer.from('footer'),
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
                     skipNetworkIdleEvent: true,
@@ -161,7 +116,7 @@ describe('HtmlScreenshot', () => {
                     properties: { format: 'jpeg', quality: 50 },
                     optimizeForSpeed: true
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(8);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });
