@@ -52,7 +52,7 @@
     "@types/config": "3.3.5",
     "@types/dotenv": "8.2.0",
     "@types/form-data": "2.5.0",
-    "@types/jest": "29.5.12",
+    "@types/jest": "29.5.13",
     "@types/node": "20.16.5",
     "@types/node-fetch": "2.6.11",
     "@typescript-eslint/eslint-plugin": "7.18.0",
