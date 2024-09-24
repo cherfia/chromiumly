@@ -7,6 +7,7 @@ import * as path from 'path';
 let dotenv;
 
 try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     dotenv = require('dotenv');
 } catch {
     // Ignore error if dotenv is not available
@@ -35,6 +36,7 @@ let config: Config | undefined;
 
 const loadConfig = () => {
     try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         config = require('config');
     } catch (error) {
         // Ignore error if the config module is not available or if a warning is present
