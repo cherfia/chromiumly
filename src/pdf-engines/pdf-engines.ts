@@ -11,6 +11,7 @@ import {
     Metadata
 } from '../common';
 import { PDFEnginesUtils } from './utils/pdf-engines.utils';
+import { DownloadFrom } from '../common/types';
 
 /**
  * Class uses PDF engines for various operations such as merging and conversion.
@@ -21,25 +22,32 @@ export class PDFEngines {
      *
      * @param {Object} options - Options for the merge operation.
      * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to be merged.
+     * @param {PdfFormat} [options.pdfa] - PDF format options.
+     * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
+     * @param {Metadata} [options.metadata] - Metadata to be written.
+     * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the merged PDF content as a Buffer.
      */
     public static async merge({
         files,
         pdfa,
         pdfUA,
-        metadata
+        metadata,
+        downloadFrom
     }: {
         files: PathLikeOrReadStream[];
         pdfa?: PdfFormat;
         pdfUA?: boolean;
         metadata?: Metadata;
+        downloadFrom?: DownloadFrom;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         await PDFEnginesUtils.customize(data, {
             pdfa,
             pdfUA,
-            metadata
+            metadata,
+            downloadFrom
         });
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
         return GotenbergUtils.fetch(
@@ -53,27 +61,30 @@ export class PDFEngines {
     /**
      * Converts various document formats to PDF.
      *
-     * @param {Object} options - Options for the conversion operation.
-     * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the files to be converted to PDF.
+     *  @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the files to be converted to PDF.
      * @param {pdfa} [options.pdfa] - PDF format options.
      * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
+     * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     public static async convert({
         files,
         pdfa,
-        pdfUA
+        pdfUA,
+        downloadFrom
     }: {
         files: PathLikeOrReadStream[];
         pdfa?: PdfFormat;
         pdfUA?: boolean;
+        downloadFrom?: DownloadFrom;
     }): Promise<Buffer> {
         const data = new FormData();
 
         await PDFEnginesUtils.addFiles(files, data);
         await PDFEnginesUtils.customize(data, {
             pdfa,
-            pdfUA
+            pdfUA,
+            downloadFrom
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;

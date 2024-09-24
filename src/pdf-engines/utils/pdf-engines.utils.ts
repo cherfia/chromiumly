@@ -66,5 +66,9 @@ export class PDFEnginesUtils {
         if ('metadata' in options && options.metadata) {
             data.append('metadata', JSON.stringify(options.metadata));
         }
+
+        if (options.downloadFrom) {
+            data.append('downloadFrom', JSON.stringify(options.downloadFrom));
+        }
     }
 }
