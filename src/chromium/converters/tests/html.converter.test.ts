@@ -146,6 +146,21 @@ describe('HtmlConverter', () => {
             });
         });
 
+        describe('when downloadFrom parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockFetch.mockResolvedValue(new Response('content'));
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(buffer).toEqual(Buffer.from('content'));
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
@@ -157,9 +172,13 @@ describe('HtmlConverter', () => {
                     footer: Buffer.from('footer'),
                     pdfFormat: PdfFormat.A_1a,
                     emulatedMediaType: 'screen',
-                    properties: { size: { width: 8.3, height: 11.7 } }
+                    properties: { size: { width: 8.3, height: 11.7 } },
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(10);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });
