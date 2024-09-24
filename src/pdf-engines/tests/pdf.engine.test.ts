@@ -46,10 +46,14 @@ describe('PDFEngines', () => {
                 const buffer = await PDFEngines.convert({
                     files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
                     pdfa: PdfFormat.A_2b,
-                    pdfUA: true
+                    pdfUA: true,
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
             });
         });
     });
