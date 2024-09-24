@@ -114,9 +114,13 @@ describe('HtmlScreenshot', () => {
                     skipNetworkIdleEvent: true,
                     failOnConsoleExceptions: true,
                     properties: { format: 'jpeg', quality: 50 },
-                    optimizeForSpeed: true
+                    optimizeForSpeed: true,
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(8);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });

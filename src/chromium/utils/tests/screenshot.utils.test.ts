@@ -227,6 +227,25 @@ describe('ScreenshotUtils', () => {
             });
         });
 
+        describe('when downloadFrom parameter is passed', () => {
+            it('should append downloadFrom', async () => {
+                await ScreenshotUtils.customize(data, {
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'downloadFrom',
+                    JSON.stringify({
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    })
+                );
+            });
+        });
+
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ScreenshotUtils.customize(data, {
@@ -241,9 +260,13 @@ describe('ScreenshotUtils', () => {
                     waitDelay: '5s',
                     waitForExpression: "document.readyState === 'complete'",
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
-                    optimizeForSpeed: true
+                    optimizeForSpeed: true,
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(10);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'emulatedMediaType',
@@ -289,6 +312,14 @@ describe('ScreenshotUtils', () => {
                     10,
                     'optimizeForSpeed',
                     'true'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    11,
+                    'downloadFrom',
+                    JSON.stringify({
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    })
                 );
             });
         });
