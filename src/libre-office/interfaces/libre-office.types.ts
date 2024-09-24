@@ -142,6 +142,7 @@ type FileInfo = {
 export type PathLikeOrReadStream = string | FileInfo;
 
 export type PageProperties = {
+    password?: string; // Password to open the document
     landscape?: boolean; // Paper orientation landscape (default false)
     nativePageRanges?: { from: number; to: number }; // Page ranges to print
     exportFormFields?: boolean; // Export form fields or inputted content (default true)

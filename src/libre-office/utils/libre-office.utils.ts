@@ -180,6 +180,10 @@ export class LibreOfficeUtils {
                 String(pageProperties.addOriginalDocumentAsStream)
             );
         }
+
+        if (pageProperties.password) {
+            data.append('password', pageProperties.password);
+        }
     }
 
     /**
