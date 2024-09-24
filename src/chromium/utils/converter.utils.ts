@@ -183,5 +183,9 @@ export class ConverterUtils {
         if (options.cookies) {
             data.append('cookies', JSON.stringify(options.cookies));
         }
+
+        if (options.downloadFrom) {
+            data.append('downloadFrom', JSON.stringify(options.downloadFrom));
+        }
     }
 }

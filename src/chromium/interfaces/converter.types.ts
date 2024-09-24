@@ -1,4 +1,4 @@
-import { Metadata, PdfFormat } from '../../common';
+import { Metadata, PathLikeOrReadStream, PdfFormat } from '../../common';
 import { ChromiumOptions, Cookie } from './common.types';
 
 type PageSize = {
@@ -27,9 +27,37 @@ export type PageProperties = {
 
 export type ConversionOptions = ChromiumOptions & {
     properties?: PageProperties;
+    /**
+     * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for pdfFormat.
+     * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
+     */
     pdfFormat?: PdfFormat;
     pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
+    /**
+     * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for userAgent.
+     * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
+     */
     userAgent?: string;
     metadata?: Metadata;
     cookies?: Cookie[];
+};
+
+export type HtmlConversionOptions = ConversionOptions & {
+    html: PathLikeOrReadStream;
+    assets?: { file: PathLikeOrReadStream; name: string }[];
+    header?: PathLikeOrReadStream;
+    footer?: PathLikeOrReadStream;
+};
+
+export type UrlConversionOptions = ConversionOptions & {
+    url: string;
+    header?: PathLikeOrReadStream;
+    footer?: PathLikeOrReadStream;
+};
+
+export type MarkdownConversionOptions = ConversionOptions & {
+    html: PathLikeOrReadStream;
+    header?: PathLikeOrReadStream;
+    footer?: PathLikeOrReadStream;
+    markdown: PathLikeOrReadStream;
 };
