@@ -451,6 +451,25 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
+        describe('when downloadFrom parameter is passed', () => {
+            it('should append downloadFrom', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'downloadFrom',
+                    JSON.stringify({
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    })
+                );
+            });
+        });
+
         describe('when page properties are passed', () => {
             it('should append page properties', async () => {
                 await LibreOfficeUtils.customize(data, {

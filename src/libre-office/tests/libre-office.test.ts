@@ -50,7 +50,11 @@ describe('LibreOffice', () => {
                     losslessImageCompression: true,
                     reduceImageResolution: true,
                     quality: 50,
-                    maxImageResolution: 75
+                    maxImageResolution: 75,
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
