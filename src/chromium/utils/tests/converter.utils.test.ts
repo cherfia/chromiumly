@@ -397,6 +397,25 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when downloadFrom parameter is passed', () => {
+            it('should append downloadFrom', async () => {
+                await ConverterUtils.customize(data, {
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'downloadFrom',
+                    JSON.stringify({
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    })
+                );
+            });
+        });
+
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ConverterUtils.customize(data, {
@@ -414,9 +433,13 @@ describe('ConverterUtils', () => {
                     failOnHttpStatusCodes: [499, 599],
                     skipNetworkIdleEvent: true,
                     failOnConsoleExceptions: true,
-                    metadata: { Author: 'John Doe' }
+                    metadata: { Author: 'John Doe' },
+                    downloadFrom: {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(15);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(16);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -489,6 +512,14 @@ describe('ConverterUtils', () => {
                     15,
                     'metadata',
                     JSON.stringify({ Author: 'John Doe' })
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    16,
+                    'downloadFrom',
+                    JSON.stringify({
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    })
                 );
             });
         });
