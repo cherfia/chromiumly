@@ -272,6 +272,7 @@ type ConversionOptions = {
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
   metadata?: Metadata; // Metadata to be written.
   cookies?: Cookie[]; // Cookies to be written.
+  downloadFrom?: DownloadFrom; //Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
 };
 ```
 
@@ -306,6 +307,7 @@ type ScreenshotOptions = {
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
   optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
   cookies?: Cookie[]; // Cookies to be written.
+  downloadFrom?: DownloadFrom; // Download the file from a specific URL. It must return a Content-Disposition header with a filename parameter.
 };
 ```
 
@@ -328,7 +330,7 @@ const buffer = await LibreOffice.convert({
 
 Similarly to Chromium's route `convert` method, this method takes the following optional parameters :
 
-- `properties`: changes how the PDF generated file will look like.
+- `properties`: changes how the PDF generated file will look like. It also includes a `password` parameter to open the source file.
 - `pdfa`: PDF format of the conversion resulting file (i.e. `PDF/A-1a`, `PDF/A-2b`, `PDF/A-3b`).
 - `pdfUA`: enables PDF for Universal Access for optimal accessibility.
 - `merge`: merges all the resulting files from the conversion into an individual PDF file.
