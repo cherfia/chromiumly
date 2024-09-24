@@ -1,9 +1,9 @@
 import FormData from 'form-data';
 
 import { Chromiumly } from '../main.config';
-import { GotenbergUtils, PdfFormat, Metadata } from '../common';
+import { GotenbergUtils } from '../common';
 import {
-    PageProperties,
+    ConversionOptions,
     PathLikeOrReadStream
 } from './interfaces/libre-office.types';
 import { LibreOfficeUtils } from './utils/libre-office.utils';
@@ -26,6 +26,7 @@ export class LibreOffice {
      * @param {boolean} [options.reduceImageResolution] - Indicates whether to reduce image resolution.
      * @param {number} [options.quality] - Quality of the JPG export.
      * @param {75 | 150 | 300 | 600 | 1200} [options.maxImageResolution] - Maximum image resolution for the converted PDF.
+     *
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     public static async convert({
@@ -39,18 +40,7 @@ export class LibreOffice {
         reduceImageResolution,
         quality,
         maxImageResolution
-    }: {
-        files: PathLikeOrReadStream[];
-        properties?: PageProperties;
-        pdfa?: PdfFormat;
-        pdfUA?: boolean;
-        merge?: boolean;
-        metadata?: Metadata;
-        losslessImageCompression?: boolean;
-        reduceImageResolution?: boolean;
-        quality?: number;
-        maxImageResolution?: 75 | 150 | 300 | 600 | 1200;
-    }): Promise<Buffer> {
+    }: { files: PathLikeOrReadStream[] } & ConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
         await LibreOfficeUtils.addFiles(files, data);

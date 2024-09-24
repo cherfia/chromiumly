@@ -1,5 +1,6 @@
 import { ReadStream } from 'fs';
 import { Metadata, PdfFormat } from '../../common';
+import { DownloadFrom } from '../../common/types';
 
 type FileExtension =
     | '123'
@@ -170,4 +171,5 @@ export type ConversionOptions = {
     reduceImageResolution?: boolean; // Allow turning on or off image resolution reduction (default to false).
     quality?: number; // Specify the quality of the JPG export. A higher value produces a higher-quality image and a larger file. Between 1 and 100.
     maxImageResolution?: 75 | 150 | 300 | 600 | 1200; // Specify if all images will be reduced to the given value in DPI
+    downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
 };

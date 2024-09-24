@@ -239,6 +239,10 @@ export class LibreOfficeUtils {
             data.append('maxImageResolution', options.maxImageResolution);
         }
 
+        if (options.downloadFrom) {
+            data.append('downloadFrom', JSON.stringify(options.downloadFrom));
+        }
+
         if (options.properties) {
             LibreOfficeUtils.addPageProperties(data, options.properties);
         }
