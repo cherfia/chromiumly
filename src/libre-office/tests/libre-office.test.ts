@@ -42,7 +42,7 @@ describe('LibreOffice', () => {
                 mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await LibreOffice.convert({
                     files: ['path/to/file.docx', 'path/to/file.bib'],
-                    properties: { landscape: true },
+                    properties: { landscape: true, password: 'password' },
                     pdfa: PdfFormat.A_2b,
                     pdfUA: true,
                     metadata: { author: 'John Doe' },
@@ -57,7 +57,7 @@ describe('LibreOffice', () => {
                     }
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
             });
         });
     });
