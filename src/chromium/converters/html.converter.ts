@@ -1,16 +1,10 @@
 import FormData from 'form-data';
 
-import {
-    GotenbergUtils,
-    Metadata,
-    PathLikeOrReadStream,
-    PdfFormat
-} from '../../common';
-import { PageProperties } from '../interfaces/converter.types';
+import { GotenbergUtils } from '../../common';
+import { HtmlConversionOptions } from '../interfaces/converter.types';
 import { ConverterUtils } from '../utils/converter.utils';
 import { Converter } from './converter';
 import { ChromiumRoute, Chromiumly } from '../../main.config';
-import { EmulatedMediaType, Cookie } from '../interfaces/common.types';
 
 /**
  * Class representing an HTML converter that extends the base Converter class.
@@ -47,6 +41,7 @@ export class HtmlConverter extends Converter {
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {Metadata} options.metadata - Metadata to be written.
      * @param {Cookie[]} options.cookies - Cookies to be written.
+     * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     async convert({
@@ -66,34 +61,9 @@ export class HtmlConverter extends Converter {
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
         metadata,
-        cookies
-    }: {
-        html: PathLikeOrReadStream;
-        assets?: { file: PathLikeOrReadStream; name: string }[];
-        header?: PathLikeOrReadStream;
-        footer?: PathLikeOrReadStream;
-        properties?: PageProperties;
-        /**
-         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for pdfFormat.
-         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
-         */
-        pdfFormat?: PdfFormat;
-        pdfUA?: boolean;
-        emulatedMediaType?: EmulatedMediaType;
-        waitDelay?: string;
-        waitForExpression?: string;
-        /**
-         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for userAgent.
-         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
-         */
-        userAgent?: string;
-        extraHttpHeaders?: Record<string, string>;
-        failOnHttpStatusCodes?: number[];
-        failOnConsoleExceptions?: boolean;
-        skipNetworkIdleEvent?: boolean;
-        metadata?: Metadata;
-        cookies?: Cookie[];
-    }): Promise<Buffer> {
+        cookies,
+        downloadFrom
+    }: HtmlConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
         await GotenbergUtils.addFile(data, html, 'index.html');
@@ -121,7 +91,8 @@ export class HtmlConverter extends Converter {
             failOnConsoleExceptions,
             skipNetworkIdleEvent,
             metadata,
-            cookies
+            cookies,
+            downloadFrom
         });
 
         return GotenbergUtils.fetch(

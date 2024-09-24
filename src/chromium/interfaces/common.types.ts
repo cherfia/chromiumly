@@ -1,4 +1,5 @@
 import { PathLikeOrReadStream } from '../../common';
+import { DownloadFrom } from '../../common/types';
 
 export type EmulatedMediaType = 'screen' | 'print';
 
@@ -23,4 +24,5 @@ export type ChromiumOptions = {
     failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
     skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
     cookies?: Cookie[]; // Cookies to be written.
+    downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
 };
