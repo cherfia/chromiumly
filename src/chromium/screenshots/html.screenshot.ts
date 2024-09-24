@@ -1,11 +1,10 @@
 import FormData from 'form-data';
 
-import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
+import { GotenbergUtils } from '../../common';
 import { ChromiumRoute, Chromiumly } from '../../main.config';
-import { EmulatedMediaType } from '../interfaces/common.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';
 import { Screenshot } from './screenshot';
-import { ImageProperties } from '../interfaces/screenshot.types';
+import { HtmlScreenshotOptions } from '../interfaces/screenshot.types';
 
 /**
  * Class representing an HTML Screenshot that extends the base Screenshot class.
@@ -36,6 +35,7 @@ export class HtmlScreenshot extends Screenshot {
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during screenshot.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
+     * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
      */
     async capture({
@@ -48,19 +48,9 @@ export class HtmlScreenshot extends Screenshot {
         failOnConsoleExceptions,
         failOnHttpStatusCodes,
         skipNetworkIdleEvent,
-        optimizeForSpeed
-    }: {
-        html: PathLikeOrReadStream;
-        properties?: ImageProperties;
-        emulatedMediaType?: EmulatedMediaType;
-        waitDelay?: string;
-        waitForExpression?: string;
-        extraHttpHeaders?: Record<string, string>;
-        failOnConsoleExceptions?: boolean;
-        failOnHttpStatusCodes?: number[];
-        skipNetworkIdleEvent?: boolean;
-        optimizeForSpeed?: boolean;
-    }): Promise<Buffer> {
+        optimizeForSpeed,
+        downloadFrom
+    }: HtmlScreenshotOptions): Promise<Buffer> {
         const data = new FormData();
 
         await GotenbergUtils.addFile(data, html, 'index.html');
@@ -74,7 +64,8 @@ export class HtmlScreenshot extends Screenshot {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             skipNetworkIdleEvent,
-            optimizeForSpeed
+            optimizeForSpeed,
+            downloadFrom
         });
 
         return GotenbergUtils.fetch(

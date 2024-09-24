@@ -1,11 +1,10 @@
 import FormData from 'form-data';
 
-import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
-import { ImageProperties } from '../interfaces/screenshot.types';
+import { GotenbergUtils } from '../../common';
+import { MarkdownScreenshotOptions } from '../interfaces/screenshot.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';
 import { Screenshot } from './screenshot';
 import { ChromiumRoute, Chromiumly } from '../../main.config';
-import { EmulatedMediaType } from '../interfaces/common.types';
 
 /**
  * Class representing a Markdown screenshot that extends the base Screenshot class.
@@ -37,6 +36,7 @@ export class MarkdownScreenshot extends Screenshot {
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during screenshot.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
+     * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
      */
     async capture({
@@ -50,22 +50,9 @@ export class MarkdownScreenshot extends Screenshot {
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
-        optimizeForSpeed
-    }: {
-        html: PathLikeOrReadStream;
-        markdown: PathLikeOrReadStream;
-        header?: PathLikeOrReadStream;
-        footer?: PathLikeOrReadStream;
-        properties?: ImageProperties;
-        emulatedMediaType?: EmulatedMediaType;
-        waitDelay?: string;
-        waitForExpression?: string;
-        extraHttpHeaders?: Record<string, string>;
-        failOnHttpStatusCodes?: number[];
-        failOnConsoleExceptions?: boolean;
-        skipNetworkIdleEvent?: boolean;
-        optimizeForSpeed?: boolean;
-    }): Promise<Buffer> {
+        optimizeForSpeed,
+        downloadFrom
+    }: MarkdownScreenshotOptions): Promise<Buffer> {
         const data = new FormData();
 
         await GotenbergUtils.addFile(data, html, 'index.html');
@@ -81,7 +68,8 @@ export class MarkdownScreenshot extends Screenshot {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             skipNetworkIdleEvent,
-            optimizeForSpeed
+            optimizeForSpeed,
+            downloadFrom
         });
 
         return GotenbergUtils.fetch(

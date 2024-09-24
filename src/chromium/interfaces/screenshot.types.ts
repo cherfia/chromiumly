@@ -1,3 +1,4 @@
+import { PathLikeOrReadStream } from '../../common';
 import { ChromiumOptions } from './common.types';
 
 export type ImageProperties = {
@@ -15,4 +16,19 @@ export type ScreenshotOptions = Omit<
 > & {
     properties?: ImageProperties;
     optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
+};
+
+export type HtmlScreenshotOptions = ScreenshotOptions & {
+    html: PathLikeOrReadStream;
+};
+
+export type UrlScreenshotOptions = ScreenshotOptions & {
+    url: string;
+};
+
+export type MarkdownScreenshotOptions = ScreenshotOptions & {
+    html: PathLikeOrReadStream;
+    markdown: PathLikeOrReadStream;
+    header?: PathLikeOrReadStream;
+    footer?: PathLikeOrReadStream;
 };

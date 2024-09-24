@@ -1,11 +1,10 @@
 import { URL } from 'url';
 import FormData from 'form-data';
 import { GotenbergUtils } from '../../common';
-import { ImageProperties } from '../interfaces/screenshot.types';
+import { UrlScreenshotOptions } from '../interfaces/screenshot.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';
 import { Screenshot } from './screenshot';
 import { ChromiumRoute, Chromiumly } from '../../main.config';
-import { Cookie, EmulatedMediaType } from '../interfaces/common.types';
 
 /**
  * Class representing a URL screenshot that extends the base screenshot class.
@@ -51,19 +50,7 @@ export class UrlScreenshot extends Screenshot {
         skipNetworkIdleEvent,
         optimizeForSpeed,
         cookies
-    }: {
-        url: string;
-        properties?: ImageProperties;
-        emulatedMediaType?: EmulatedMediaType;
-        waitDelay?: string;
-        waitForExpression?: string;
-        extraHttpHeaders?: Record<string, string>;
-        failOnHttpStatusCodes?: number[];
-        failOnConsoleExceptions?: boolean;
-        skipNetworkIdleEvent?: boolean;
-        optimizeForSpeed?: boolean;
-        cookies?: Cookie[];
-    }): Promise<Buffer> {
+    }: UrlScreenshotOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
 
