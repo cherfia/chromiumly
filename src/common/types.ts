@@ -5,3 +5,8 @@ export type PathLikeOrReadStream = PathLike | ReadStream;
 export type Metadata = {
     [key: string]: boolean | number | string | string[];
 };
+
+export type DownloadFrom = {
+    url: string;
+    extraHttpHeaders?: Record<string, string>;
+};
