@@ -84,7 +84,7 @@ describe('HtmlScreenshot', () => {
                 mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
-                    skipNetworkIdleEvent: true
+                    skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(Buffer.from('content'));
@@ -111,7 +111,7 @@ describe('HtmlScreenshot', () => {
                     html: Buffer.from('data'),
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
-                    skipNetworkIdleEvent: true,
+                    skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
                     properties: { format: 'jpeg', quality: 50 },
                     optimizeForSpeed: true,

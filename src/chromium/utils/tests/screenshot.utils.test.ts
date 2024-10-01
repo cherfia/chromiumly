@@ -204,12 +204,12 @@ describe('ScreenshotUtils', () => {
         describe('when skipNetworkIdleEvent parameter is passed', () => {
             it('should append skipNetworkIdleEvent', async () => {
                 await ScreenshotUtils.customize(data, {
-                    skipNetworkIdleEvent: true
+                    skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                 expect(data.append).toHaveBeenCalledWith(
                     'skipNetworkIdleEvent',
-                    'true'
+                    'false'
                 );
             });
         });
@@ -251,7 +251,7 @@ describe('ScreenshotUtils', () => {
                 await ScreenshotUtils.customize(data, {
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
-                    skipNetworkIdleEvent: true,
+                    skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
                     properties: {
                         format: 'jpeg',
@@ -306,7 +306,7 @@ describe('ScreenshotUtils', () => {
                 expect(data.append).toHaveBeenNthCalledWith(
                     9,
                     'skipNetworkIdleEvent',
-                    'true'
+                    'false'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     10,

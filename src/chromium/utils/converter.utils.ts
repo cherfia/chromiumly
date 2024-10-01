@@ -170,7 +170,7 @@ export class ConverterUtils {
             );
         }
 
-        if (options.skipNetworkIdleEvent) {
+        if (options.skipNetworkIdleEvent === false) {
             data.append(
                 'skipNetworkIdleEvent',
                 String(options.skipNetworkIdleEvent)

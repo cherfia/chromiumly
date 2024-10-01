@@ -90,7 +90,7 @@ describe('MarkdownScreenshot', () => {
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
-                    skipNetworkIdleEvent: true
+                    skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
                 expect(buffer).toEqual(Buffer.from('content'));
@@ -105,7 +105,7 @@ describe('MarkdownScreenshot', () => {
                     markdown: Buffer.from('markdown'),
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
-                    skipNetworkIdleEvent: true,
+                    skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
                     properties: { format: 'jpeg', quality: 50 },
                     optimizeForSpeed: true,

@@ -119,7 +119,7 @@ describe('HtmlConverter', () => {
                 mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     url: 'http://www.example.com/',
-                    skipNetworkIdleEvent: true
+                    skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(Buffer.from('content'));

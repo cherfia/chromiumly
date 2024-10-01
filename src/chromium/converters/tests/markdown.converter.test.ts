@@ -130,7 +130,7 @@ describe('MarkdownConverter', () => {
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
-                    skipNetworkIdleEvent: true
+                    skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
                 expect(buffer).toEqual(Buffer.from('content'));

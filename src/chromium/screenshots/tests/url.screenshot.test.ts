@@ -82,7 +82,7 @@ describe('URLScreenshot', () => {
                 mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
-                    skipNetworkIdleEvent: true
+                    skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(Buffer.from('content'));
@@ -108,7 +108,7 @@ describe('URLScreenshot', () => {
                     url: 'http://www.example.com/',
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
-                    skipNetworkIdleEvent: true,
+                    skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
                     properties: { format: 'jpeg', quality: 50 },
                     optimizeForSpeed: true,
