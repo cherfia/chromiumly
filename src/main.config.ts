@@ -15,6 +15,7 @@ export enum ChromiumRoute {
  * @enum {string}
  */
 enum PdfEngineRoute {
+    CONVERT = 'convert',
     MERGE = 'merge',
     READ_METADATA = 'metadata/read',
     WRITE_METADATA = 'metadata/write'
@@ -92,6 +93,7 @@ export class Chromiumly {
      * @type {Object}
      */
     public static readonly PDF_ENGINE_ROUTES = {
+        convert: PdfEngineRoute.CONVERT,
         merge: PdfEngineRoute.MERGE,
         readMetadata: PdfEngineRoute.READ_METADATA,
         writeMetadata: PdfEngineRoute.WRITE_METADATA
