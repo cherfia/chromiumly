@@ -28,14 +28,16 @@ describe('PDFEngines', () => {
 
     describe('convert', () => {
         describe('when no properties are passed', () => {
-            it('should return a buffer', async () => {
+            it('should throw an error', async () => {
                 mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockResolvedValue(new Response('content'));
-                const buffer = await PDFEngines.convert({
-                    files: ['path/to/file_1.pdf', 'path/to/file_2.pdf']
-                });
-                expect(buffer).toEqual(Buffer.from('content'));
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                await expect(
+                    PDFEngines.convert({
+                        files: ['path/to/file_1.pdf', 'path/to/file_2.pdf']
+                    })
+                ).rejects.toThrow(
+                    'At least one of pdfa or pdfUA must be provided'
+                );
             });
         });
 

@@ -2,7 +2,7 @@ import { constants, createReadStream, promises, ReadStream } from 'fs';
 import path from 'path';
 
 import FormData from 'form-data';
-import { PathLikeOrReadStream } from '../../common';
+import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
 import {
     ConversionOptions,
     MergeOptions
@@ -55,6 +55,11 @@ export class PDFEnginesUtils {
         data: FormData,
         options: ConversionOptions | MergeOptions
     ): Promise<void> {
+        GotenbergUtils.assert(
+            !!options.pdfa || !!options.pdfUA,
+            'At least one of pdfa or pdfUA must be provided'
+        );
+
         if (options.pdfa) {
             data.append('pdfa', options.pdfa);
         }
