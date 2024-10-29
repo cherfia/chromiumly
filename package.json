@@ -48,7 +48,7 @@
     "@commitlint/cli": "^19.0.3",
     "@commitlint/config-conventional": "^19.0.3",
     "@commitlint/cz-commitlint": "^19.0.3",
-    "@release-it/conventional-changelog": "9.0.1",
+    "@release-it/conventional-changelog": "9.0.2",
     "@types/config": "3.3.5",
     "@types/dotenv": "8.2.3",
     "@types/form-data": "2.5.2",
