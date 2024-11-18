@@ -62,6 +62,7 @@ export class HtmlConverter extends Converter {
         failOnResourceHttpStatusCodes,
         failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
+        generateDocumentOutline,
         metadata,
         cookies,
         downloadFrom
@@ -94,6 +95,7 @@ export class HtmlConverter extends Converter {
             failOnResourceHttpStatusCodes,
             failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
+            generateDocumentOutline,
             metadata,
             cookies,
             downloadFrom

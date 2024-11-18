@@ -51,7 +51,8 @@ export class HtmlScreenshot extends Screenshot {
         failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
         optimizeForSpeed,
-        downloadFrom
+        downloadFrom,
+        generateDocumentOutline
     }: HtmlScreenshotOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -69,7 +70,8 @@ export class HtmlScreenshot extends Screenshot {
             failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
             optimizeForSpeed,
-            downloadFrom
+            downloadFrom,
+            generateDocumentOutline
         });
 
         return GotenbergUtils.fetch(

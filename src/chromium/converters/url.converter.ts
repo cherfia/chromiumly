@@ -63,7 +63,8 @@ export class UrlConverter extends Converter {
         skipNetworkIdleEvent,
         metadata,
         cookies,
-        downloadFrom
+        downloadFrom,
+        generateDocumentOutline
     }: UrlConversionOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -88,7 +89,8 @@ export class UrlConverter extends Converter {
             cookies,
             downloadFrom,
             failOnResourceHttpStatusCodes,
-            failOnResourceLoadingFailed
+            failOnResourceLoadingFailed,
+            generateDocumentOutline
         });
 
         return GotenbergUtils.fetch(

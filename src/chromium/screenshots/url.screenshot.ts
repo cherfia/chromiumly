@@ -51,7 +51,8 @@ export class UrlScreenshot extends Screenshot {
         failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
         optimizeForSpeed,
-        cookies
+        cookies,
+        generateDocumentOutline
     }: UrlScreenshotOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -70,7 +71,8 @@ export class UrlScreenshot extends Screenshot {
             failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
             optimizeForSpeed,
-            cookies
+            cookies,
+            generateDocumentOutline
         });
 
         return GotenbergUtils.fetch(

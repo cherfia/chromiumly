@@ -25,6 +25,7 @@ export type ChromiumOptions = {
     failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if the HTTP status code is in the list (default [499,599])
     failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if the resource loading failed (default false)
     skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default false)
+    generateDocumentOutline?: boolean; // Generate a document outline (default false)
     cookies?: Cookie[]; // Cookies to be written.
     downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
 };

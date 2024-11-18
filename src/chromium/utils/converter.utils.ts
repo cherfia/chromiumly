@@ -201,5 +201,12 @@ export class ConverterUtils {
         if (options.downloadFrom) {
             data.append('downloadFrom', JSON.stringify(options.downloadFrom));
         }
+
+        if (options.generateDocumentOutline) {
+            data.append(
+                'generateDocumentOutline',
+                String(options.generateDocumentOutline)
+            );
+        }
     }
 }

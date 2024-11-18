@@ -135,5 +135,12 @@ export class ScreenshotUtils {
         if (options.downloadFrom) {
             data.append('downloadFrom', JSON.stringify(options.downloadFrom));
         }
+
+        if (options.generateDocumentOutline) {
+            data.append(
+                'generateDocumentOutline',
+                String(options.generateDocumentOutline)
+            );
+        }
     }
 }
