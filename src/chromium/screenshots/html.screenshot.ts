@@ -47,6 +47,8 @@ export class HtmlScreenshot extends Screenshot {
         extraHttpHeaders,
         failOnConsoleExceptions,
         failOnHttpStatusCodes,
+        failOnResourceHttpStatusCodes,
+        failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
         optimizeForSpeed,
         downloadFrom
@@ -63,6 +65,8 @@ export class HtmlScreenshot extends Screenshot {
             extraHttpHeaders,
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
+            failOnResourceHttpStatusCodes,
+            failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
             optimizeForSpeed,
             downloadFrom

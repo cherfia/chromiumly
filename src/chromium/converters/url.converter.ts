@@ -57,6 +57,8 @@ export class UrlConverter extends Converter {
         userAgent,
         extraHttpHeaders,
         failOnHttpStatusCodes,
+        failOnResourceHttpStatusCodes,
+        failOnResourceLoadingFailed,
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
         metadata,
@@ -84,7 +86,9 @@ export class UrlConverter extends Converter {
             skipNetworkIdleEvent,
             metadata,
             cookies,
-            downloadFrom
+            downloadFrom,
+            failOnResourceHttpStatusCodes,
+            failOnResourceLoadingFailed
         });
 
         return GotenbergUtils.fetch(

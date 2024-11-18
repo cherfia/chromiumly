@@ -96,6 +96,20 @@ export class ScreenshotUtils {
             );
         }
 
+        if (options.failOnResourceHttpStatusCodes) {
+            data.append(
+                'failOnResourceHttpStatusCodes',
+                JSON.stringify(options.failOnResourceHttpStatusCodes)
+            );
+        }
+
+        if (options.failOnResourceLoadingFailed) {
+            data.append(
+                'failOnResourceLoadingFailed',
+                String(options.failOnResourceLoadingFailed)
+            );
+        }
+
         if (options.failOnConsoleExceptions) {
             data.append(
                 'failOnConsoleExceptions',

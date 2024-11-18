@@ -51,7 +51,9 @@ export class MarkdownScreenshot extends Screenshot {
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
         optimizeForSpeed,
-        downloadFrom
+        downloadFrom,
+        failOnResourceHttpStatusCodes,
+        failOnResourceLoadingFailed
     }: MarkdownScreenshotOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -67,6 +69,8 @@ export class MarkdownScreenshot extends Screenshot {
             extraHttpHeaders,
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
+            failOnResourceHttpStatusCodes,
+            failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
             optimizeForSpeed,
             downloadFrom

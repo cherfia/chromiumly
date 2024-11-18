@@ -60,6 +60,8 @@ export class MarkdownConverter extends Converter {
         extraHttpHeaders,
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
+        failOnResourceHttpStatusCodes,
+        failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
         metadata,
         cookies,
@@ -87,7 +89,9 @@ export class MarkdownConverter extends Converter {
             skipNetworkIdleEvent,
             metadata,
             cookies,
-            downloadFrom
+            downloadFrom,
+            failOnResourceHttpStatusCodes,
+            failOnResourceLoadingFailed
         });
 
         return GotenbergUtils.fetch(

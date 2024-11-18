@@ -251,6 +251,8 @@ describe('ScreenshotUtils', () => {
                 await ScreenshotUtils.customize(data, {
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
+                    failOnResourceHttpStatusCodes: [499, 599],
+                    failOnResourceLoadingFailed: true,
                     skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
                     properties: {
@@ -266,7 +268,7 @@ describe('ScreenshotUtils', () => {
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(13);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'emulatedMediaType',
@@ -300,21 +302,32 @@ describe('ScreenshotUtils', () => {
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     8,
+                    'failOnResourceHttpStatusCodes',
+                    JSON.stringify([499, 599])
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    9,
+                    'failOnResourceLoadingFailed',
+                    'true'
+                );
+
+                expect(data.append).toHaveBeenNthCalledWith(
+                    10,
                     'failOnConsoleExceptions',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    9,
+                    11,
                     'skipNetworkIdleEvent',
                     'false'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    10,
+                    12,
                     'optimizeForSpeed',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    11,
+                    13,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',

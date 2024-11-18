@@ -431,6 +431,8 @@ describe('ConverterUtils', () => {
                         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
                     failOnHttpStatusCodes: [499, 599],
+                    failOnResourceHttpStatusCodes: [499, 599],
+                    failOnResourceLoadingFailed: true,
                     skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
                     metadata: { Author: 'John Doe' },
@@ -439,7 +441,7 @@ describe('ConverterUtils', () => {
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(16);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(18);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -500,21 +502,31 @@ describe('ConverterUtils', () => {
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     13,
+                    'failOnResourceHttpStatusCodes',
+                    JSON.stringify([499, 599])
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    14,
+                    'failOnResourceLoadingFailed',
+                    'true'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    15,
                     'failOnConsoleExceptions',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    14,
+                    16,
                     'skipNetworkIdleEvent',
                     'false'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    15,
+                    17,
                     'metadata',
                     JSON.stringify({ Author: 'John Doe' })
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    16,
+                    18,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',

@@ -47,6 +47,8 @@ export class UrlScreenshot extends Screenshot {
         extraHttpHeaders,
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
+        failOnResourceHttpStatusCodes,
+        failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
         optimizeForSpeed,
         cookies
@@ -64,6 +66,8 @@ export class UrlScreenshot extends Screenshot {
             extraHttpHeaders,
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
+            failOnResourceHttpStatusCodes,
+            failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
             optimizeForSpeed,
             cookies
