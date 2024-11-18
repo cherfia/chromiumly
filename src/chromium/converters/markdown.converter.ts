@@ -39,7 +39,10 @@ export class MarkdownConverter extends Converter {
      * @param {Record<string, string>} [options.extraHttpHeaders] - Additional HTTP headers for the conversion.
      * @param {number []} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during conversion.
+     * @param {number[]} [options.failOnResourceHttpStatusCodes] - Whether to fail on resource HTTP status code.
+     * @param {boolean} [options.failOnResourceLoadingFailed] - Whether to fail on resource loading failed.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
+     * @param {boolean} [options.generateDocumentOutline] - Whether to generate document outline.
      * @param {Metadata} options.metadata - Metadata to be written.
      * @param {Cookie[]} options.cookies - Cookies to be written.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.

@@ -31,11 +31,14 @@ export class HtmlScreenshot extends Screenshot {
      * @param {string} [options.waitDelay] - Delay before the screenshot process starts.
      * @param {string} [options.waitForExpression] - JavaScript expression to wait for before completing the screenshot.
      * @param {Record<string, string>} [options.extraHttpHeaders] - Additional HTTP headers for the screenshot.
-     * @param {number []} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during screenshot.
+     * @param {number []} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
+     * @param {number[]} [options.failOnResourceHttpStatusCodes] - Whether to fail on resource HTTP status code.
+     * @param {boolean} [options.failOnResourceLoadingFailed] - Whether to fail on resource loading failed.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+     * @param {boolean} [options.generateDocumentOutline] - Whether to generate document outline.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
      */
     async capture({
