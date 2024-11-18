@@ -1,12 +1,38 @@
-## [3.8.2](https://github.com/cherfia/chromiumly/compare/v3.8.1...v3.8.2) (2024-10-13)
+## 3.9.0 (2024-11-18)
 
-### Bug Fixes
-
-- **deps:** update dependency form-data to v4.0.1 ([5989665](https://github.com/cherfia/chromiumly/commit/598966524da28496052116d59c254d3e9b7dfc7c))
-
-### Reverts
-
-- Revert "chore(deps): update dependency @release-it/conventional-changelog to v9" ([f35f9ce](https://github.com/cherfia/chromiumly/commit/f35f9ce61b0eda8fb3e057ff53f67f29ab9c199a))
+- docs(chromium): update converters docs ([cff6208](https://github.com/cherfia/chromiumly/commit/cff6208))
+- test(chromium): update unit tests ([d0dc409](https://github.com/cherfia/chromiumly/commit/d0dc409))
+- feat(chormium): add support to failOnResourceHttpStatusCodes and failOnResourceLoadingFailed ([03d596b](https://github.com/cherfia/chromiumly/commit/03d596b))
+- feat(chromium): add support to generateDocumentOutline ([9dd5395](https://github.com/cherfia/chromiumly/commit/9dd5395))
+- chore(deps): update codecov/codecov-action action to v5 ([fb81dfa](https://github.com/cherfia/chromiumly/commit/fb81dfa))
+- chore(deps): update dependency @babel/preset-typescript to v7.25.9 ([97f2e6a](https://github.com/cherfia/chromiumly/commit/97f2e6a))
+- chore(deps): update dependency @babel/preset-typescript to v7.26.0 ([bb75ef6](https://github.com/cherfia/chromiumly/commit/bb75ef6))
+- chore(deps): update dependency @release-it/conventional-changelog to v9 ([8a2cc06](https://github.com/cherfia/chromiumly/commit/8a2cc06))
+- chore(deps): update dependency @release-it/conventional-changelog to v9.0.1 ([a2e2b06](https://github.com/cherfia/chromiumly/commit/a2e2b06))
+- chore(deps): update dependency @release-it/conventional-changelog to v9.0.2 ([4848d38](https://github.com/cherfia/chromiumly/commit/4848d38))
+- chore(deps): update dependency @release-it/conventional-changelog to v9.0.3 (#497) ([95bd633](https://github.com/cherfia/chromiumly/commit/95bd633)), closes [#497](https://github.com/cherfia/chromiumly/issues/497)
+- chore(deps): update dependency @types/dotenv to v8.2.3 ([7809a5b](https://github.com/cherfia/chromiumly/commit/7809a5b))
+- chore(deps): update dependency @types/form-data to v2.5.2 ([b6ad074](https://github.com/cherfia/chromiumly/commit/b6ad074))
+- chore(deps): update dependency @types/jest to v29.5.14 ([c168c09](https://github.com/cherfia/chromiumly/commit/c168c09))
+- chore(deps): update dependency @types/node to v20.16.12 ([a512415](https://github.com/cherfia/chromiumly/commit/a512415))
+- chore(deps): update dependency @types/node to v20.16.13 ([6f100cd](https://github.com/cherfia/chromiumly/commit/6f100cd))
+- chore(deps): update dependency @types/node to v20.17.1 ([f4569d6](https://github.com/cherfia/chromiumly/commit/f4569d6))
+- chore(deps): update dependency @types/node to v22 ([be00c00](https://github.com/cherfia/chromiumly/commit/be00c00))
+- chore(deps): update dependency @types/node to v22.8.4 ([428d582](https://github.com/cherfia/chromiumly/commit/428d582))
+- chore(deps): update dependency @types/node to v22.8.6 ([2776838](https://github.com/cherfia/chromiumly/commit/2776838))
+- chore(deps): update dependency @types/node to v22.8.7 ([1199aca](https://github.com/cherfia/chromiumly/commit/1199aca))
+- chore(deps): update dependency @types/node to v22.9.0 ([d882957](https://github.com/cherfia/chromiumly/commit/d882957))
+- chore(deps): update dependency @types/node-fetch to v2.6.12 (#495) ([b58ffcb](https://github.com/cherfia/chromiumly/commit/b58ffcb)), closes [#495](https://github.com/cherfia/chromiumly/issues/495)
+- chore(deps): update dependency release-it to v17.10.0 ([4281436](https://github.com/cherfia/chromiumly/commit/4281436))
+- chore(deps): update dependency release-it to v17.9.0 ([4f67a01](https://github.com/cherfia/chromiumly/commit/4f67a01))
+- chore(deps): update dependency tslib to v2.8.0 ([a3ab42f](https://github.com/cherfia/chromiumly/commit/a3ab42f))
+- chore(deps): update dependency tslib to v2.8.1 ([72f9032](https://github.com/cherfia/chromiumly/commit/72f9032))
+- chore(deps): update typescript-eslint monorepo to v8.10.0 ([779bc9b](https://github.com/cherfia/chromiumly/commit/779bc9b))
+- chore(deps): update typescript-eslint monorepo to v8.11.0 ([7aa417a](https://github.com/cherfia/chromiumly/commit/7aa417a))
+- chore(deps): update typescript-eslint monorepo to v8.12.2 ([9ab42d1](https://github.com/cherfia/chromiumly/commit/9ab42d1))
+- chore(deps): update typescript-eslint monorepo to v8.13.0 ([79d6350](https://github.com/cherfia/chromiumly/commit/79d6350))
+- chore(deps): update typescript-eslint monorepo to v8.14.0 (#496) ([662ea16](https://github.com/cherfia/chromiumly/commit/662ea16)), closes [#496](https://github.com/cherfia/chromiumly/issues/496)
+- chore(deps): update typescript-eslint monorepo to v8.9.0 ([ca477d6](https://github.com/cherfia/chromiumly/commit/ca477d6))
 
 ### Changelog
 
@@ -14,7 +40,24 @@ All notable changes to this project will be documented in this file. Dates are d
 
 Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
 
+#### [v3.9.0](https://github.com/cherfia/chromiumly/compare/v3.8.2...v3.9.0)
+
+- chore(deps): update codecov/codecov-action action to v5 [`#498`](https://github.com/cherfia/chromiumly/pull/498)
+- chore(deps): update typescript-eslint monorepo to v8.14.0 [`#496`](https://github.com/cherfia/chromiumly/pull/496)
+- chore(deps): update dependency @release-it/conventional-changelog to v9.0.3 [`#497`](https://github.com/cherfia/chromiumly/pull/497)
+- chore(deps): update dependency @types/node-fetch to v2.6.12 [`#495`](https://github.com/cherfia/chromiumly/pull/495)
+- chore(deps): update dependency @types/node to v22 [`#486`](https://github.com/cherfia/chromiumly/pull/486)
+- chore(deps): update dependency @types/form-data to v2.5.2 [`#482`](https://github.com/cherfia/chromiumly/pull/482)
+- chore(deps): update dependency release-it to v17.10.0 [`#473`](https://github.com/cherfia/chromiumly/pull/473)
+- chore(deps): update dependency tslib to v2.8.0 [`#474`](https://github.com/cherfia/chromiumly/pull/474)
+- chore(deps): update dependency @release-it/conventional-changelog to v9 [`#470`](https://github.com/cherfia/chromiumly/pull/470)
+- chore(deps): update dependency @babel/preset-typescript to v7.25.9 [`97f2e6a`](https://github.com/cherfia/chromiumly/commit/97f2e6aa079e079ffa8e043ed62487693f895d8e)
+- chore(deps): update typescript-eslint monorepo to v8.13.0 [`79d6350`](https://github.com/cherfia/chromiumly/commit/79d6350dbbbfc47f4230a9577b3887c171ef4a25)
+- chore(deps): update typescript-eslint monorepo to v8.12.2 [`9ab42d1`](https://github.com/cherfia/chromiumly/commit/9ab42d1444d760a6941cda1fdd6958242eb1dee8)
+
 #### [v3.8.2](https://github.com/cherfia/chromiumly/compare/v3.8.1...v3.8.2)
+
+> 13 October 2024
 
 - chore(deps): update dependency @release-it/conventional-changelog to v9 [`#468`](https://github.com/cherfia/chromiumly/pull/468)
 - chore(deps): update dependency release-it to v17.8.2 [`#469`](https://github.com/cherfia/chromiumly/pull/469)
@@ -23,7 +66,7 @@ Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
 - chore(deps): update typescript-eslint monorepo to v8.8.1 [`#464`](https://github.com/cherfia/chromiumly/pull/464)
 - Revert "chore(deps): update dependency @release-it/conventional-changelog to v9" [`f35f9ce`](https://github.com/cherfia/chromiumly/commit/f35f9ce61b0eda8fb3e057ff53f67f29ab9c199a)
 - chore(deps): update dependency release-it to v17.7.0 [`5c6da67`](https://github.com/cherfia/chromiumly/commit/5c6da67a6780ea488942e893a605b194770ec815)
-- chore(deps): update dependency @types/node to v20.16.11 [`4c02a1c`](https://github.com/cherfia/chromiumly/commit/4c02a1cdde17e5021d50f3bcb23fd1f7c90f5712)
+- chore: release v3.8.2 [`fb26785`](https://github.com/cherfia/chromiumly/commit/fb26785fc633db453f0363e14104129c9aafdbf1)
 
 #### [v3.8.1](https://github.com/cherfia/chromiumly/compare/v3.8.0...v3.8.1)
 
