@@ -255,6 +255,7 @@ describe('ScreenshotUtils', () => {
                     failOnResourceLoadingFailed: true,
                     skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
+                    generateDocumentOutline: true,
                     properties: {
                         format: 'jpeg',
                         quality: 50
@@ -268,7 +269,7 @@ describe('ScreenshotUtils', () => {
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(13);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(14);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'emulatedMediaType',
@@ -333,6 +334,11 @@ describe('ScreenshotUtils', () => {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     })
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    14,
+                    'generateDocumentOutline',
+                    'true'
                 );
             });
         });

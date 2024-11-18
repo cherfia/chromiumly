@@ -439,9 +439,10 @@ describe('ConverterUtils', () => {
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
-                    }
+                    },
+                    generateDocumentOutline: true
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(18);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(19);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -532,6 +533,11 @@ describe('ConverterUtils', () => {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     })
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    19,
+                    'generateDocumentOutline',
+                    'true'
                 );
             });
         });
