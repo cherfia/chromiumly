@@ -54,6 +54,14 @@ export class Chromiumly {
         Gotenberg.password;
 
     /**
+     * An async function that returns a set of headers to use for the fetch call to gotenberg service
+     * @type {string | undefined}
+     */
+    private static addCustomHeadersFn:
+        | (() => Promise<Record<string, string>>)
+        | undefined = undefined;
+
+    /**
      * The path for Chromium-related conversions.
      * @type {string}
      */
@@ -118,6 +126,7 @@ export class Chromiumly {
         endpoint: string;
         username?: string;
         password?: string;
+        addCustomHeadersFn?: () => Promise<Record<string, string>>;
     }): void {
         this.gotenbergEndpoint = config.endpoint;
 
@@ -126,6 +135,9 @@ export class Chromiumly {
         }
         if (config.password !== undefined) {
             this.gotenbergApiBasicAuthPassword = config.password;
+        }
+        if (config.addCustomHeadersFn !== undefined) {
+            this.addCustomHeadersFn = config.addCustomHeadersFn;
         }
     }
 
@@ -155,5 +167,15 @@ export class Chromiumly {
      */
     public static getGotenbergApiBasicAuthPassword(): string | undefined {
         return this.gotenbergApiBasicAuthPassword;
+    }
+
+    /**
+     * Gets the function to build/send custom headers with fetch
+     * @returns () => Promise<Record<string, string>>
+     */
+    public static getAddCustomHeadersFn(): () => Promise<
+        Record<string, string>
+    > {
+        return this.addCustomHeadersFn ?? (async () => ({}));
     }
 }
