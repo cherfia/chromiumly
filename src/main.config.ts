@@ -121,6 +121,7 @@ export class Chromiumly {
      * @param {string} config.endpoint - The Gotenberg service endpoint.
      * @param {string} [config.username] - The username for basic authentication.
      * @param {string} [config.password] - The password for basic authentication.
+     * @param {() => Promise<Record<string, string>>} [config.addCustomHeadersFn] - Optional async function to add custom headers to fetch
      */
     public static configure(config: {
         endpoint: string;
