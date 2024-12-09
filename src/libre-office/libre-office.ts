@@ -62,7 +62,8 @@ export class LibreOffice {
             endpoint,
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
-            Chromiumly.getGotenbergApiBasicAuthPassword()
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
         );
     }
 }

@@ -143,6 +143,26 @@ Chromiumly.configure({
 });
 ```
 
+### Advanced Authentication with Custom HTTP Headers
+
+To implement advanced authentication or add custom HTTP headers to your requests, you can use the `customHttpHeaders` option within the `configure` method. This allows you to pass additional headers, such as authentication tokens or custom metadata, with each API call.
+
+For example, you can include a Bearer token for authentication along with a custom header as follows:
+
+```typescript
+const token = await generateToken();
+
+Chromiumly.configure({
+  endpoint: "http://localhost:3000",
+  customHttpHeaders: {
+    Authorization: `Bearer ${token}`,
+    "X-Custom-Header": "value",
+  },
+});
+```
+
+## Modules
+
 ## Modules
 
 Chromiumly introduces different classes that serve as wrappers to

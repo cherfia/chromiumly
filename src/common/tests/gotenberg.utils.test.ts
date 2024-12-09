@@ -41,17 +41,38 @@ describe('GotenbergUtils', () => {
         const endpoint = 'http://localhost:3000/forms/chromium/convert/html';
         const basicAuthUsername = 'username';
         const basicAuthPassword = 'pass';
+        const customHttpHeaders = { 'X-Custom-Header': 'value' };
 
         describe('when fetch request succeeds', () => {
-            it('should return a buffer', async () => {
+            it('should return a buffer and send correct headers', async () => {
                 mockFetch.mockResolvedValueOnce(new Response('content'));
+
                 const response = await GotenbergUtils.fetch(
                     endpoint,
                     data,
                     basicAuthUsername,
-                    basicAuthPassword
+                    basicAuthPassword,
+                    customHttpHeaders
                 );
+
                 await expect(response).toEqual(Buffer.from('content'));
+
+                expect(mockFetch).toHaveBeenCalledWith(
+                    endpoint,
+                    expect.objectContaining({
+                        method: 'post',
+                        headers: expect.objectContaining({
+                            Authorization: `Basic ${Buffer.from(
+                                `${basicAuthUsername}:${basicAuthPassword}`
+                            ).toString('base64')}`,
+                            'X-Custom-Header': 'value',
+                            'content-type': expect.stringMatching(
+                                /^multipart\/form-data; boundary=/
+                            )
+                        }),
+                        body: expect.any(Object)
+                    })
+                );
             });
         });
 
@@ -68,7 +89,8 @@ describe('GotenbergUtils', () => {
                             endpoint,
                             data,
                             basicAuthUsername,
-                            basicAuthPassword
+                            basicAuthPassword,
+                            customHttpHeaders
                         )
                     ).rejects.toThrow(errorMessage);
                 });
@@ -90,7 +112,8 @@ describe('GotenbergUtils', () => {
                             endpoint,
                             data,
                             basicAuthUsername,
-                            basicAuthPassword
+                            basicAuthPassword,
+                            customHttpHeaders
                         )
                     ).rejects.toThrow('500 Internal server error');
                 });
