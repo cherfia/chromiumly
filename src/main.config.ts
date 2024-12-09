@@ -54,12 +54,10 @@ export class Chromiumly {
         Gotenberg.password;
 
     /**
-     * An async function that returns a set of headers to use for the fetch call to gotenberg service
-     * @type {string | undefined}
+     * Custom HTTP headers to be sent with each request.
+     * @type {Record<string, string> | undefined}
      */
-    private static addCustomHeadersFn:
-        | (() => Promise<Record<string, string>>)
-        | undefined = undefined;
+    private static customHttpHeaders: Record<string, string> | undefined;
 
     /**
      * The path for Chromium-related conversions.
@@ -121,13 +119,13 @@ export class Chromiumly {
      * @param {string} config.endpoint - The Gotenberg service endpoint.
      * @param {string} [config.username] - The username for basic authentication.
      * @param {string} [config.password] - The password for basic authentication.
-     * @param {() => Promise<Record<string, string>>} [config.addCustomHeadersFn] - Optional async function to add custom headers to fetch
+     * @param {Record<string, string>} [config.customHttpHeaders] - Custom HTTP headers to be sent with each request.
      */
     public static configure(config: {
         endpoint: string;
         username?: string;
         password?: string;
-        addCustomHeadersFn?: () => Promise<Record<string, string>>;
+        customHttpHeaders?: Record<string, string>;
     }): void {
         this.gotenbergEndpoint = config.endpoint;
 
@@ -137,8 +135,8 @@ export class Chromiumly {
         if (config.password !== undefined) {
             this.gotenbergApiBasicAuthPassword = config.password;
         }
-        if (config.addCustomHeadersFn !== undefined) {
-            this.addCustomHeadersFn = config.addCustomHeadersFn;
+        if (config.customHttpHeaders !== undefined) {
+            this.customHttpHeaders = config.customHttpHeaders;
         }
     }
 
@@ -171,12 +169,10 @@ export class Chromiumly {
     }
 
     /**
-     * Gets the function to build/send custom headers with fetch
-     * @returns () => Promise<Record<string, string>>
+     * Gets the custom HTTP headers.
+     * @returns {Record<string, string> | undefined}
      */
-    public static getAddCustomHeadersFn(): () => Promise<
-        Record<string, string>
-    > {
-        return this.addCustomHeadersFn ?? (async () => ({}));
+    public static getCustomHttpHeaders(): Record<string, string> | undefined {
+        return this.customHttpHeaders;
     }
 }

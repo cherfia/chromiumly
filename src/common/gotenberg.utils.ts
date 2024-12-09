@@ -29,6 +29,7 @@ export class GotenbergUtils {
      * @param {string} endpoint - The Gotenberg endpoint URL.
      * @param {string} username - The username for basic authentication.
      * @param {string} password - The password for basic authentication.
+     * @param {Record<string, string>} [customHttpHeaders] - Custom HTTP headers to be sent with the request.
      * @param {FormData} data - The FormData object to be sent in the POST request.
      * @param {Record<string, string>} customHeaders - List of custom headers to include in the fetch
      * @returns {Promise<Buffer>} A Promise that resolves to the response body as a Buffer.
@@ -39,11 +40,11 @@ export class GotenbergUtils {
         data: FormData,
         username?: string,
         password?: string,
-        customHeaders: Record<string, string> = {}
+        customHttpHeaders?: Record<string, string>
     ): Promise<Buffer> {
         const headers: Record<string, string> = {
             ...data.getHeaders(),
-            ...customHeaders
+            ...customHttpHeaders
         };
 
         if (username && password) {

@@ -143,24 +143,25 @@ Chromiumly.configure({
 });
 ```
 
-### Advanced Authentication / Headers
+### Advanced Authentication with Custom HTTP Headers
 
-You can optionally pass in an async function to the client config to pass custom headers into the underlying `fetch` call to your Gotenberg instance.
+To implement advanced authentication or add custom HTTP headers to your requests, you can use the `customHttpHeaders` option within the `configure` method. This allows you to pass additional headers, such as authentication tokens or custom metadata, with each API call.
 
-This is useful for cases where you might need to do things like custom service account auth (if hosting on Google cloud run, for example), include custom proxy headers, ec.
-
-Ex:
+For example, you can include a Bearer token for authentication along with a custom header as follows:
 
 ```typescript
+const token = await generateToken();
+
 Chromiumly.configure({
-  endpoint: "https://my-gotenberg-service-1234.us-central1.run.app",
-  addCustomHeadersFn: async () => ({
-    Authorization: `Bearer ${await generateIdToken()}`,
-  }),
+  endpoint: "http://localhost:3000",
+  customHttpHeaders: {
+    Authorization: `Bearer ${token}`,
+    "X-Custom-Header": "value",
+  },
 });
 ```
 
-_Note: if you include username/password the created `Authorization` heaer will overwrite any you supply from the custom headers function._
+## Modules
 
 ## Modules
 

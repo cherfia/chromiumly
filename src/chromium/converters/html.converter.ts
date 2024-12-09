@@ -109,7 +109,7 @@ export class HtmlConverter extends Converter {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            await Chromiumly.getAddCustomHeadersFn()()
+            Chromiumly.getCustomHttpHeaders()
         );
     }
 }
