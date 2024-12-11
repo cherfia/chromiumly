@@ -81,7 +81,8 @@ export class HtmlScreenshot extends Screenshot {
             this.endpoint,
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
-            Chromiumly.getGotenbergApiBasicAuthPassword()
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
         );
     }
 }

@@ -54,6 +54,12 @@ export class Chromiumly {
         Gotenberg.password;
 
     /**
+     * Custom HTTP headers to be sent with each request.
+     * @type {Record<string, string> | undefined}
+     */
+    private static customHttpHeaders: Record<string, string> | undefined;
+
+    /**
      * The path for Chromium-related conversions.
      * @type {string}
      */
@@ -113,11 +119,13 @@ export class Chromiumly {
      * @param {string} config.endpoint - The Gotenberg service endpoint.
      * @param {string} [config.username] - The username for basic authentication.
      * @param {string} [config.password] - The password for basic authentication.
+     * @param {Record<string, string>} [config.customHttpHeaders] - Custom HTTP headers to be sent with each request.
      */
     public static configure(config: {
         endpoint: string;
         username?: string;
         password?: string;
+        customHttpHeaders?: Record<string, string>;
     }): void {
         this.gotenbergEndpoint = config.endpoint;
 
@@ -126,6 +134,9 @@ export class Chromiumly {
         }
         if (config.password !== undefined) {
             this.gotenbergApiBasicAuthPassword = config.password;
+        }
+        if (config.customHttpHeaders !== undefined) {
+            this.customHttpHeaders = config.customHttpHeaders;
         }
     }
 
@@ -155,5 +166,13 @@ export class Chromiumly {
      */
     public static getGotenbergApiBasicAuthPassword(): string | undefined {
         return this.gotenbergApiBasicAuthPassword;
+    }
+
+    /**
+     * Gets the custom HTTP headers.
+     * @returns {Record<string, string> | undefined}
+     */
+    public static getCustomHttpHeaders(): Record<string, string> | undefined {
+        return this.customHttpHeaders;
     }
 }

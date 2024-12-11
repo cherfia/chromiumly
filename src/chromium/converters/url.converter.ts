@@ -100,7 +100,8 @@ export class UrlConverter extends Converter {
             this.endpoint,
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
-            Chromiumly.getGotenbergApiBasicAuthPassword()
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
         );
     }
 }
