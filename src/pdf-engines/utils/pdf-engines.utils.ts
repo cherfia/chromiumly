@@ -23,9 +23,10 @@ export class PDFEnginesUtils {
         files: PathLikeOrReadStream[],
         data: FormData
     ) {
+        const paddingLength = String(files.length).length + 1;
         await Promise.all(
-            files.map(async (file, key) => {
-                const filename = `file${key}.pdf`;
+            files.map(async (file, index) => {
+                const filename = `file${String(index + 1).padStart(paddingLength, '0')}.pdf`;
                 if (Buffer.isBuffer(file)) {
                     data.append('files', file, filename);
                 } else if (file instanceof ReadStream) {
