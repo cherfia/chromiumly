@@ -39,13 +39,18 @@ export class LibreOfficeUtils {
         files: PathLikeOrReadStream[],
         data: FormData
     ) {
+        const paddingLength = String(files.length).length + 1;
         await Promise.all(
-            files.map(async (file, key) => {
+            files.map(async (file, index) => {
                 const fileInfo = await this.getFileInfo(file);
                 if (!LIBRE_OFFICE_EXTENSIONS.includes(fileInfo.ext)) {
                     throw new Error(`${fileInfo.ext} is not supported`);
                 }
-                data.append('files', fileInfo.data, `${key}.${fileInfo.ext}`);
+                const filename = `file${String(index + 1).padStart(
+                    paddingLength,
+                    '0'
+                )}.${fileInfo.ext}`;
+                data.append('files', fileInfo.data, filename);
             })
         );
     }
