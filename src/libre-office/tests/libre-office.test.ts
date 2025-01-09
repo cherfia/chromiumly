@@ -54,10 +54,15 @@ describe('LibreOffice', () => {
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    },
+                    split: {
+                        mode: 'pages',
+                        span: '1-10',
+                        unify: true
                     }
                 });
                 expect(buffer).toEqual(Buffer.from('content'));
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(15);
             });
         });
     });
