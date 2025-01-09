@@ -153,6 +153,19 @@ describe('MarkdownConverter', () => {
             });
         });
 
+        describe('when split parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockFetch.mockResolvedValue(new Response('content'));
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    split: { mode: 'pages', span: '1-10' }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                expect(buffer).toEqual(Buffer.from('content'));
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockFetch.mockResolvedValue(new Response('content'));

@@ -416,6 +416,15 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when split parameter is passed', () => {
+            it('should append split', async () => {
+                await ConverterUtils.customize(data, {
+                    split: { mode: 'pages', span: '1-10' }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+            });
+        });
+
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ConverterUtils.customize(data, {
@@ -440,9 +449,10 @@ describe('ConverterUtils', () => {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     },
-                    generateDocumentOutline: true
+                    generateDocumentOutline: true,
+                    split: { mode: 'pages', span: '1-10', unify: true }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(19);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(22);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',

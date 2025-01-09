@@ -140,6 +140,19 @@ describe('HtmlConverter', () => {
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });
+
+        describe('when split parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockFetch.mockResolvedValue(new Response('content'));
+                const buffer = await converter.convert({
+                    url: 'http://www.example.com/',
+                    split: { mode: 'intervals', span: '1' }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+                expect(buffer).toEqual(Buffer.from('content'));
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockFetch.mockResolvedValue(new Response('content'));

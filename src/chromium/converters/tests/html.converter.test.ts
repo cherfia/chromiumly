@@ -161,6 +161,18 @@ describe('HtmlConverter', () => {
             });
         });
 
+        describe('when split parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockFetch.mockResolvedValue(new Response('content'));
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    split: { mode: 'pages', span: '1-10', unify: true }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                expect(buffer).toEqual(Buffer.from('content'));
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
@@ -176,9 +188,10 @@ describe('HtmlConverter', () => {
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
-                    }
+                    },
+                    split: { mode: 'pages', span: 'r3-r1' }
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(10);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
                 expect(buffer).toEqual(Buffer.from('content'));
             });
         });
