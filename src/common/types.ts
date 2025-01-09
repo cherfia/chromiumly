@@ -10,3 +10,9 @@ export type DownloadFrom = {
     url: string;
     extraHttpHeaders?: Record<string, string>;
 };
+
+export type Split = {
+    mode: 'pages' | 'intervals';
+    span: string;
+    unify?: boolean;
+};
