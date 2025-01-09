@@ -360,6 +360,28 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `quality`: specifies the quality of the JPG export. The value ranges from 1 to 100, with higher values producing higher-quality images and larger file sizes.
 - `maxImageResolution`: specifies if all images will be reduced to the specified DPI value. Possible values are: `75`, `150`, `300`, `600`, and `1200`.
 
+#### Split
+
+Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route has a `split` parameter that allows splitting the PDF file into multiple files. The `split` parameter is an object with the following properties:
+
+- `mode`: the mode of the split. It can be `pages` or `intervals`.
+- `span`: the span of the split. It is a string that represents the range of pages to split.
+- `unify`: a boolean that allows unifying the split files. Only works when `mode` is `pages`.
+
+```typescript
+import { UrlConverter } from "chromiumly";
+const buffer = await UrlConverter.convert({
+  url: "https://www.example.com/",
+  split: {
+    mode: "pages",
+    span: "1-2",
+    unify: true,
+  },
+});
+```
+
+> ⚠️ **Note**: Gotenberg does not currently validate the `span` value when `mode` is set to `pages`, as the validation depends on the chosen engine for the split feature. See [PDF Engines module configuration](https://gotenberg.dev/docs/configuration#pdf-engines) for more details.
+
 ### PDFEngines
 
 The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) routes to manupilate PDF files.
@@ -392,6 +414,23 @@ const buffer = await PDFEngines.merge({
   files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
   pdfa: PdfFormat.A_2b,
   pdfUA: true,
+});
+```
+
+#### split
+
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#split-pdfs-route) split route which splits PDF files into multiple files.
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const buffer = await PDFEngines.split({
+  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
+  split: {
+    mode: "pages",
+    span: "1-2",
+    unify: true,
+  },
 });
 ```
 
