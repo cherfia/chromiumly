@@ -11,7 +11,7 @@ import {
     Metadata
 } from '../common';
 import { PDFEnginesUtils } from './utils/pdf-engines.utils';
-import { DownloadFrom } from '../common/types';
+import { DownloadFrom, Split } from '../common/types';
 
 /**
  * Class uses PDF engines for various operations such as merging and conversion.
@@ -89,6 +89,46 @@ export class PDFEngines {
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.convert}`;
+
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
+        );
+    }
+
+    /**
+     * Splits a PDF file into multiple PDF files.
+     *
+     *  @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to be split.
+     * @param {Split} options.split - Split the PDF into multiple files.
+     * @returns {Promise<Buffer>} A Promise resolving to the split PDF content as a Buffer.
+     */
+    public static async split({
+        files,
+        split
+    }: {
+        files: PathLikeOrReadStream[];
+        split: Split;
+    }): Promise<Buffer> {
+        const data = new FormData();
+
+        await PDFEnginesUtils.addFiles(files, data);
+
+        data.append('splitMode', split.mode);
+        data.append('splitSpan', split.span);
+
+        if (split.unify) {
+            GotenbergUtils.assert(
+                split.mode === 'pages',
+                'split unify is only supported for pages mode'
+            );
+            data.append('splitUnify', String(split.unify));
+        }
+
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.split}`;
 
         return GotenbergUtils.fetch(
             endpoint,

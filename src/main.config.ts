@@ -18,7 +18,8 @@ enum PdfEngineRoute {
     CONVERT = 'convert',
     MERGE = 'merge',
     READ_METADATA = 'metadata/read',
-    WRITE_METADATA = 'metadata/write'
+    WRITE_METADATA = 'metadata/write',
+    SPLIT = 'split'
 }
 
 /**
@@ -102,7 +103,8 @@ export class Chromiumly {
         convert: PdfEngineRoute.CONVERT,
         merge: PdfEngineRoute.MERGE,
         readMetadata: PdfEngineRoute.READ_METADATA,
-        writeMetadata: PdfEngineRoute.WRITE_METADATA
+        writeMetadata: PdfEngineRoute.WRITE_METADATA,
+        split: PdfEngineRoute.SPLIT
     };
 
     /**
