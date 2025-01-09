@@ -117,7 +117,7 @@ describe('PDFEngines', () => {
             mockFetch.mockResolvedValue(new Response('content'));
             const buffer = await PDFEngines.split({
                 files: ['path/to/file.pdf'],
-                split: { mode: 'pages', span: '1-10', unify: true }
+                options: { mode: 'pages', span: '1-10', unify: true }
             });
             expect(buffer).toEqual(Buffer.from('content'));
             expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
