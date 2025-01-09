@@ -13,35 +13,31 @@ a variety of document formats to PDF files.
 
 # Table of Contents
 
-1. [Introduction](#introduction)
-   - [Install](#install)
+1. [Getting Started](#getting-started)
+   - [Installation](#installation)
    - [Prerequisites](#prerequisites)
-   - [Get Started](#get-started)
-2. [Configuration](#configuration)
-   - [dotenv](#dotenv)
-   - [config](#config)
-   - [code](#code)
-3. [Basic Authentication](#basic-authentication)
-4. [Modules](#modules)
-
+   - [Configuration](#configuration)
+2. [Authentication](#authentication)
+   - [Basic Authentication](#basic-authentication)
+   - [Advanced Authentication](#advanced-authentication)
+3. [Core Features](#core-features)
    - [Chromium](#chromium)
      - [URL](#url)
      - [HTML](#html)
      - [Markdown](#markdown)
-   - [Customization](#customization)
-     - [Conversion](#conversion)
      - [Screenshot](#screenshot)
    - [LibreOffice](#libreoffice)
-   - [PDFEngines](#pdfengines)
-     - [convert](#convert)
-     - [merge](#merge)
-     - [readMetadata](#readmetadata)
-     - [writeMetadata](#writemetadata)
-     - [generate](#generate)
+   - [PDF Engines](#pdf-engines)
+     - [Format Conversion](#format-conversion)
+     - [Merging](#merging)
+     - [Metadata Management](#metadata-management)
+     - [File Generation](#file-generation)
+   - [PDF Splitting](#pdf-splitting)
+4. [Usage Example](#snippet)
 
-5. [Snippet](#snippet)
+## Getting Started
 
-## Install
+### Installation
 
 Using npm:
 
@@ -55,7 +51,7 @@ Using yarn:
 yarn add chromiumly
 ```
 
-## Prerequisites
+### Prerequisites
 
 Before attempting to use Chromiumly, be sure you install [Docker](https://www.docker.com/) if you have not already done
 so.
@@ -65,8 +61,6 @@ After that, you can start a default Docker container of [Gotenberg](https://gote
 ```bash
 docker run --rm -p 3000:3000 gotenberg/gotenberg:8
 ```
-
-## Get Started
 
 ### Configuration
 
@@ -96,6 +90,8 @@ import { Chromiumly } from "chromiumly";
 
 Chromiumly.configure({ endpoint: "http://localhost:3000" });
 ```
+
+## Authentication
 
 ### Basic Authentication
 
@@ -143,7 +139,7 @@ Chromiumly.configure({
 });
 ```
 
-### Advanced Authentication with Custom HTTP Headers
+### Advanced Authentication
 
 To implement advanced authentication or add custom HTTP headers to your requests, you can use the `customHttpHeaders` option within the `configure` method. This allows you to pass additional headers, such as authentication tokens or custom metadata, with each API call.
 
@@ -161,16 +157,14 @@ Chromiumly.configure({
 });
 ```
 
-## Modules
-
-## Modules
+## Core Features
 
 Chromiumly introduces different classes that serve as wrappers to
 Gotenberg's [routes](https://gotenberg.dev/docs/routes). These classes encompass methods featuring an
 input file parameter, such as `html`, `header`, `footer`, and `markdown`, capable of accepting inputs in the form of a
 `string` (i.e. file path), `Buffer`, or `ReadStream`.
 
-### Chormium
+### Chromium
 
 There are three different classes that come with a single method (i.e.`convert`) which calls one of
 Chromium's [Conversion routes](https://gotenberg.dev/docs/routes#convert-with-chromium) to convert `html` and `markdown` files, or
@@ -244,11 +238,7 @@ const buffer = await screenshot.capture({
 });
 ```
 
-### Customization
-
-#### Conversion
-
-`convert()` method takes an optional `properties` parameter of the following type which dictates how the PDF generated
+Each `convert()` method takes an optional `properties` parameter of the following type which dictates how the PDF generated
 file will look like.
 
 ```typescript
@@ -293,6 +283,7 @@ type ConversionOptions = {
   metadata?: Metadata; // Metadata to be written.
   cookies?: Cookie[]; // Cookies to be written.
   downloadFrom?: DownloadFrom; //Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+  split?: SplitOptions; // Split the PDF file into multiple files.
 };
 ```
 
@@ -360,33 +351,11 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `quality`: specifies the quality of the JPG export. The value ranges from 1 to 100, with higher values producing higher-quality images and larger file sizes.
 - `maxImageResolution`: specifies if all images will be reduced to the specified DPI value. Possible values are: `75`, `150`, `300`, `600`, and `1200`.
 
-#### Split
-
-Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route has a `split` parameter that allows splitting the PDF file into multiple files. The `split` parameter is an object with the following properties:
-
-- `mode`: the mode of the split. It can be `pages` or `intervals`.
-- `span`: the span of the split. It is a string that represents the range of pages to split.
-- `unify`: a boolean that allows unifying the split files. Only works when `mode` is `pages`.
-
-```typescript
-import { UrlConverter } from "chromiumly";
-const buffer = await UrlConverter.convert({
-  url: "https://www.example.com/",
-  split: {
-    mode: "pages",
-    span: "1-2",
-    unify: true,
-  },
-});
-```
-
-> ⚠️ **Note**: Gotenberg does not currently validate the `span` value when `mode` is set to `pages`, as the validation depends on the chosen engine for the split feature. See [PDF Engines module configuration](https://gotenberg.dev/docs/configuration#pdf-engines) for more details.
-
-### PDFEngines
+### PDF Engines
 
 The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) routes to manupilate PDF files.
 
-#### convert
+#### Format Conversion
 
 This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) convertion route to transform PDF files into the requested PDF/A format and/or PDF/UA.
 
@@ -400,7 +369,7 @@ const buffer = await PDFEngines.convert({
 });
 ```
 
-#### merge
+#### Merging
 
 This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#merge-pdfs-route) merge route which gathers different
 engines that can manipulate and merge PDF files such
@@ -417,24 +386,9 @@ const buffer = await PDFEngines.merge({
 });
 ```
 
-#### split
+#### Metadata Management
 
-This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#split-pdfs-route) split route which splits PDF files into multiple files.
-
-```typescript
-import { PDFEngines } from "chromiumly";
-
-const buffer = await PDFEngines.split({
-  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
-  split: {
-    mode: "pages",
-    span: "1-2",
-    unify: true,
-  },
-});
-```
-
-#### readMetadata
+##### readMetadata
 
 This method reads metadata from the provided PDF files.
 
@@ -447,7 +401,7 @@ const metadataBuffer = await PDFEngines.readMetadata([
 ]);
 ```
 
-#### writeMetadata
+##### writeMetadata
 
 This method writes metadata to the provided PDF files.
 
@@ -469,12 +423,49 @@ const buffer = await PDFEngines.writeMetadata({
 
 Please consider referring to [ExifTool](https://exiftool.org/TagNames/XMP.html#pdf) for a comprehensive list of accessible metadata options.
 
-#### generate
+#### File Generation
 
 It is just a generic complementary method that takes the `buffer` returned by the `convert` method, and a
 chosen `filename` to generate the PDF file.
 
 Please note that all the PDF files can be found `__generated__` folder in the root folder of your project.
+
+### PDF Splitting
+
+Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route has a `split` parameter that allows splitting the PDF file into multiple files. The `split` parameter is an object with the following properties:
+
+- `mode`: the mode of the split. It can be `pages` or `intervals`.
+- `span`: the span of the split. It is a string that represents the range of pages to split.
+- `unify`: a boolean that allows unifying the split files. Only works when `mode` is `pages`.
+
+```typescript
+import { UrlConverter } from "chromiumly";
+const buffer = await UrlConverter.convert({
+  url: "https://www.example.com/",
+  split: {
+    mode: "pages",
+    span: "1-2",
+    unify: true,
+  },
+});
+```
+
+On the other hand, PDFEngines' has a `split` method that interacts with [PDF Engines](https://gotenberg.dev/docs/routes#split-pdfs-route) split route which splits PDF files into multiple files.
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const buffer = await PDFEngines.split({
+  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
+  options: {
+    mode: "pages",
+    span: "1-2",
+    unify: true,
+  },
+});
+```
+
+> ⚠️ **Note**: Gotenberg does not currently validate the `span` value when `mode` is set to `pages`, as the validation depends on the chosen engine for the split feature. See [PDF Engines module configuration](https://gotenberg.dev/docs/configuration#pdf-engines) for more details.
 
 ## Snippet
 
@@ -487,6 +478,23 @@ async function run() {
   const urlConverter = new UrlConverter();
   const buffer = await urlConverter.convert({
     url: "https://gotenberg.dev/",
+    properties: {
+      singlePage: true,
+      size: {
+        width: 8.5,
+        height: 11,
+      },
+    },
+    emulatedMediaType: "screen",
+    failOnHttpStatusCodes: [404],
+    failOnConsoleExceptions: true,
+    skipNetworkIdleEvent: false,
+    optimizeForSpeed: true,
+    split: {
+      mode: "pages",
+      span: "1-2",
+      unify: true,
+    },
   });
 
   await PDFEngines.generate("gotenberg.pdf", buffer);
