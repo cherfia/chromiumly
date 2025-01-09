@@ -1,4 +1,6 @@
-# Chromiumly
+<p align="center">
+  <img src="assets/logo.png" alt="Chromiumly Logo" width="128" height="auto">
+</p>
 
 ![build](https://github.com/cherfia/chromiumly/actions/workflows/build.yml/badge.svg)
 [![coverage](https://img.shields.io/codecov/c/gh/cherfia/chromiumly?style=flat-square)](https://codecov.io/gh/cherfia/chromiumly)
