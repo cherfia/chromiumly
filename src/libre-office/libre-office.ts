@@ -26,6 +26,7 @@ export class LibreOffice {
      * @param {boolean} [options.reduceImageResolution] - Indicates whether to reduce image resolution.
      * @param {number} [options.quality] - Quality of the JPG export.
      * @param {75 | 150 | 300 | 600 | 1200} [options.maxImageResolution] - Maximum image resolution for the converted PDF.
+     * @param {Split} [options.split] - Split the PDF into multiple files.
      *
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
@@ -39,7 +40,8 @@ export class LibreOffice {
         losslessImageCompression,
         reduceImageResolution,
         quality,
-        maxImageResolution
+        maxImageResolution,
+        split
     }: { files: PathLikeOrReadStream[] } & ConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -53,7 +55,8 @@ export class LibreOffice {
             losslessImageCompression,
             reduceImageResolution,
             quality,
-            maxImageResolution
+            maxImageResolution,
+            split
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
