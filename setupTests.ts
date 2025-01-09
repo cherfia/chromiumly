@@ -4,4 +4,7 @@ Chromiumly.configure({
   endpoint: "http://localhost:3000",
   username: "user",
   password: "pass",
+  customHttpHeaders: {
+    "X-Custom-Header": "test",
+  },
 });

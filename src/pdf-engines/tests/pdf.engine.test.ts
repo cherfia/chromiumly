@@ -111,6 +111,19 @@ describe('PDFEngines', () => {
         });
     });
 
+    describe('split', () => {
+        it('should return a buffer', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            mockFetch.mockResolvedValue(new Response('content'));
+            const buffer = await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                split: { mode: 'pages', span: '1-10', unify: true }
+            });
+            expect(buffer).toEqual(Buffer.from('content'));
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+        });
+    });
+
     describe('generate', () => {
         const mockFilename = 'test.pdf';
         const mockBuffer = Buffer.from('mock pdf content');
