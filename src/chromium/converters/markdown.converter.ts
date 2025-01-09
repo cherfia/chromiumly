@@ -46,6 +46,7 @@ export class MarkdownConverter extends Converter {
      * @param {Metadata} options.metadata - Metadata to be written.
      * @param {Cookie[]} options.cookies - Cookies to be written.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+     * @param {Split} [options.split] - Split the PDF into multiple files.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     async convert({
@@ -69,7 +70,8 @@ export class MarkdownConverter extends Converter {
         generateDocumentOutline,
         metadata,
         cookies,
-        downloadFrom
+        downloadFrom,
+        split
     }: MarkdownConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -94,6 +96,7 @@ export class MarkdownConverter extends Converter {
             metadata,
             cookies,
             downloadFrom,
+            split,
             failOnResourceHttpStatusCodes,
             failOnResourceLoadingFailed,
             generateDocumentOutline

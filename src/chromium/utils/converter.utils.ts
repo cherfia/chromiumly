@@ -208,5 +208,18 @@ export class ConverterUtils {
                 String(options.generateDocumentOutline)
             );
         }
+
+        if (options.split) {
+            data.append('splitMode', options.split.mode);
+            data.append('splitSpan', options.split.span);
+
+            if (options.split.unify) {
+                GotenbergUtils.assert(
+                    options.split.mode === 'pages',
+                    'split unify is only supported for pages mode'
+                );
+                data.append('splitUnify', String(options.split.unify));
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 import { Metadata, PathLikeOrReadStream, PdfFormat } from '../../common';
+import { Split } from '../../common/types';
 import { ChromiumOptions, Cookie } from './common.types';
 
 type PageSize = {
@@ -40,6 +41,7 @@ export type ConversionOptions = ChromiumOptions & {
     userAgent?: string;
     metadata?: Metadata;
     cookies?: Cookie[];
+    split?: Split;
 };
 
 export type HtmlConversionOptions = ConversionOptions & {

@@ -45,6 +45,7 @@ export class UrlConverter extends Converter {
      * @param {Metadata} options.metadata - Metadata to be written.
      * @param {Cookie[]} options.cookies - Cookies to be written.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+     * @param {Split} [options.split] - Split the PDF into multiple files.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
      */
     async convert({
@@ -67,7 +68,8 @@ export class UrlConverter extends Converter {
         metadata,
         cookies,
         downloadFrom,
-        generateDocumentOutline
+        generateDocumentOutline,
+        split
     }: UrlConversionOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -93,7 +95,8 @@ export class UrlConverter extends Converter {
             downloadFrom,
             failOnResourceHttpStatusCodes,
             failOnResourceLoadingFailed,
-            generateDocumentOutline
+            generateDocumentOutline,
+            split
         });
 
         return GotenbergUtils.fetch(
