@@ -62,8 +62,9 @@ export class PDFEngines {
     /**
      * Converts various document formats to PDF.
      *
-     *  @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the files to be converted to PDF.
-     * @param {pdfa} [options.pdfa] - PDF format options.
+     * @param {Object} options - Options for the conversion operation.
+     * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the files to be converted to PDF.
+     * @param {PdfFormat} [options.pdfa] - PDF format options.
      * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
@@ -102,30 +103,31 @@ export class PDFEngines {
     /**
      * Splits a PDF file into multiple PDF files.
      *
-     *  @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to be split.
-     * @param {Split} options.split - Split the PDF into multiple files.
+     * @param {Object} options - Options for the split operation.
+     * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to be split.
+     * @param {Split} options.options - Split configuration specifying mode ('pages' or 'intervals'), span, and unify options.
      * @returns {Promise<Buffer>} A Promise resolving to the split PDF content as a Buffer.
      */
     public static async split({
         files,
-        split
+        options
     }: {
         files: PathLikeOrReadStream[];
-        split: Split;
+        options: Split;
     }): Promise<Buffer> {
         const data = new FormData();
 
         await PDFEnginesUtils.addFiles(files, data);
 
-        data.append('splitMode', split.mode);
-        data.append('splitSpan', split.span);
+        data.append('splitMode', options.mode);
+        data.append('splitSpan', options.span);
 
-        if (split.unify) {
+        if (options.unify) {
             GotenbergUtils.assert(
-                split.mode === 'pages',
+                options.mode === 'pages',
                 'split unify is only supported for pages mode'
             );
-            data.append('splitUnify', String(split.unify));
+            data.append('splitUnify', String(options.unify));
         }
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.split}`;
