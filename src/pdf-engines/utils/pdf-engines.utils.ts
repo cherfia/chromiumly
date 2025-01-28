@@ -1,12 +1,12 @@
-import { constants, createReadStream, promises, ReadStream } from 'fs';
+import { constants, openAsBlob, promises, ReadStream } from 'fs';
 import path from 'path';
 
-import FormData from 'form-data';
 import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
 import {
     ConversionOptions,
     MergeOptions
 } from '../interfaces/pdf-engines.types';
+import { blob } from 'node:stream/consumers';
 
 /**
  * Utility class for handling common tasks related to PDF engine operations.
@@ -28,15 +28,17 @@ export class PDFEnginesUtils {
             files.map(async (file, index) => {
                 const filename = `file${String(index + 1).padStart(paddingLength, '0')}.pdf`;
                 if (Buffer.isBuffer(file)) {
-                    data.append('files', file, filename);
+                    data.append('files', new Blob([file]), filename);
                 } else if (file instanceof ReadStream) {
-                    data.append('files', file, filename);
+                    const content = await blob(file);
+                    data.append('files', content, filename);
                 } else {
                     await promises.access(file, constants.R_OK);
                     const _filename = path.basename(file.toString());
                     const extension = path.extname(_filename);
                     if (extension === '.pdf') {
-                        data.append(_filename, createReadStream(file));
+                        const content = await openAsBlob(file);
+                        data.append(_filename, content);
                     } else {
                         throw new Error(`${extension} is not supported`);
                     }

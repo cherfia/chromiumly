@@ -51,10 +51,8 @@
     "@release-it/conventional-changelog": "10.0.0",
     "@types/config": "3.3.5",
     "@types/dotenv": "8.2.3",
-    "@types/form-data": "2.5.2",
     "@types/jest": "29.5.14",
     "@types/node": "22.10.10",
-    "@types/node-fetch": "2.6.12",
     "@typescript-eslint/eslint-plugin": "8.21.0",
     "@typescript-eslint/parser": "8.21.0",
     "commitizen": "4.3.1",
@@ -71,10 +69,6 @@
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "typescript": "5.7.3"
-  },
-  "dependencies": {
-    "form-data": "4.0.1",
-    "node-fetch": "2.7.0"
   },
   "optionalDependencies": {
     "config": "3.x",

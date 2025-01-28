@@ -1,7 +1,6 @@
-import { constants, createReadStream, ReadStream, promises } from 'fs';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
+import { constants, ReadStream, promises, openAsBlob } from 'fs';
 import { PathLikeOrReadStream } from './types';
+import { blob } from 'node:stream/consumers';
 
 /**
  * Utility class for common tasks related to the Gotenberg service.
@@ -32,7 +31,7 @@ export class GotenbergUtils {
      * @param {Record<string, string>} [customHttpHeaders] - Custom HTTP headers to be sent with the request.
      * @param {FormData} data - The FormData object to be sent in the POST request.
      * @param {Record<string, string>} customHeaders - List of custom headers to include in the fetch
-     * @returns {Promise<Buffer>} A Promise that resolves to the response body as a Buffer.
+     * @returns {Promise<Buffer>} A Promise that resolves to the response body as a buffer.
      * @throws {Error} Throws an error if the HTTP response status is not OK.
      */
     public static async fetch(
@@ -43,7 +42,6 @@ export class GotenbergUtils {
         customHttpHeaders?: Record<string, string>
     ): Promise<Buffer> {
         const headers: Record<string, string> = {
-            ...data.getHeaders(),
             ...customHttpHeaders
         };
 
@@ -55,7 +53,7 @@ export class GotenbergUtils {
         }
 
         const response = await fetch(endpoint, {
-            method: 'post',
+            method: 'POST',
             body: data,
             headers
         });
@@ -63,8 +61,8 @@ export class GotenbergUtils {
         if (!response.ok) {
             throw new Error(`${response.status} ${response.statusText}`);
         }
-
-        return response.buffer();
+        const arrayBuffer = await response.arrayBuffer();
+        return Buffer.from(arrayBuffer);
     }
 
     /**
@@ -81,12 +79,14 @@ export class GotenbergUtils {
         name: string
     ) {
         if (Buffer.isBuffer(file)) {
-            data.append('files', file, name);
+            data.append('files', new Blob([file]), name);
         } else if (file instanceof ReadStream) {
-            data.append('files', file, name);
+            const content = await blob(file);
+            data.append('files', content, name);
         } else {
             await promises.access(file, constants.R_OK);
-            data.append('files', createReadStream(file), name);
+            const content = await openAsBlob(file);
+            data.append('files', content, name);
         }
     }
 }

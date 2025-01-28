@@ -1,8 +1,6 @@
 import { promises } from 'fs';
 import path from 'path';
 
-import FormData from 'form-data';
-
 import { Chromiumly } from '../main.config';
 import {
     GotenbergUtils,
@@ -26,7 +24,7 @@ export class PDFEngines {
      * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
      * @param {Metadata} [options.metadata] - Metadata to be written.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
-     * @returns {Promise<Buffer>} A Promise resolving to the merged PDF content as a Buffer.
+     * @returns {Promise<Buffer>} A Promise resolving to the merged PDF content as a buffer
      */
     public static async merge({
         files,
@@ -67,7 +65,7 @@ export class PDFEngines {
      * @param {PdfFormat} [options.pdfa] - PDF format options.
      * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
-     * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
+     * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a buffer
      */
     public static async convert({
         files,
@@ -106,7 +104,7 @@ export class PDFEngines {
      * @param {Object} options - Options for the split operation.
      * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to be split.
      * @param {Split} options.options - Split configuration specifying mode ('pages' or 'intervals'), span, and unify options.
-     * @returns {Promise<Buffer>} A Promise resolving to the split PDF content as a Buffer.
+     * @returns {Promise<Buffer>} A Promise resolving to the split PDF content as a buffer
      */
     public static async split({
         files,
@@ -199,7 +197,7 @@ export class PDFEngines {
      * Generates a PDF file from a buffer and saves it to the "__generated__" directory.
      *
      * @param {string} filename - The filename for the generated PDF.
-     * @param {Buffer} buffer - The PDF content as a Buffer.
+     * @param {Buffer} buffer - The PDF content as a buffer
      * @returns {Promise<void>} A Promise that resolves once the file is generated and saved.
      */
     public static async generate(

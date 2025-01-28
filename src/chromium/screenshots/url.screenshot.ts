@@ -1,5 +1,5 @@
 import { URL } from 'url';
-import FormData from 'form-data';
+
 import { GotenbergUtils } from '../../common';
 import { UrlScreenshotOptions } from '../interfaces/screenshot.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';

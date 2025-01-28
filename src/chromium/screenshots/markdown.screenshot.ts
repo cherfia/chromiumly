@@ -1,5 +1,3 @@
-import FormData from 'form-data';
-
 import { GotenbergUtils } from '../../common';
 import { MarkdownScreenshotOptions } from '../interfaces/screenshot.types';
 import { ScreenshotUtils } from '../utils/screenshot.utils';

@@ -1,5 +1,3 @@
-import FormData from 'form-data';
-
 import { GotenbergUtils } from '../../common';
 import { MarkdownConversionOptions } from '../interfaces/converter.types';
 import { ConverterUtils } from '../utils/converter.utils';
@@ -47,7 +45,7 @@ export class MarkdownConverter extends Converter {
      * @param {Cookie[]} options.cookies - Cookies to be written.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @param {Split} [options.split] - Split the PDF into multiple files.
-     * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
+     * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a buffer
      */
     async convert({
         html,

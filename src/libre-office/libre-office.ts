@@ -1,5 +1,3 @@
-import FormData from 'form-data';
-
 import { Chromiumly } from '../main.config';
 import { GotenbergUtils } from '../common';
 import {
@@ -28,7 +26,7 @@ export class LibreOffice {
      * @param {75 | 150 | 300 | 600 | 1200} [options.maxImageResolution] - Maximum image resolution for the converted PDF.
      * @param {Split} [options.split] - Split the PDF into multiple files.
      *
-     * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a Buffer.
+     * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a buffer
      */
     public static async convert({
         files,
@@ -42,7 +40,9 @@ export class LibreOffice {
         quality,
         maxImageResolution,
         split
-    }: { files: PathLikeOrReadStream[] } & ConversionOptions): Promise<Buffer> {
+    }: {
+        files: PathLikeOrReadStream[];
+    } & ConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
         await LibreOfficeUtils.addFiles(files, data);

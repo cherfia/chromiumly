@@ -2,7 +2,6 @@ import {
     ImageProperties,
     ScreenshotOptions
 } from './../interfaces/screenshot.types';
-import FormData from 'form-data';
 
 import { GotenbergUtils } from '../../common';
 

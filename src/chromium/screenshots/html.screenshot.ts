@@ -1,5 +1,3 @@
-import FormData from 'form-data';
-
 import { GotenbergUtils } from '../../common';
 import { ChromiumRoute, Chromiumly } from '../../main.config';
 import { ScreenshotUtils } from '../utils/screenshot.utils';

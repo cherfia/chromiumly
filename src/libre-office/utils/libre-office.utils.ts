@@ -1,7 +1,6 @@
 import { constants, createReadStream, promises } from 'fs';
 import path from 'path';
-
-import FormData from 'form-data';
+import { blob } from 'node:stream/consumers';
 
 import { GotenbergUtils } from '../../common';
 import { LIBRE_OFFICE_EXTENSIONS } from './constants';
@@ -50,7 +49,12 @@ export class LibreOfficeUtils {
                     paddingLength,
                     '0'
                 )}.${fileInfo.ext}`;
-                data.append('files', fileInfo.data, filename);
+                if (Buffer.isBuffer(fileInfo.data)) {
+                    data.append('files', new Blob([fileInfo.data]), filename);
+                } else {
+                    const content = await blob(fileInfo.data);
+                    data.append('files', content, filename);
+                }
             })
         );
     }
