@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import FormData from 'form-data';
 import { ScreenshotUtils } from './../screenshot.utils';
 
 describe('ScreenshotUtils', () => {

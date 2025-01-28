@@ -1,13 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
 
-import FormData from 'form-data';
-import fetch from 'node-fetch';
-
 import { MarkdownScreenshot } from '../markdown.screenshot';
 
-const { Response } = jest.requireActual('node-fetch');
-jest.mock('node-fetch', () => jest.fn());
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content'])),
+    createReadStream: jest.fn()
+}));
+
+const mockResponse = () => new Response('content');
+
+const getResponseBuffer = async () => {
+    const responseBuffer = await mockResponse().arrayBuffer();
+    return Buffer.from(responseBuffer);
+};
+
+const mockFetch = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve(mockResponse()));
 
 describe('MarkdownScreenshot', () => {
     const screenshot = new MarkdownScreenshot();
@@ -22,11 +33,20 @@ describe('MarkdownScreenshot', () => {
 
     describe('capture', () => {
         const mockPromisesAccess = jest.spyOn(promises, 'access');
-        const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
         beforeEach(() => {
-            (createReadStream as jest.Mock) = jest.fn();
+            (createReadStream as jest.Mock) = jest
+                .fn()
+                .mockImplementation(() => ({
+                    pipe: jest.fn(),
+                    on: jest.fn(),
+                    async *[Symbol.asyncIterator]() {
+                        yield Buffer.from('file content');
+                    }
+                }));
+            jest.clearAllMocks();
+            mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
         });
 
         afterEach(() => {
@@ -35,31 +55,29 @@ describe('MarkdownScreenshot', () => {
 
         describe('when html and markdown parameters are passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown')
                 });
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
             });
         });
 
         describe('when image properties parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
                     properties: { format: 'jpeg', quality: 50 }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when emulatedMediaType parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
@@ -67,39 +85,38 @@ describe('MarkdownScreenshot', () => {
                 });
 
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when failOnHttpStatusCodes parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
                     failOnHttpStatusCodes: [499, 599]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when skipNetworkIdleEvent parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
                     skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
+                mockPromisesAccess.mockResolvedValue();
+
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
@@ -115,7 +132,7 @@ describe('MarkdownScreenshot', () => {
                     }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(10);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
@@ -137,7 +154,7 @@ describe('MarkdownScreenshot', () => {
         describe('when fetch request fails', () => {
             it('should throw an error', async () => {
                 const errorMessage =
-                    'FetchError: request to http://localhost:3000/forms/chromium/screenshot/html failed';
+                    'FetchError: request to http://localhost:3000/forms/chromium/screenshot/markdown failed';
                 mockPromisesAccess.mockResolvedValue();
                 mockFetch.mockRejectedValue(new Error(errorMessage));
                 await expect(() =>

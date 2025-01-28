@@ -1,7 +1,17 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
-import FormData from 'form-data';
+
 import { PDFEnginesUtils } from '../pdf-engines.utils';
+
+jest.mock('node:stream/consumers', () => ({
+    blob: jest.fn().mockResolvedValue(new Blob(['stream content']))
+}));
+
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file path'])),
+    createReadStream: jest.fn()
+}));
 
 describe('PDFEnginesUtils', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
@@ -9,9 +19,13 @@ describe('PDFEnginesUtils', () => {
     const data = new FormData();
 
     beforeEach(() => {
-        (createReadStream as jest.Mock) = jest
-            .fn()
-            .mockImplementation((file) => file);
+        (createReadStream as jest.Mock) = jest.fn().mockImplementation(() => ({
+            pipe: jest.fn(),
+            on: jest.fn(),
+            async *[Symbol.asyncIterator]() {
+                yield Buffer.from('file content');
+            }
+        }));
     });
 
     afterEach(() => {

@@ -1,18 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream } from 'fs';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
 
-import { UrlScreenshot } from './../url.screenshot';
+import { UrlScreenshot } from '../url.screenshot';
 
-const { Response } = jest.requireActual('node-fetch');
-jest.mock('node-fetch', () => jest.fn());
+const mockResponse = () => new Response('content');
 
-describe('URLScreenshot', () => {
+const getResponseBuffer = async () => {
+    const responseBuffer = await mockResponse().arrayBuffer();
+    return Buffer.from(responseBuffer);
+};
+
+const mockFetch = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve(mockResponse()));
+
+describe('UrlScreenshot', () => {
     const screenshot = new UrlScreenshot();
 
     describe('endpoint', () => {
-        it('should route to Chromium HTML route', () => {
+        it('should route to Chromium URL route', () => {
             expect(screenshot.endpoint).toEqual(
                 'http://localhost:3000/forms/chromium/screenshot/url'
             );
@@ -20,11 +26,12 @@ describe('URLScreenshot', () => {
     });
 
     describe('capture', () => {
-        const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
         beforeEach(() => {
             (createReadStream as jest.Mock) = jest.fn();
+            jest.clearAllMocks();
+            mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
         });
 
         afterEach(() => {
@@ -33,77 +40,70 @@ describe('URLScreenshot', () => {
 
         describe('when URL is valid', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValueOnce(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/'
                 });
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when image properties parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValueOnce(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
                     properties: { format: 'jpeg', quality: 50 }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when emulatedMediaType parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
                     emulatedMediaType: 'screen'
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when failOnHttpStatusCodes parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
                     failOnHttpStatusCodes: [499, 599]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when skipNetworkIdleEvent parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
                     skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when optimizeForSpeed parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
                     optimizeForSpeed: true
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     url: 'http://www.example.com/',
                     emulatedMediaType: 'screen',
@@ -121,7 +121,7 @@ describe('URLScreenshot', () => {
                     ]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
@@ -136,8 +136,8 @@ describe('URLScreenshot', () => {
         describe('when fetch request fails', () => {
             it('should throw an error', async () => {
                 const errorMessage =
-                    'FetchError: request to http://localhost:3000/forms/chromium/convert/html failed';
-                mockFetch.mockRejectedValueOnce(new Error(errorMessage));
+                    'FetchError: request to http://localhost:3000/forms/chromium/screenshot/url failed';
+                mockFetch.mockRejectedValue(new Error(errorMessage));
                 await expect(() =>
                     screenshot.capture({ url: 'http://www.example.com/' })
                 ).rejects.toThrow(errorMessage);

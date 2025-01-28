@@ -1,17 +1,37 @@
 import { createReadStream, promises } from 'fs';
-import path from 'path';
-import fetch from 'node-fetch';
-import FormData from 'form-data';
 
-import { GotenbergUtils } from './../gotenberg.utils';
+import { GotenbergUtils } from '../gotenberg.utils';
+import { blob } from 'node:stream/consumers';
 
-const { Response, FetchError } = jest.requireActual('node-fetch');
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file path'])),
+    createReadStream: jest.fn()
+}));
 
-jest.mock('node-fetch', () => jest.fn());
+jest.mock('node:stream/consumers', () => ({
+    blob: jest.fn().mockResolvedValue(new Blob(['stream content']))
+}));
+
+const mockResponse = () => new Response('content', { status: 200 });
+
+const getResponseBuffer = async () => {
+    const responseBuffer = await mockResponse().arrayBuffer();
+    return Buffer.from(responseBuffer);
+};
+
+const mockFetch = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve(mockResponse()));
 
 describe('GotenbergUtils', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
     const data = new FormData();
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
+    });
 
     afterEach(() => {
         jest.resetAllMocks();
@@ -19,146 +39,131 @@ describe('GotenbergUtils', () => {
 
     describe('assert', () => {
         const errorMessage = 'error message';
-        describe('when condition is true', () => {
-            it('should pass', () => {
-                expect(() =>
-                    GotenbergUtils.assert(true, errorMessage)
-                ).not.toThrow();
-            });
+
+        it('should pass when condition is true', () => {
+            expect(() =>
+                GotenbergUtils.assert(true, errorMessage)
+            ).not.toThrow();
         });
-        describe('when condition is false', () => {
-            it('should return error message', () => {
-                expect(() =>
-                    GotenbergUtils.assert(false, errorMessage)
-                ).toThrow(errorMessage);
-            });
+
+        it('should throw error when condition is false', () => {
+            expect(() => GotenbergUtils.assert(false, errorMessage)).toThrow(
+                errorMessage
+            );
         });
     });
 
     describe('fetch', () => {
-        const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const data = new FormData();
         const endpoint = 'http://localhost:3000/forms/chromium/convert/html';
         const basicAuthUsername = 'username';
         const basicAuthPassword = 'pass';
         const customHttpHeaders = { 'X-Custom-Header': 'value' };
 
-        describe('when fetch request succeeds', () => {
-            it('should return a buffer and send correct headers', async () => {
-                mockFetch.mockResolvedValueOnce(new Response('content'));
+        it('should return buffer and send correct headers on success', async () => {
+            const buffer = await GotenbergUtils.fetch(
+                endpoint,
+                data,
+                basicAuthUsername,
+                basicAuthPassword,
+                customHttpHeaders
+            );
 
-                const response = await GotenbergUtils.fetch(
+            expect(buffer).toEqual(await getResponseBuffer());
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                endpoint,
+                expect.objectContaining({
+                    method: 'POST',
+                    headers: expect.objectContaining({
+                        Authorization: `Basic ${Buffer.from(
+                            `${basicAuthUsername}:${basicAuthPassword}`
+                        ).toString('base64')}`,
+                        'X-Custom-Header': 'value'
+                    }),
+                    body: expect.any(Object)
+                })
+            );
+        });
+
+        it('should throw error on known fetch error', async () => {
+            const errorMessage =
+                'FetchError: request to http://localhost:3000/forms/chromium/convert/html failed';
+            mockFetch.mockRejectedValueOnce(new Error(errorMessage));
+
+            await expect(() =>
+                GotenbergUtils.fetch(
                     endpoint,
                     data,
                     basicAuthUsername,
                     basicAuthPassword,
                     customHttpHeaders
-                );
-
-                await expect(response).toEqual(Buffer.from('content'));
-
-                expect(mockFetch).toHaveBeenCalledWith(
-                    endpoint,
-                    expect.objectContaining({
-                        method: 'post',
-                        headers: expect.objectContaining({
-                            Authorization: `Basic ${Buffer.from(
-                                `${basicAuthUsername}:${basicAuthPassword}`
-                            ).toString('base64')}`,
-                            'X-Custom-Header': 'value',
-                            'content-type': expect.stringMatching(
-                                /^multipart\/form-data; boundary=/
-                            )
-                        }),
-                        body: expect.any(Object)
-                    })
-                );
-            });
+                )
+            ).rejects.toThrow(errorMessage);
         });
 
-        describe('when fetch request fails', () => {
-            describe('when there is a known error', () => {
-                it('should throw an error', async () => {
-                    const errorMessage =
-                        'FetchError: request to http://localhost:3000/forms/chromium/convert/html failed';
-                    mockFetch.mockRejectedValueOnce(
-                        new FetchError(errorMessage)
-                    );
-                    await expect(() =>
-                        GotenbergUtils.fetch(
-                            endpoint,
-                            data,
-                            basicAuthUsername,
-                            basicAuthPassword,
-                            customHttpHeaders
-                        )
-                    ).rejects.toThrow(errorMessage);
-                });
-            });
+        it('should throw error on unknown fetch error', async () => {
+            mockFetch.mockResolvedValueOnce(
+                new Response('Error content', {
+                    status: 500,
+                    statusText: 'Internal server error'
+                })
+            );
 
-            describe('when there is an unknown error', () => {
-                it('should throw an error', async () => {
-                    mockFetch.mockResolvedValueOnce(
-                        new Response(
-                            {},
-                            {
-                                status: 500,
-                                statusText: 'Internal server error'
-                            }
-                        )
-                    );
-                    await expect(() =>
-                        GotenbergUtils.fetch(
-                            endpoint,
-                            data,
-                            basicAuthUsername,
-                            basicAuthPassword,
-                            customHttpHeaders
-                        )
-                    ).rejects.toThrow('500 Internal server error');
-                });
-            });
+            await expect(() =>
+                GotenbergUtils.fetch(
+                    endpoint,
+                    data,
+                    basicAuthUsername,
+                    basicAuthPassword,
+                    customHttpHeaders
+                )
+            ).rejects.toThrow('500 Internal server error');
         });
     });
 
     describe('addFile', () => {
         const mockPromisesAccess = jest.spyOn(promises, 'access');
-        const __tmp__ = path.resolve(process.cwd(), '__tmp__');
-        const filePath = path.resolve(__tmp__, 'file.html');
+        const filePath = '/mock/path/file.html';
 
-        beforeAll(async () => {
+        beforeEach(() => {
             mockPromisesAccess.mockResolvedValue();
-            await promises.mkdir(path.resolve(__tmp__), { recursive: true });
-            await promises.writeFile(filePath, 'data');
+            const mockStream = {
+                pipe: jest.fn(),
+                on: jest.fn(),
+                async *[Symbol.asyncIterator]() {
+                    yield Buffer.from('file content');
+                }
+            };
+            (createReadStream as jest.Mock).mockReturnValue(mockStream);
         });
 
-        afterAll(async () => {
-            await promises.rm(path.resolve(__tmp__), { recursive: true });
+        it('should append read stream file to data', async () => {
+            const file = createReadStream(filePath);
+            await GotenbergUtils.addFile(data, file, 'file');
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+            const content = await blob(file);
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'files',
+                content,
+                'file'
+            );
         });
 
-        describe('when file is passed as read stream', () => {
-            it('should append file to data', async () => {
-                const file = createReadStream(filePath);
-                await GotenbergUtils.addFile(data, file, 'file');
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('files', file, 'file');
-            });
+        it('should append file path to data', async () => {
+            await GotenbergUtils.addFile(data, filePath, 'file');
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
         });
 
-        describe('when file is passed as path', () => {
-            it('should append file to data', async () => {
-                await GotenbergUtils.addFile(data, filePath, 'file');
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-            });
-        });
-
-        describe('when file is passed as buffer', () => {
-            it('should append file to data', async () => {
-                const file = Buffer.from('data');
-                await GotenbergUtils.addFile(data, file, 'file');
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('files', file, 'file');
-            });
+        it('should append buffer to data', async () => {
+            const file = Buffer.from('data');
+            await GotenbergUtils.addFile(data, file, 'file');
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'files',
+                new Blob([file]),
+                'file'
+            );
         });
     });
 });

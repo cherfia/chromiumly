@@ -1,14 +1,25 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
 
-import fetch from 'node-fetch';
-import FormData from 'form-data';
-
 import { PdfFormat } from '../../../common';
 import { HtmlConverter } from '../html.converter';
 
-const { Response } = jest.requireActual('node-fetch');
-jest.mock('node-fetch', () => jest.fn());
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content'])),
+    createReadStream: jest.fn()
+}));
+
+const mockResponse = () => new Response('content');
+
+const getResponseBuffer = async () => {
+    const responseBuffer = await mockResponse().arrayBuffer();
+    return Buffer.from(responseBuffer);
+};
+
+const mockFetch = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve(mockResponse()));
 
 describe('HtmlConverter', () => {
     const converter = new HtmlConverter();
@@ -23,7 +34,6 @@ describe('HtmlConverter', () => {
 
     describe('convert', () => {
         const mockPromisesAccess = jest.spyOn(promises, 'access');
-        const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
         const assets = [
@@ -33,6 +43,8 @@ describe('HtmlConverter', () => {
 
         beforeEach(() => {
             (createReadStream as jest.Mock) = jest.fn();
+            jest.clearAllMocks();
+            mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
         });
 
         afterEach(() => {
@@ -41,114 +53,104 @@ describe('HtmlConverter', () => {
 
         describe('when html parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data')
                 });
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when pdf format parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     pdfFormat: PdfFormat.A_1a
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when page properties parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     properties: { size: { width: 8.3, height: 11.7 } }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when header parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     header: Buffer.from('header')
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when footer parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     footer: Buffer.from('footer')
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when assets parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     assets
                 });
 
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when emulatedMediaType parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     emulatedMediaType: 'screen'
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when failOnHttpStatusCodes parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     failOnHttpStatusCodes: [499, 599]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when skipNetworkIdleEvent parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when downloadFrom parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     downloadFrom: {
@@ -157,26 +159,25 @@ describe('HtmlConverter', () => {
                     }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when split parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     split: { mode: 'pages', span: '1-10', unify: true }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response('content'));
+
                 const buffer = await converter.convert({
                     html: Buffer.from('data'),
                     assets,
@@ -192,7 +193,7 @@ describe('HtmlConverter', () => {
                     split: { mode: 'pages', span: 'r3-r1' }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 

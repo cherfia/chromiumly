@@ -1,22 +1,34 @@
-import { LibreOffice } from '../libre-office';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
+
+import { LibreOffice } from '../libre-office';
 import { PdfFormat } from '../../common';
 
-const { Response } = jest.requireActual('node-fetch');
-jest.mock('node-fetch', () => jest.fn());
+const mockResponse = () => new Response('content');
+
+const getResponseBuffer = async () => {
+    const responseBuffer = await mockResponse().arrayBuffer();
+    return Buffer.from(responseBuffer);
+};
+
+const mockFetch = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve(mockResponse()));
 
 describe('LibreOffice', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
-    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
     beforeEach(() => {
-        (createReadStream as jest.Mock) = jest
-            .fn()
-            .mockImplementation((file) => file);
+        (createReadStream as jest.Mock) = jest.fn().mockImplementation(() => ({
+            pipe: jest.fn(),
+            on: jest.fn(),
+            async *[Symbol.asyncIterator]() {
+                yield Buffer.from('file content');
+            }
+        }));
+        jest.clearAllMocks();
+        mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
     });
 
     afterEach(() => {
@@ -27,11 +39,10 @@ describe('LibreOffice', () => {
         describe('when no properties are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await LibreOffice.convert({
                     files: ['path/to/file.docx', 'path/to/file.bib']
                 });
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
             });
         });
@@ -39,7 +50,6 @@ describe('LibreOffice', () => {
         describe('when properties are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await LibreOffice.convert({
                     files: ['path/to/file.docx', 'path/to/file.bib'],
                     properties: { landscape: true, password: 'password' },
@@ -61,7 +71,7 @@ describe('LibreOffice', () => {
                         unify: true
                     }
                 });
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(15);
             });
         });

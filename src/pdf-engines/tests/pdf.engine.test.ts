@@ -1,25 +1,37 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
-import FormData from 'form-data';
 import fs from 'fs/promises';
-import fetch from 'node-fetch';
 import path from 'path';
-
 import { PdfFormat } from '../../common';
 import { PDFEngines } from '../pdf-engines';
 
-const { Response } = jest.requireActual('node-fetch');
-jest.mock('node-fetch', () => jest.fn());
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content'])),
+    createReadStream: jest.fn()
+}));
+
+const mockResponse = () => new Response('content');
+
+const getResponseBuffer = async () => {
+    const responseBuffer = await mockResponse().arrayBuffer();
+    return Buffer.from(responseBuffer);
+};
+
+const mockFetch = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve(mockResponse()));
 
 describe('PDFEngines', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
-    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
     beforeEach(() => {
         (createReadStream as jest.Mock) = jest
             .fn()
             .mockImplementation((file) => file);
+        jest.clearAllMocks();
+        mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
     });
 
     afterEach(() => {
@@ -30,7 +42,6 @@ describe('PDFEngines', () => {
         describe('when no properties are passed', () => {
             it('should throw an error', async () => {
                 mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response('content'));
                 await expect(
                     PDFEngines.convert({
                         files: ['path/to/file_1.pdf', 'path/to/file_2.pdf']
@@ -44,7 +55,6 @@ describe('PDFEngines', () => {
         describe('when properties are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await PDFEngines.convert({
                     files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
                     pdfa: PdfFormat.A_2b,
@@ -54,7 +64,7 @@ describe('PDFEngines', () => {
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     }
                 });
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
             });
         });
@@ -63,14 +73,13 @@ describe('PDFEngines', () => {
     describe('merge', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
-            mockFetch.mockResolvedValue(new Response('content'));
             const buffer = await PDFEngines.merge({
                 files: ['path/to/file.pdf', 'path/to/another-file.pdf'],
                 pdfa: PdfFormat.A_2b,
                 pdfUA: true,
                 metadata: { Author: 'John Doe' }
             });
-            expect(buffer).toEqual(Buffer.from('content'));
+            expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
         });
     });
@@ -78,9 +87,8 @@ describe('PDFEngines', () => {
     describe('readMetadata', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
-            mockFetch.mockResolvedValue(new Response('content'));
             const buffer = await PDFEngines.readMetadata(['path/to/file.pdf']);
-            expect(buffer).toEqual(Buffer.from('content'));
+            expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
         });
     });
@@ -88,7 +96,6 @@ describe('PDFEngines', () => {
     describe('writeMetadata', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
-            mockFetch.mockResolvedValue(new Response('content'));
             const buffer = await PDFEngines.writeMetadata({
                 files: ['path/to/file.pdf'],
                 metadata: {
@@ -106,7 +113,7 @@ describe('PDFEngines', () => {
                     Trapped: 'Unknown'
                 }
             });
-            expect(buffer).toEqual(Buffer.from('content'));
+            expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
         });
     });
@@ -114,12 +121,11 @@ describe('PDFEngines', () => {
     describe('split', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
-            mockFetch.mockResolvedValue(new Response('content'));
             const buffer = await PDFEngines.split({
                 files: ['path/to/file.pdf'],
                 options: { mode: 'pages', span: '1-10', unify: true }
             });
-            expect(buffer).toEqual(Buffer.from('content'));
+            expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
         });
     });

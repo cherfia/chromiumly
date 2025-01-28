@@ -2,7 +2,6 @@
 import { promises, createReadStream } from 'fs';
 import { LibreOfficeUtils } from '../libre-office.utils';
 
-import FormData from 'form-data';
 import { PdfFormat } from '../../../common';
 
 describe('LibreOfficeUtils', () => {
@@ -100,7 +99,7 @@ describe('LibreOfficeUtils', () => {
                     LibreOfficeUtils.addPageProperties(data, {
                         landscape: true
                     });
-                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                     expect(data.append).toHaveBeenCalledWith(
                         'landscape',
                         'true'

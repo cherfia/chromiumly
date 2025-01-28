@@ -1,13 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
 
-import fetch from 'node-fetch';
-import FormData from 'form-data';
-
 import { HtmlScreenshot } from '../html.screenshot';
 
-const { Response } = jest.requireActual('node-fetch');
-jest.mock('node-fetch', () => jest.fn());
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content'])),
+    createReadStream: jest.fn()
+}));
+
+const mockResponse = () => new Response('content');
+
+const getResponseBuffer = async () => {
+    const responseBuffer = await mockResponse().arrayBuffer();
+    return Buffer.from(responseBuffer);
+};
+
+const mockFetch = jest
+    .spyOn(global, 'fetch')
+    .mockImplementation(() => Promise.resolve(mockResponse()));
 
 describe('HtmlScreenshot', () => {
     const screenshot = new HtmlScreenshot();
@@ -22,11 +33,20 @@ describe('HtmlScreenshot', () => {
 
     describe('capture', () => {
         const mockPromisesAccess = jest.spyOn(promises, 'access');
-        const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
         const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
         beforeEach(() => {
-            (createReadStream as jest.Mock) = jest.fn();
+            (createReadStream as jest.Mock) = jest
+                .fn()
+                .mockImplementation(() => ({
+                    pipe: jest.fn(),
+                    on: jest.fn(),
+                    async *[Symbol.asyncIterator]() {
+                        yield Buffer.from('file content');
+                    }
+                }));
+            jest.clearAllMocks();
+            mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
         });
 
         afterEach(() => {
@@ -35,78 +55,73 @@ describe('HtmlScreenshot', () => {
 
         describe('when html parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data')
                 });
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when image properties parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     properties: { format: 'jpeg', quality: 50 }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when emulatedMediaType parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     emulatedMediaType: 'screen'
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when failOnHttpStatusCodes parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     failOnHttpStatusCodes: [499, 599]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when skipNetworkIdleEvent parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     skipNetworkIdleEvent: false
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when optimizeForSpeed parameter is passed', () => {
             it('should return a buffer', async () => {
-                mockFetch.mockResolvedValue(new Response('content'));
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     optimizeForSpeed: true
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
-                mockFetch.mockResolvedValue(new Response('content'));
+
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     emulatedMediaType: 'screen',
@@ -121,7 +136,7 @@ describe('HtmlScreenshot', () => {
                     }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(9);
-                expect(buffer).toEqual(Buffer.from('content'));
+                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 

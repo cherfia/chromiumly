@@ -1,13 +1,27 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
-import path from 'path';
-import FormData from 'form-data';
+
 import { ConverterUtils } from '../converter.utils';
 import { GotenbergUtils, PdfFormat } from '../../../common';
+import { blob } from 'node:stream/consumers';
+
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file path'])),
+    createReadStream: jest.fn()
+}));
+
+jest.mock('node:stream/consumers', () => ({
+    blob: jest.fn().mockResolvedValue(new Blob(['stream content']))
+}));
 
 describe('ConverterUtils', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
     const data = new FormData();
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
     afterEach(() => {
         jest.resetAllMocks();
@@ -21,7 +35,7 @@ describe('ConverterUtils', () => {
                         singlePage: true
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                    expect(data.append).toHaveBeenCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
                         'singlePage',
                         'true'
                     );
@@ -36,8 +50,11 @@ describe('ConverterUtils', () => {
                         size: { width: 8.3, height: 11.7 }
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                    expect(data.append).toHaveBeenCalledWith('paperWidth', 8.3);
-                    expect(data.append).toHaveBeenNthCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        8.3
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                         2,
                         'paperHeight',
                         11.7
@@ -53,18 +70,21 @@ describe('ConverterUtils', () => {
                         margins: { top: 0.5, bottom: 0.5, left: 1, right: 1 }
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
-                    expect(data.append).toHaveBeenCalledWith('marginTop', 0.5);
-                    expect(data.append).toHaveBeenNthCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginTop',
+                        0.5
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                         2,
                         'marginBottom',
                         0.5
                     );
-                    expect(data.append).toHaveBeenNthCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                         3,
                         'marginLeft',
                         1
                     );
-                    expect(data.append).toHaveBeenNthCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                         4,
                         'marginRight',
                         1
@@ -80,7 +100,7 @@ describe('ConverterUtils', () => {
                         preferCssPageSize: true
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                    expect(data.append).toHaveBeenCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
                         'preferCssPageSize',
                         'true'
                     );
@@ -95,7 +115,7 @@ describe('ConverterUtils', () => {
                         printBackground: true
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                    expect(data.append).toHaveBeenCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
                         'printBackground',
                         'true'
                     );
@@ -108,7 +128,7 @@ describe('ConverterUtils', () => {
                         omitBackground: true
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                    expect(data.append).toHaveBeenCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
                         'omitBackground',
                         'true'
                     );
@@ -123,7 +143,7 @@ describe('ConverterUtils', () => {
                         landscape: true
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                    expect(data.append).toHaveBeenCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
                         'landscape',
                         'true'
                     );
@@ -138,7 +158,10 @@ describe('ConverterUtils', () => {
                         scale: 1.5
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                    expect(data.append).toHaveBeenCalledWith('scale', 1.5);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'scale',
+                        1.5
+                    );
                 });
             });
         });
@@ -150,7 +173,7 @@ describe('ConverterUtils', () => {
                         nativePageRanges: { from: 1, to: 6 }
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                    expect(data.append).toHaveBeenCalledWith(
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
                         'nativePageRanges',
                         '1-6'
                     );
@@ -160,24 +183,32 @@ describe('ConverterUtils', () => {
     });
 
     describe('addFile', () => {
-        const __tmp__ = path.resolve(process.cwd(), '__tmp__');
-        const filePath = path.resolve(__tmp__, 'file.html');
+        const mockPromisesAccess = jest.spyOn(promises, 'access');
+        const filePath = '/mock/path/file.html';
 
-        beforeAll(async () => {
-            await promises.mkdir(path.resolve(__tmp__), { recursive: true });
-            await promises.writeFile(filePath, 'data');
-        });
-
-        afterAll(async () => {
-            await promises.rm(path.resolve(__tmp__), { recursive: true });
+        beforeEach(() => {
+            mockPromisesAccess.mockResolvedValue();
+            const mockStream = {
+                pipe: jest.fn(),
+                on: jest.fn(),
+                async *[Symbol.asyncIterator]() {
+                    yield Buffer.from('file content');
+                }
+            };
+            (createReadStream as jest.Mock).mockReturnValue(mockStream);
         });
 
         describe('when file is passed as read stream', () => {
             it('should append file to data', async () => {
                 const file = createReadStream(filePath);
                 await GotenbergUtils.addFile(data, file, 'file');
+                const content = await blob(file);
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('files', file, 'file');
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'files',
+                    content,
+                    'file'
+                );
             });
         });
 
@@ -193,7 +224,11 @@ describe('ConverterUtils', () => {
                 const file = Buffer.from('data');
                 await GotenbergUtils.addFile(data, file, 'file');
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('files', file, 'file');
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'files',
+                    new Blob([file]),
+                    'file'
+                );
             });
         });
     });
@@ -212,9 +247,9 @@ describe('ConverterUtils', () => {
                     header: Buffer.from('header')
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'files',
-                    Buffer.from('header'),
+                    new Blob([Buffer.from('header')]),
                     'header.html'
                 );
             });
@@ -226,9 +261,9 @@ describe('ConverterUtils', () => {
                     footer: Buffer.from('footer')
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'files',
-                    Buffer.from('footer'),
+                    new Blob([Buffer.from('footer')]),
                     'footer.html'
                 );
             });
@@ -240,7 +275,10 @@ describe('ConverterUtils', () => {
                     pdfFormat: PdfFormat.A_1a
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('pdfa', 'PDF/A-1a');
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'pdfa',
+                    'PDF/A-1a'
+                );
             });
         });
 
@@ -250,18 +288,24 @@ describe('ConverterUtils', () => {
                     pdfUA: true
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('pdfua', 'true');
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'pdfua',
+                    'true'
+                );
             });
         });
 
         describe('when page properties parameter is passed', () => {
-            it('should append page propertiers', async () => {
+            it('should append page properties', async () => {
                 await ConverterUtils.customize(data, {
                     properties: { size: { width: 8.3, height: 11.7 } }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(data.append).toHaveBeenCalledWith('paperWidth', 8.3);
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'paperWidth',
+                    8.3
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     2,
                     'paperHeight',
                     11.7
@@ -275,7 +319,7 @@ describe('ConverterUtils', () => {
                     emulatedMediaType: 'screen'
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'emulatedMediaType',
                     'screen'
                 );
@@ -288,7 +332,10 @@ describe('ConverterUtils', () => {
                     waitDelay: '5s'
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('waitDelay', '5s');
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'waitDelay',
+                    '5s'
+                );
             });
         });
 
@@ -298,7 +345,7 @@ describe('ConverterUtils', () => {
                     waitForExpression: "document.readyState === 'complete'"
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'waitForExpression',
                     "document.readyState === 'complete'"
                 );
@@ -314,7 +361,7 @@ describe('ConverterUtils', () => {
                     userAgent
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'userAgent',
                     userAgent
                 );
@@ -331,7 +378,7 @@ describe('ConverterUtils', () => {
                     extraHttpHeaders
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'extraHttpHeaders',
                     JSON.stringify(extraHttpHeaders)
                 );
@@ -344,7 +391,7 @@ describe('ConverterUtils', () => {
                     failOnConsoleExceptions: true
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'failOnConsoleExceptions',
                     'true'
                 );
@@ -357,7 +404,7 @@ describe('ConverterUtils', () => {
                     metadata: { Author: 'John Doe' }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'metadata',
                     JSON.stringify({ Author: 'John Doe' })
                 );
@@ -380,7 +427,7 @@ describe('ConverterUtils', () => {
                     ]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'cookies',
                     JSON.stringify([
                         {
@@ -406,7 +453,7 @@ describe('ConverterUtils', () => {
                     }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',
@@ -422,6 +469,14 @@ describe('ConverterUtils', () => {
                     split: { mode: 'pages', span: '1-10' }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'splitMode',
+                    'pages'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'splitSpan',
+                    '1-10'
+                );
             });
         });
 
@@ -453,90 +508,94 @@ describe('ConverterUtils', () => {
                     split: { mode: 'pages', span: '1-10', unify: true }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(22);
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
                     'PDF/A-1a'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(2, 'pdfua', 'true');
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    2,
+                    'pdfua',
+                    'true'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     3,
                     'files',
-                    Buffer.from('header.html'),
+                    new Blob([Buffer.from('header.html')]),
                     'header.html'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     4,
                     'files',
-                    Buffer.from('footer.html'),
+                    new Blob([Buffer.from('footer.html')]),
                     'footer.html'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     5,
                     'emulatedMediaType',
                     'screen'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     6,
                     'paperWidth',
                     8.3
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     7,
                     'paperHeight',
                     11.7
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     8,
                     'waitDelay',
                     '5s'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     9,
                     'waitForExpression',
                     "document.readyState === 'complete'"
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     10,
                     'userAgent',
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     11,
                     'extraHttpHeaders',
                     JSON.stringify({ 'X-Custom-Header': 'value' })
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     12,
                     'failOnHttpStatusCodes',
                     JSON.stringify([499, 599])
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     13,
                     'failOnResourceHttpStatusCodes',
                     JSON.stringify([499, 599])
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     14,
                     'failOnResourceLoadingFailed',
                     'true'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     15,
                     'failOnConsoleExceptions',
                     'true'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     16,
                     'skipNetworkIdleEvent',
                     'false'
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     17,
                     'metadata',
                     JSON.stringify({ Author: 'John Doe' })
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     18,
                     'downloadFrom',
                     JSON.stringify({
@@ -544,9 +603,24 @@ describe('ConverterUtils', () => {
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     })
                 );
-                expect(data.append).toHaveBeenNthCalledWith(
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     19,
                     'generateDocumentOutline',
+                    'true'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    20,
+                    'splitMode',
+                    'pages'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    21,
+                    'splitSpan',
+                    '1-10'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    22,
+                    'splitUnify',
                     'true'
                 );
             });
