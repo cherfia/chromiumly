@@ -77,7 +77,7 @@ export class GotenbergUtils {
         data: FormData,
         file: PathLikeOrReadStream,
         name: string
-    ) {
+    ): Promise<void> {
         if (Buffer.isBuffer(file)) {
             data.append('files', new Blob([file]), name);
         } else if (file instanceof ReadStream) {
