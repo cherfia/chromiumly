@@ -1,4 +1,4 @@
-import { constants, createReadStream, promises } from 'fs';
+import { constants, openAsBlob, promises, ReadStream } from 'fs';
 import path from 'path';
 import { blob } from 'node:stream/consumers';
 
@@ -19,7 +19,7 @@ export class LibreOfficeUtils {
             await promises.access(file, constants.R_OK);
             const filename = path.basename(path.parse(file).base);
             return {
-                data: createReadStream(file),
+                data: file,
                 ext: path.extname(filename).slice(1)
             };
         } else {
@@ -51,8 +51,12 @@ export class LibreOfficeUtils {
                 )}.${fileInfo.ext}`;
                 if (Buffer.isBuffer(fileInfo.data)) {
                     data.append('files', new Blob([fileInfo.data]), filename);
-                } else {
+                } else if (fileInfo.data instanceof ReadStream) {
                     const content = await blob(fileInfo.data);
+                    data.append('files', content, filename);
+                } else {
+                    await promises.access(fileInfo.data, constants.R_OK);
+                    const content = await openAsBlob(fileInfo.data);
                     data.append('files', content, filename);
                 }
             })
