@@ -1,6 +1,7 @@
 import { constants, ReadStream, promises, openAsBlob } from 'fs';
-import { PathLikeOrReadStream } from './types';
 import { blob } from 'node:stream/consumers';
+
+import { PathLikeOrReadStream } from './types';
 
 /**
  * Utility class for common tasks related to the Gotenberg service.

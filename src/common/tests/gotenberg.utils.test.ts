@@ -1,7 +1,7 @@
 import { createReadStream, promises } from 'fs';
+import { blob } from 'node:stream/consumers';
 
 import { GotenbergUtils } from '../gotenberg.utils';
-import { blob } from 'node:stream/consumers';
 
 jest.mock('fs', () => ({
     ...jest.requireActual('fs'),

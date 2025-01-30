@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
+import { blob } from 'node:stream/consumers';
 
 import { ConverterUtils } from '../converter.utils';
 import { GotenbergUtils, PdfFormat } from '../../../common';
-import { blob } from 'node:stream/consumers';
 
 jest.mock('fs', () => ({
     ...jest.requireActual('fs'),

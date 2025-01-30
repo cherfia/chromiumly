@@ -1,12 +1,12 @@
 import { constants, openAsBlob, promises, ReadStream } from 'fs';
 import path from 'path';
+import { blob } from 'node:stream/consumers';
 
 import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
 import {
     ConversionOptions,
     MergeOptions
 } from '../interfaces/pdf-engines.types';
-import { blob } from 'node:stream/consumers';
 
 /**
  * Utility class for handling common tasks related to PDF engine operations.
