@@ -4,6 +4,11 @@ import { LibreOfficeUtils } from '../libre-office.utils';
 
 import { PdfFormat } from '../../../common';
 
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content']))
+}));
+
 describe('LibreOfficeUtils', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
@@ -99,7 +104,7 @@ describe('LibreOfficeUtils', () => {
                     LibreOfficeUtils.addPageProperties(data, {
                         landscape: true
                     });
-                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                     expect(data.append).toHaveBeenCalledWith(
                         'landscape',
                         'true'

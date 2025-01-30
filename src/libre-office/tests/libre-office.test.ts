@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createReadStream, promises } from 'fs';
+import { promises } from 'fs';
 
 import { LibreOffice } from '../libre-office';
 import { PdfFormat } from '../../common';
@@ -11,6 +11,11 @@ const getResponseBuffer = async () => {
     return Buffer.from(responseBuffer);
 };
 
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content']))
+}));
+
 const mockFetch = jest
     .spyOn(global, 'fetch')
     .mockImplementation(() => Promise.resolve(mockResponse()));
@@ -20,13 +25,6 @@ describe('LibreOffice', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
     beforeEach(() => {
-        (createReadStream as jest.Mock) = jest.fn().mockImplementation(() => ({
-            pipe: jest.fn(),
-            on: jest.fn(),
-            async *[Symbol.asyncIterator]() {
-                yield Buffer.from('file content');
-            }
-        }));
         jest.clearAllMocks();
         mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
     });
