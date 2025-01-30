@@ -1,33 +1,28 @@
 # Changelog
 
-## 3.11.0 (2025-01-09)
+## 4.0.0 (2025-01-30)
 
-- docs: update README ([0240e0c](https://github.com/cherfia/chromiumly/commit/0240e0c))
-- docs: update README ([9543f55](https://github.com/cherfia/chromiumly/commit/9543f55))
-- docs: update README.md ([afee221](https://github.com/cherfia/chromiumly/commit/afee221))
-- test(libre-office): update unit tests ([8627aff](https://github.com/cherfia/chromiumly/commit/8627aff))
-- test(pdf-engines): update unit tests ([31d008e](https://github.com/cherfia/chromiumly/commit/31d008e))
-- test(pdf-engines): update unit tests ([5afb646](https://github.com/cherfia/chromiumly/commit/5afb646))
-- chore(deps): update commitlint monorepo to v19.6.1 (#517) ([787d089](https://github.com/cherfia/chromiumly/commit/787d089)), closes [#517](https://github.com/cherfia/chromiumly/issues/517)
-- chore(deps): update dependency @release-it/conventional-changelog to v10 ([f562869](https://github.com/cherfia/chromiumly/commit/f562869))
-- chore(deps): update dependency @release-it/conventional-changelog to v9.0.4 (#519) ([07c198d](https://github.com/cherfia/chromiumly/commit/07c198d)), closes [#519](https://github.com/cherfia/chromiumly/issues/519)
-- chore(deps): update dependency @types/node to v22.10.2 (#515) ([c23f4e0](https://github.com/cherfia/chromiumly/commit/c23f4e0)), closes [#515](https://github.com/cherfia/chromiumly/issues/515)
-- chore(deps): update dependency @types/node to v22.10.3 (#524) ([1de40f6](https://github.com/cherfia/chromiumly/commit/1de40f6)), closes [#524](https://github.com/cherfia/chromiumly/issues/524)
-- chore(deps): update dependency @types/node to v22.10.5 (#525) ([9a8375a](https://github.com/cherfia/chromiumly/commit/9a8375a)), closes [#525](https://github.com/cherfia/chromiumly/issues/525)
-- chore(deps): update dependency lint-staged to v15.2.11 (#516) ([1961d33](https://github.com/cherfia/chromiumly/commit/1961d33)), closes [#516](https://github.com/cherfia/chromiumly/issues/516)
-- chore(deps): update dependency lint-staged to v15.3.0 (#522) ([dae6afe](https://github.com/cherfia/chromiumly/commit/dae6afe)), closes [#522](https://github.com/cherfia/chromiumly/issues/522)
-- chore(deps): update dependency release-it to v17.11.0 (#520) ([0ca53d7](https://github.com/cherfia/chromiumly/commit/0ca53d7)), closes [#520](https://github.com/cherfia/chromiumly/issues/520)
-- chore(deps): update dependency release-it to v18 ([17cda23](https://github.com/cherfia/chromiumly/commit/17cda23))
-- chore(deps): update typescript-eslint monorepo to v8.18.1 (#518) ([8ce9a70](https://github.com/cherfia/chromiumly/commit/8ce9a70)), closes [#518](https://github.com/cherfia/chromiumly/issues/518)
-- chore(deps): update typescript-eslint monorepo to v8.18.2 (#521) ([fc2061d](https://github.com/cherfia/chromiumly/commit/fc2061d)), closes [#521](https://github.com/cherfia/chromiumly/issues/521)
-- chore(deps): update typescript-eslint monorepo to v8.19.0 (#523) ([d9429f5](https://github.com/cherfia/chromiumly/commit/d9429f5)), closes [#523](https://github.com/cherfia/chromiumly/issues/523)
-- chore(pdf-engines): update split method param ([08c184c](https://github.com/cherfia/chromiumly/commit/08c184c))
-- ci: update build and publish workflows ([0d43d30](https://github.com/cherfia/chromiumly/commit/0d43d30))
-- feat(chromium): add support for splitting PDFs into multiple files ([0038f1d](https://github.com/cherfia/chromiumly/commit/0038f1d))
-- feat(chromium): update unit tests ([5d55caa](https://github.com/cherfia/chromiumly/commit/5d55caa))
-- feat(common): add Split type ([5d6f6e8](https://github.com/cherfia/chromiumly/commit/5d6f6e8))
-- feat(libre-office): add support for splitting PDFs into multiple files ([c1783d9](https://github.com/cherfia/chromiumly/commit/c1783d9))
-- feat(pdf-engines): add support for splitting PDFs into multiple files ([d0ffb90](https://github.com/cherfia/chromiumly/commit/d0ffb90))
+- chore: reorganize imports ([bdd0951](https://github.com/cherfia/chromiumly/commit/bdd0951))
+- chore(common): add addFilre return type ([0f61bb1](https://github.com/cherfia/chromiumly/commit/0f61bb1))
+- chore(deps): bump cross-spawn from 7.0.3 to 7.0.6 (#528) ([c2cab28](https://github.com/cherfia/chromiumly/commit/c2cab28)), closes [#528](https://github.com/cherfia/chromiumly/issues/528)
+- chore(deps): update dependency @types/node to v22.10.10 (#539) ([a18919e](https://github.com/cherfia/chromiumly/commit/a18919e)), closes [#539](https://github.com/cherfia/chromiumly/issues/539)
+- chore(deps): update dependency @types/node to v22.10.6 (#532) ([21e5ca1](https://github.com/cherfia/chromiumly/commit/21e5ca1)), closes [#532](https://github.com/cherfia/chromiumly/issues/532)
+- chore(deps): update dependency @types/node to v22.10.7 (#534) ([d713356](https://github.com/cherfia/chromiumly/commit/d713356)), closes [#534](https://github.com/cherfia/chromiumly/issues/534)
+- chore(deps): update dependency @types/node to v22.12.0 (#542) ([37c62bf](https://github.com/cherfia/chromiumly/commit/37c62bf)), closes [#542](https://github.com/cherfia/chromiumly/issues/542)
+- chore(deps): update dependency eslint-config-prettier to v10 (#531) ([ace0ca5](https://github.com/cherfia/chromiumly/commit/ace0ca5)), closes [#531](https://github.com/cherfia/chromiumly/issues/531)
+- chore(deps): update dependency lint-staged to v15.4.1 (#535) ([b59ed25](https://github.com/cherfia/chromiumly/commit/b59ed25)), closes [#535](https://github.com/cherfia/chromiumly/issues/535)
+- chore(deps): update dependency lint-staged to v15.4.2 (#538) ([5abc539](https://github.com/cherfia/chromiumly/commit/5abc539)), closes [#538](https://github.com/cherfia/chromiumly/issues/538)
+- chore(deps): update dependency lint-staged to v15.4.3 (#541) ([3afc0b0](https://github.com/cherfia/chromiumly/commit/3afc0b0)), closes [#541](https://github.com/cherfia/chromiumly/issues/541)
+- chore(deps): update dependency release-it to v18.1.2 (#540) ([5cc8c4c](https://github.com/cherfia/chromiumly/commit/5cc8c4c)), closes [#540](https://github.com/cherfia/chromiumly/issues/540)
+- chore(deps): update dependency typescript to v5.7.3 (#529) ([28819b1](https://github.com/cherfia/chromiumly/commit/28819b1)), closes [#529](https://github.com/cherfia/chromiumly/issues/529)
+- chore(deps): update typescript-eslint monorepo to v8.19.1 (#530) ([1a5ec8c](https://github.com/cherfia/chromiumly/commit/1a5ec8c)), closes [#530](https://github.com/cherfia/chromiumly/issues/530)
+- chore(deps): update typescript-eslint monorepo to v8.20.0 (#533) ([a0bcb32](https://github.com/cherfia/chromiumly/commit/a0bcb32)), closes [#533](https://github.com/cherfia/chromiumly/issues/533)
+- chore(deps): update typescript-eslint monorepo to v8.21.0 (#536) ([fd55039](https://github.com/cherfia/chromiumly/commit/fd55039)), closes [#536](https://github.com/cherfia/chromiumly/issues/536)
+- chore(deps): update typescript-eslint monorepo to v8.22.0 (#543) ([7a40daa](https://github.com/cherfia/chromiumly/commit/7a40daa)), closes [#543](https://github.com/cherfia/chromiumly/issues/543)
+- chore(libre-office): refactor utils methods ([ab050d8](https://github.com/cherfia/chromiumly/commit/ab050d8))
+- test: update unit tests ([ebc3976](https://github.com/cherfia/chromiumly/commit/ebc3976))
+- test(libre-office): update unit tests ([2bb9200](https://github.com/cherfia/chromiumly/commit/2bb9200))
+- refactor!: use built-in fetch and form-data ([f943fce](https://github.com/cherfia/chromiumly/commit/f943fce))
 
 ##
 
@@ -35,7 +30,30 @@ All notable changes to this project will be documented in this file. Dates are d
 
 Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
 
+#### [v4.0.0](https://github.com/cherfia/chromiumly/compare/v3.11.0...v4.0.0)
+
+- chore(deps): update typescript-eslint monorepo to v8.22.0 [`#543`](https://github.com/cherfia/chromiumly/pull/543)
+- chore(deps): update dependency @types/node to v22.12.0 [`#542`](https://github.com/cherfia/chromiumly/pull/542)
+- chore(deps): update dependency lint-staged to v15.4.3 [`#541`](https://github.com/cherfia/chromiumly/pull/541)
+- chore(deps): update dependency release-it to v18.1.2 [`#540`](https://github.com/cherfia/chromiumly/pull/540)
+- chore(deps): update dependency @types/node to v22.10.10 [`#539`](https://github.com/cherfia/chromiumly/pull/539)
+- chore(deps): update dependency lint-staged to v15.4.2 [`#538`](https://github.com/cherfia/chromiumly/pull/538)
+- chore(deps): update typescript-eslint monorepo to v8.21.0 [`#536`](https://github.com/cherfia/chromiumly/pull/536)
+- chore(deps): update dependency lint-staged to v15.4.1 [`#535`](https://github.com/cherfia/chromiumly/pull/535)
+- chore(deps): update dependency @types/node to v22.10.7 [`#534`](https://github.com/cherfia/chromiumly/pull/534)
+- chore(deps): update dependency eslint-config-prettier to v10 [`#531`](https://github.com/cherfia/chromiumly/pull/531)
+- chore(deps): update typescript-eslint monorepo to v8.20.0 [`#533`](https://github.com/cherfia/chromiumly/pull/533)
+- chore(deps): update dependency @types/node to v22.10.6 [`#532`](https://github.com/cherfia/chromiumly/pull/532)
+- chore(deps): update typescript-eslint monorepo to v8.19.1 [`#530`](https://github.com/cherfia/chromiumly/pull/530)
+- chore(deps): update dependency typescript to v5.7.3 [`#529`](https://github.com/cherfia/chromiumly/pull/529)
+- chore(deps): bump cross-spawn from 7.0.3 to 7.0.6 [`#528`](https://github.com/cherfia/chromiumly/pull/528)
+- test: update unit tests [`ebc3976`](https://github.com/cherfia/chromiumly/commit/ebc39766fc3b7645d86a7ec8c1ff944b3cd04cd2)
+- refactor!: use built-in fetch and form-data [`f943fce`](https://github.com/cherfia/chromiumly/commit/f943fcedebb2c2b291e4da19bd16be476cb063e6)
+- test(libre-office): update unit tests [`2bb9200`](https://github.com/cherfia/chromiumly/commit/2bb92000023692653de985c6a7d557b9fa850939)
+
 #### [v3.11.0](https://github.com/cherfia/chromiumly/compare/v3.10.1...v3.11.0)
+
+> 9 January 2025
 
 - chore(deps): update dependency @types/node to v22.10.5 [`#525`](https://github.com/cherfia/chromiumly/pull/525)
 - chore(deps): update dependency @types/node to v22.10.3 [`#524`](https://github.com/cherfia/chromiumly/pull/524)
@@ -50,7 +68,7 @@ Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
 - chore(deps): update dependency @types/node to v22.10.2 [`#515`](https://github.com/cherfia/chromiumly/pull/515)
 - chore(deps): update dependency release-it to v18 [`17cda23`](https://github.com/cherfia/chromiumly/commit/17cda23ec7cf8b4279b36b7c497d45bc16b0d0e5)
 - docs: update README [`0240e0c`](https://github.com/cherfia/chromiumly/commit/0240e0cfd502819577c4150da1c2a93a96d87c33)
-- feat(chromium): update unit tests [`5d55caa`](https://github.com/cherfia/chromiumly/commit/5d55caa6faddfe9bf5ae3d04f554a930bdf24a6e)
+- chore: release v3.11.0 [`5f31747`](https://github.com/cherfia/chromiumly/commit/5f31747dcf2f3ee111181639450a7644b9454eb5)
 
 #### [v3.10.1](https://github.com/cherfia/chromiumly/compare/v3.10.0...v3.10.1)
 
