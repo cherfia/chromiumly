@@ -355,7 +355,7 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 
 ### PDF Engines
 
-The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) routes to manupilate PDF files.
+The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) routes to manipulate PDF files.
 
 #### Format Conversion
 
