@@ -67,10 +67,11 @@ describe('LibreOffice', () => {
                         mode: 'pages',
                         span: '1-10',
                         unify: true
-                    }
+                    },
+                    flatten: true
                 });
                 expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(15);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(16);
             });
         });
     });

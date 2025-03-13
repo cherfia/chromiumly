@@ -277,5 +277,9 @@ export class LibreOfficeUtils {
                 data.append('splitUnify', String(options.split.unify));
             }
         }
+
+        if (options.flatten) {
+            data.append('flatten', String(options.flatten));
+        }
     }
 }

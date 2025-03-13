@@ -174,4 +174,5 @@ export type ConversionOptions = {
     maxImageResolution?: 75 | 150 | 300 | 600 | 1200; // Specify if all images will be reduced to the given value in DPI
     downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
     split?: Split; // Split the PDF into multiple files.
+    flatten?: boolean; // Flatten the PDF document.
 };
