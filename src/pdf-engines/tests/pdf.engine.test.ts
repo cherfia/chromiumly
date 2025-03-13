@@ -77,10 +77,11 @@ describe('PDFEngines', () => {
                 files: ['path/to/file.pdf', 'path/to/another-file.pdf'],
                 pdfa: PdfFormat.A_2b,
                 pdfUA: true,
-                metadata: { Author: 'John Doe' }
+                metadata: { Author: 'John Doe' },
+                flatten: true
             });
             expect(buffer).toEqual(await getResponseBuffer());
-            expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
         });
     });
 
@@ -123,10 +124,24 @@ describe('PDFEngines', () => {
             mockPromisesAccess.mockResolvedValue();
             const buffer = await PDFEngines.split({
                 files: ['path/to/file.pdf'],
-                options: { mode: 'pages', span: '1-10', unify: true }
+                options: {
+                    mode: 'pages',
+                    span: '1-10',
+                    unify: true,
+                    flatten: true
+                }
             });
             expect(buffer).toEqual(await getResponseBuffer());
-            expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
+        });
+    });
+
+    describe('flatten', () => {
+        it('should return a buffer', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.flatten(['path/to/file.pdf']);
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
         });
     });
 

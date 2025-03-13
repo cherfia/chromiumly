@@ -15,4 +15,5 @@ export type Split = {
     mode: 'pages' | 'intervals';
     span: string;
     unify?: boolean;
+    flatten?: boolean;
 };

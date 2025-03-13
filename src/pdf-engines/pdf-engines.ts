@@ -24,6 +24,8 @@ export class PDFEngines {
      * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
      * @param {Metadata} [options.metadata] - Metadata to be written.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+     * @param {boolean} [options.flatten] - Flatten the PDF document.
+     *
      * @returns {Promise<Buffer>} A Promise resolving to the merged PDF content as a buffer
      */
     public static async merge({
@@ -31,13 +33,15 @@ export class PDFEngines {
         pdfa,
         pdfUA,
         metadata,
-        downloadFrom
+        downloadFrom,
+        flatten
     }: {
         files: PathLikeOrReadStream[];
         pdfa?: PdfFormat;
         pdfUA?: boolean;
         metadata?: Metadata;
         downloadFrom?: DownloadFrom;
+        flatten?: boolean;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -45,7 +49,8 @@ export class PDFEngines {
             pdfa,
             pdfUA,
             metadata,
-            downloadFrom
+            downloadFrom,
+            flatten
         });
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
         return GotenbergUtils.fetch(
@@ -120,6 +125,10 @@ export class PDFEngines {
         data.append('splitMode', options.mode);
         data.append('splitSpan', options.span);
 
+        if (options.flatten) {
+            data.append('flatten', String(options.flatten));
+        }
+
         if (options.unify) {
             GotenbergUtils.assert(
                 options.mode === 'pages',
@@ -129,6 +138,29 @@ export class PDFEngines {
         }
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.split}`;
+
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
+        );
+    }
+
+    /**
+     * Flattens a PDF file.
+     *
+     * @param {PathLikeOrReadStream[]} files - An array of PathLikes or ReadStreams to the PDF files to be flattened.
+     * @returns {Promise<Buffer>} A Promise resolving to the flattened PDF content as a buffer
+     */
+    public static async flatten(
+        files: PathLikeOrReadStream[]
+    ): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.flatten}`;
 
         return GotenbergUtils.fetch(
             endpoint,

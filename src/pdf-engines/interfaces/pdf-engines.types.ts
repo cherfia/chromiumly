@@ -9,4 +9,5 @@ export type ConversionOptions = {
 
 export type MergeOptions = ConversionOptions & {
     metadata?: Metadata;
+    flatten?: boolean;
 };
