@@ -60,8 +60,18 @@ export class GotenbergUtils {
         });
 
         if (!response.ok) {
-            throw new Error(`${response.status} ${response.statusText}`);
+            const body = await response.text();
+            const trace = response.headers.get('gotenberg-trace');
+
+            throw new Error(
+                `Gotenberg API Error:\n` +
+                    `Endpoint: ${endpoint}\n` +
+                    `Status: ${response.status} ${response.statusText}\n` +
+                    `Trace: ${trace || 'No trace'}\n` +
+                    `Body: ${body}`
+            );
         }
+
         const arrayBuffer = await response.arrayBuffer();
         return Buffer.from(arrayBuffer);
     }
