@@ -1,35 +1,11 @@
 # Changelog
 
-## 4.1.0 (2025-03-13)
+## <small>4.1.1 (2025-03-17)</small>
 
-- chore: add .nvmrc ([10e633e](https://github.com/cherfia/chromiumly/commit/10e633e))
-- chore: improve error message ([bc12fa6](https://github.com/cherfia/chromiumly/commit/bc12fa6))
-- chore(deps): update commitlint monorepo to v19.7.1 (#545) ([3d73398](https://github.com/cherfia/chromiumly/commit/3d73398)), closes [#545](https://github.com/cherfia/chromiumly/issues/545)
-- chore(deps): update commitlint monorepo to v19.8.0 (#567) ([4c72e1e](https://github.com/cherfia/chromiumly/commit/4c72e1e)), closes [#567](https://github.com/cherfia/chromiumly/issues/567)
-- chore(deps): update dependency @types/node to v22.13.0 (#544) ([593c046](https://github.com/cherfia/chromiumly/commit/593c046)), closes [#544](https://github.com/cherfia/chromiumly/issues/544)
-- chore(deps): update dependency @types/node to v22.13.1 (#547) ([bc871cc](https://github.com/cherfia/chromiumly/commit/bc871cc)), closes [#547](https://github.com/cherfia/chromiumly/issues/547)
-- chore(deps): update dependency @types/node to v22.13.10 (#566) ([c1ed3ca](https://github.com/cherfia/chromiumly/commit/c1ed3ca)), closes [#566](https://github.com/cherfia/chromiumly/issues/566)
-- chore(deps): update dependency @types/node to v22.13.4 (#551) ([0e20cb1](https://github.com/cherfia/chromiumly/commit/0e20cb1)), closes [#551](https://github.com/cherfia/chromiumly/issues/551)
-- chore(deps): update dependency @types/node to v22.13.5 (#554) ([e964e9e](https://github.com/cherfia/chromiumly/commit/e964e9e)), closes [#554](https://github.com/cherfia/chromiumly/issues/554)
-- chore(deps): update dependency @types/node to v22.13.8 (#561) ([26a9904](https://github.com/cherfia/chromiumly/commit/26a9904)), closes [#561](https://github.com/cherfia/chromiumly/issues/561)
-- chore(deps): update dependency @types/node to v22.13.9 (#563) ([b7550bb](https://github.com/cherfia/chromiumly/commit/b7550bb)), closes [#563](https://github.com/cherfia/chromiumly/issues/563)
-- chore(deps): update dependency eslint-config-prettier to v10.0.2 (#559) ([ec535de](https://github.com/cherfia/chromiumly/commit/ec535de)), closes [#559](https://github.com/cherfia/chromiumly/issues/559)
-- chore(deps): update dependency eslint-config-prettier to v10.1.1 (#565) ([ea76db4](https://github.com/cherfia/chromiumly/commit/ea76db4)), closes [#565](https://github.com/cherfia/chromiumly/issues/565)
-- chore(deps): update dependency prettier to v3.5.0 (#548) ([6d1cbb3](https://github.com/cherfia/chromiumly/commit/6d1cbb3)), closes [#548](https://github.com/cherfia/chromiumly/issues/548)
-- chore(deps): update dependency prettier to v3.5.1 (#550) ([422864a](https://github.com/cherfia/chromiumly/commit/422864a)), closes [#550](https://github.com/cherfia/chromiumly/issues/550)
-- chore(deps): update dependency prettier to v3.5.2 (#555) ([94427a0](https://github.com/cherfia/chromiumly/commit/94427a0)), closes [#555](https://github.com/cherfia/chromiumly/issues/555)
-- chore(deps): update dependency prettier to v3.5.3 (#562) ([cff4286](https://github.com/cherfia/chromiumly/commit/cff4286)), closes [#562](https://github.com/cherfia/chromiumly/issues/562)
-- chore(deps): update dependency ts-jest to v29.2.6 (#556) ([16b0003](https://github.com/cherfia/chromiumly/commit/16b0003)), closes [#556](https://github.com/cherfia/chromiumly/issues/556)
-- chore(deps): update dependency typescript to v5.8.2 (#560) ([12ce760](https://github.com/cherfia/chromiumly/commit/12ce760)), closes [#560](https://github.com/cherfia/chromiumly/issues/560)
-- chore(deps): update typescript-eslint monorepo to v8.23.0 (#546) ([6b05b7c](https://github.com/cherfia/chromiumly/commit/6b05b7c)), closes [#546](https://github.com/cherfia/chromiumly/issues/546)
-- chore(deps): update typescript-eslint monorepo to v8.24.0 (#549) ([d9fcd2c](https://github.com/cherfia/chromiumly/commit/d9fcd2c)), closes [#549](https://github.com/cherfia/chromiumly/issues/549)
-- chore(deps): update typescript-eslint monorepo to v8.24.1 (#552) ([13f7db3](https://github.com/cherfia/chromiumly/commit/13f7db3)), closes [#552](https://github.com/cherfia/chromiumly/issues/552)
-- chore(deps): update typescript-eslint monorepo to v8.25.0 (#558) ([a5a0d0e](https://github.com/cherfia/chromiumly/commit/a5a0d0e)), closes [#558](https://github.com/cherfia/chromiumly/issues/558)
-- chore(deps): update typescript-eslint monorepo to v8.26.0 (#564) ([c6695b9](https://github.com/cherfia/chromiumly/commit/c6695b9)), closes [#564](https://github.com/cherfia/chromiumly/issues/564)
-- chore(deps): update typescript-eslint monorepo to v8.26.1 (#568) ([f95f73d](https://github.com/cherfia/chromiumly/commit/f95f73d)), closes [#568](https://github.com/cherfia/chromiumly/issues/568)
-- feat(libre-translate): add flatten property ([e6272c1](https://github.com/cherfia/chromiumly/commit/e6272c1))
-- feat(pdf-engines): add flatten route ([36d9767](https://github.com/cherfia/chromiumly/commit/36d9767))
-- fix: typo in README ([5b9a14d](https://github.com/cherfia/chromiumly/commit/5b9a14d))
+- docs: update README.md ([6ae581a](https://github.com/cherfia/chromiumly/commit/6ae581a))
+- fix(pdf-engines): correct form data append structure for file uploads ([a3e73ba](https://github.com/cherfia/chromiumly/commit/a3e73ba))
+- chore(deps): update dependency lint-staged to v15.5.0 (#571) ([ac41101](https://github.com/cherfia/chromiumly/commit/ac41101)), closes [#571](https://github.com/cherfia/chromiumly/issues/571)
+- chore(deps): update node.js to v22 (#569) ([5af119e](https://github.com/cherfia/chromiumly/commit/5af119e)), closes [#569](https://github.com/cherfia/chromiumly/issues/569)
 
 ##
 
@@ -37,7 +13,16 @@ All notable changes to this project will be documented in this file. Dates are d
 
 Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
 
+#### [v4.1.1](https://github.com/cherfia/chromiumly/compare/v4.1.0...v4.1.1)
+
+- chore(deps): update dependency lint-staged to v15.5.0 [`#571`](https://github.com/cherfia/chromiumly/pull/571)
+- chore(deps): update node.js to v22 [`#569`](https://github.com/cherfia/chromiumly/pull/569)
+- docs: update README.md [`6ae581a`](https://github.com/cherfia/chromiumly/commit/6ae581ab95a22b96d6301d1fa20a2b1503138c7d)
+- fix(pdf-engines): correct form data append structure for file uploads [`a3e73ba`](https://github.com/cherfia/chromiumly/commit/a3e73ba55b833e3e59b7830b1e1ec378464b609b)
+
 #### [v4.1.0](https://github.com/cherfia/chromiumly/compare/v4.0.0...v4.1.0)
+
+> 13 March 2025
 
 - chore(deps): update typescript-eslint monorepo to v8.26.1 [`#568`](https://github.com/cherfia/chromiumly/pull/568)
 - chore(deps): update commitlint monorepo to v19.8.0 [`#567`](https://github.com/cherfia/chromiumly/pull/567)
@@ -62,9 +47,9 @@ Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
 - chore(deps): update typescript-eslint monorepo to v8.23.0 [`#546`](https://github.com/cherfia/chromiumly/pull/546)
 - chore(deps): update commitlint monorepo to v19.7.1 [`#545`](https://github.com/cherfia/chromiumly/pull/545)
 - chore(deps): update dependency @types/node to v22.13.0 [`#544`](https://github.com/cherfia/chromiumly/pull/544)
+- chore: release v4.1.0 [`d607390`](https://github.com/cherfia/chromiumly/commit/d607390ae23590d242540798b6dac337442a02c0)
 - feat(pdf-engines): add flatten route [`36d9767`](https://github.com/cherfia/chromiumly/commit/36d9767dee6291bb22710c4af50ab054ffaa6fa8)
 - feat(libre-translate): add flatten property [`e6272c1`](https://github.com/cherfia/chromiumly/commit/e6272c1e7567bd0f5b63aa688980011aae78aebd)
-- chore: improve error message [`bc12fa6`](https://github.com/cherfia/chromiumly/commit/bc12fa66ce03f06c9d6c3a4da61afda2ead417e4)
 
 ### [v4.0.0](https://github.com/cherfia/chromiumly/compare/v3.11.0...v4.0.0)
 
