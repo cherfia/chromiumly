@@ -38,7 +38,7 @@ export class PDFEnginesUtils {
                     const extension = path.extname(_filename);
                     if (extension === '.pdf') {
                         const content = await openAsBlob(file);
-                        data.append(_filename, content);
+                        data.append('files', content, _filename);
                     } else {
                         throw new Error(`${extension} is not supported`);
                     }
