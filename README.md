@@ -352,6 +352,7 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `reduceImageResolution`: allows turning on or off image resolution reduction to tweak image conversion performance.
 - `quality`: specifies the quality of the JPG export. The value ranges from 1 to 100, with higher values producing higher-quality images and larger file sizes.
 - `maxImageResolution`: specifies if all images will be reduced to the specified DPI value. Possible values are: `75`, `150`, `300`, `600`, and `1200`.
+- `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
 
 ### PDF Engines
 
@@ -439,6 +440,7 @@ Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route has a `split` p
 - `mode`: the mode of the split. It can be `pages` or `intervals`.
 - `span`: the span of the split. It is a string that represents the range of pages to split.
 - `unify`: a boolean that allows unifying the split files. Only works when `mode` is `pages`.
+- `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
 
 ```typescript
 import { UrlConverter } from "chromiumly";
@@ -468,6 +470,18 @@ const buffer = await PDFEngines.split({
 ```
 
 > ⚠️ **Note**: Gotenberg does not currently validate the `span` value when `mode` is set to `pages`, as the validation depends on the chosen engine for the split feature. See [PDF Engines module configuration](https://gotenberg.dev/docs/configuration#pdf-engines) for more details.
+
+### PDF Flattening
+
+PDF flattening converts interactive elements like forms and annotations into a static PDF. This ensures the document looks the same everywhere and prevents further edits.
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const buffer = await PDFEngines.flatten({
+  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
+});
+```
 
 ## Snippet
 
