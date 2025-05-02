@@ -44,7 +44,7 @@
     }
   },
   "devDependencies": {
-    "@babel/preset-typescript": "7.27.0",
+    "@babel/preset-typescript": "7.27.1",
     "@commitlint/cli": "^19.0.3",
     "@commitlint/config-conventional": "^19.0.3",
     "@commitlint/cz-commitlint": "^19.0.3",
