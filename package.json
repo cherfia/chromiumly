@@ -64,7 +64,7 @@
     "jest-junit": "16.0.0",
     "lint-staged": "^16.0.0",
     "prettier": "3.5.3",
-    "release-it": "18.1.2",
+    "release-it": "19.0.3",
     "ts-jest": "29.4.0",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
