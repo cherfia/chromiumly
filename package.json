@@ -71,7 +71,7 @@
     "typescript": "5.8.3"
   },
   "optionalDependencies": {
-    "config": "3.x",
+    "config": "4.x",
     "dotenv": "16.x"
   },
   "lint-staged": {
