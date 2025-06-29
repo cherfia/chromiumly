@@ -72,7 +72,7 @@
   },
   "optionalDependencies": {
     "config": "4.x",
-    "dotenv": "16.x"
+    "dotenv": "17.x"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
