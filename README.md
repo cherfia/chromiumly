@@ -5,7 +5,7 @@
 ![build](https://github.com/cherfia/chromiumly/actions/workflows/build.yml/badge.svg)
 [![coverage](https://img.shields.io/codecov/c/gh/cherfia/chromiumly?style=flat-square)](https://codecov.io/gh/cherfia/chromiumly)
 [![vulnerabilities](https://snyk.io/test/github/cherfia/chromiumly/badge.svg?targetFile=package.json&color=brightgreen&style=flat-square)](https://snyk.io/test/github/cherfia/chromiumly?targetFile=package.json)
-[![maintainability](https://img.shields.io/codeclimate/maintainability/cherfia/chromiumly?color=yellow&style=flat-square)](https://codeclimate.com/github/cherfia/chromiumly/maintainability)
+[![Maintainability](https://qlty.sh/gh/cherfia/projects/chromiumly/maintainability.svg)](https://qlty.sh/gh/cherfia/projects/chromiumly)
 [![npm](https://img.shields.io/npm/v/chromiumly?color=brightgreen&style=flat-square)](https://npmjs.org/package/chromiumly)
 [![downloads](https://img.shields.io/npm/dt/chromiumly.svg?color=brightgreen&style=flat-square)](https://npm-stat.com/charts.html?package=chromiumly)
 ![licence](https://img.shields.io/github/license/cherfia/chromiumly?style=flat-square)
