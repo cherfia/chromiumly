@@ -286,6 +286,9 @@ type ConversionOptions = {
   cookies?: Cookie[]; // Cookies to be written.
   downloadFrom?: DownloadFrom; //Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
   split?: SplitOptions; // Split the PDF file into multiple files.
+  userPassword?: string; // Password for opening the resulting PDF(s).
+  ownerPassword?: string; // Password for full access on the resulting PDF(s).
+  embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
 };
 ```
 
@@ -321,6 +324,9 @@ type ScreenshotOptions = {
   optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
   cookies?: Cookie[]; // Cookies to be written.
   downloadFrom?: DownloadFrom; // Download the file from a specific URL. It must return a Content-Disposition header with a filename parameter.
+  userPassword?: string; // Password for opening the resulting PDF(s).
+  ownerPassword?: string; // Password for full access on the resulting PDF(s).
+  embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
 };
 ```
 
@@ -353,6 +359,9 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `quality`: specifies the quality of the JPG export. The value ranges from 1 to 100, with higher values producing higher-quality images and larger file sizes.
 - `maxImageResolution`: specifies if all images will be reduced to the specified DPI value. Possible values are: `75`, `150`, `300`, `600`, and `1200`.
 - `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
+- `userPassword`: password for opening the resulting PDF(s).
+- `ownerPassword`: password for full access on the resulting PDF(s).
+- `embeds`: files to embed in the generated PDF (repeatable). This feature enables the creation of PDFs compatible with standards like [ZUGFeRD / Factur-X](https://fnfe-mpe.org/factur-x/), which require embedding XML invoices and other files within the PDF.
 
 ### PDF Engines
 
@@ -482,6 +491,42 @@ const buffer = await PDFEngines.flatten({
   files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
 });
 ```
+
+### PDF Encryption
+
+Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route supports PDF encryption through the `userPassword` and `ownerPassword` parameters. The `userPassword` is required to open the PDF, while the `ownerPassword` provides full access permissions.
+
+```typescript
+import { UrlConverter } from "chromiumly";
+
+const buffer = await UrlConverter.convert({
+  url: "https://www.example.com/",
+  userPassword: "my_user_password",
+  ownerPassword: "my_owner_password",
+});
+```
+
+### Embedding Files
+
+Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route supports embedding files into the generated PDF through the `embeds` parameter. This feature enables the creation of PDFs compatible with standards like [ZUGFeRD / Factur-X](https://fnfe-mpe.org/factur-x/), which require embedding XML invoices and other files within the PDF.
+
+You can embed multiple files by passing an array of file paths, buffers, or read streams:
+
+```typescript
+import { HtmlConverter } from "chromiumly";
+
+const htmlConverter = new HtmlConverter();
+const buffer = await htmlConverter.convert({
+  html: "path/to/index.html",
+  embeds: [
+    "path/to/invoice.xml",
+    "path/to/logo.png",
+    Buffer.from("additional data"),
+  ],
+});
+```
+
+All embedded files will be attached to the generated PDF and can be extracted using PDF readers that support file attachments.
 
 ## Snippet
 
