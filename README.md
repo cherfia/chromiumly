@@ -35,6 +35,9 @@ a variety of document formats to PDF files.
      - [Metadata Management](#metadata-management)
      - [File Generation](#file-generation)
    - [PDF Splitting](#pdf-splitting)
+   - [PDF Flattening](#pdf-flattening)
+   - [PDF Encryption](#pdf-encryption)
+   - [Embedding Files](#embedding-files)
 4. [Usage Example](#snippet)
 
 ## Getting Started
