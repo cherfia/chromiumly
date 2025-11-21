@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createReadStream, promises } from 'fs';
+import { promises } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 import { PdfFormat } from '../../common';
@@ -27,9 +26,6 @@ describe('PDFEngines', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
 
     beforeEach(() => {
-        (createReadStream as jest.Mock) = jest
-            .fn()
-            .mockImplementation((file) => file);
         jest.clearAllMocks();
         mockFetch.mockImplementation(() => Promise.resolve(mockResponse()));
     });
@@ -120,7 +116,7 @@ describe('PDFEngines', () => {
     });
 
     describe('split', () => {
-        it('should return a buffer', async () => {
+        it('should return a buffer with all options', async () => {
             mockPromisesAccess.mockResolvedValue();
             const buffer = await PDFEngines.split({
                 files: ['path/to/file.pdf'],
@@ -134,6 +130,48 @@ describe('PDFEngines', () => {
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
         });
+
+        it('should return a buffer without flatten', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: {
+                    mode: 'pages',
+                    span: '1-10',
+                    unify: true
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+        });
+
+        it('should return a buffer without unify', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: {
+                    mode: 'pages',
+                    span: '1-10',
+                    flatten: true
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+        });
+
+        it('should throw an error when unify is true but mode is not pages', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await expect(
+                PDFEngines.split({
+                    files: ['path/to/file.pdf'],
+                    options: {
+                        mode: 'intervals',
+                        span: '1-10',
+                        unify: true
+                    }
+                })
+            ).rejects.toThrow('split unify is only supported for pages mode');
+        });
     });
 
     describe('flatten', () => {
@@ -142,6 +180,78 @@ describe('PDFEngines', () => {
             const buffer = await PDFEngines.flatten(['path/to/file.pdf']);
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('encrypt', () => {
+        it('should return a buffer with userPassword only', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.encrypt({
+                files: ['path/to/file.pdf'],
+                options: {
+                    userPassword: 'my_user_password'
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        });
+
+        it('should return a buffer with userPassword and ownerPassword', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.encrypt({
+                files: ['path/to/file.pdf'],
+                options: {
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+        });
+
+        it('should return a buffer with multiple files', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.encrypt({
+                files: ['path/to/file1.pdf', 'path/to/file2.pdf'],
+                options: {
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+        });
+    });
+
+    describe('embed', () => {
+        it('should return a buffer with embedded files', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.embed({
+                files: ['path/to/file.pdf'],
+                embeds: ['path/to/embed.xml']
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        });
+
+        it('should return a buffer with multiple embedded files', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.embed({
+                files: ['path/to/file.pdf'],
+                embeds: ['path/to/embed1.xml', 'path/to/embed2.xml']
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+        });
+
+        it('should return a buffer with multiple PDF files and embedded files', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.embed({
+                files: ['path/to/file1.pdf', 'path/to/file2.pdf'],
+                embeds: ['path/to/embed.xml']
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
         });
     });
 

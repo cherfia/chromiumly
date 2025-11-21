@@ -1,4 +1,4 @@
-import { createReadStream, promises } from 'fs';
+import { createReadStream, promises, ReadStream } from 'fs';
 import { blob } from 'node:stream/consumers';
 
 import { GotenbergUtils } from '../gotenberg.utils';
@@ -120,6 +120,75 @@ describe('GotenbergUtils', () => {
                 )
             ).rejects.toThrow('500 Internal server error');
         });
+
+        it('should not add Authorization header when username is missing', async () => {
+            const buffer = await GotenbergUtils.fetch(
+                endpoint,
+                data,
+                undefined,
+                basicAuthPassword,
+                customHttpHeaders
+            );
+
+            expect(buffer).toEqual(await getResponseBuffer());
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                endpoint,
+                expect.objectContaining({
+                    method: 'POST',
+                    headers: expect.not.objectContaining({
+                        Authorization: expect.any(String)
+                    }),
+                    body: expect.any(Object)
+                })
+            );
+        });
+
+        it('should not add Authorization header when password is missing', async () => {
+            const buffer = await GotenbergUtils.fetch(
+                endpoint,
+                data,
+                basicAuthUsername,
+                undefined,
+                customHttpHeaders
+            );
+
+            expect(buffer).toEqual(await getResponseBuffer());
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                endpoint,
+                expect.objectContaining({
+                    method: 'POST',
+                    headers: expect.not.objectContaining({
+                        Authorization: expect.any(String)
+                    }),
+                    body: expect.any(Object)
+                })
+            );
+        });
+
+        it('should not add Authorization header when both username and password are missing', async () => {
+            const buffer = await GotenbergUtils.fetch(
+                endpoint,
+                data,
+                undefined,
+                undefined,
+                customHttpHeaders
+            );
+
+            expect(buffer).toEqual(await getResponseBuffer());
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                endpoint,
+                expect.objectContaining({
+                    method: 'POST',
+                    headers: expect.not.objectContaining({
+                        Authorization: expect.any(String)
+                    }),
+                    body: expect.any(Object)
+                })
+            );
+        });
     });
 
     describe('addFile', () => {
@@ -139,15 +208,17 @@ describe('GotenbergUtils', () => {
         });
 
         it('should append read stream file to data', async () => {
-            const file = createReadStream(filePath);
-            await GotenbergUtils.addFile(data, file, 'file');
+            const mockReadStream = {
+                pipe: jest.fn(),
+                on: jest.fn(),
+                read: jest.fn(),
+                [Symbol.toStringTag]: 'ReadStream'
+            } as unknown as ReadStream;
+            Object.setPrototypeOf(mockReadStream, ReadStream.prototype);
+
+            await GotenbergUtils.addFile(data, mockReadStream, 'file');
             expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-            const content = await blob(file);
-            expect(mockFormDataAppend).toHaveBeenCalledWith(
-                'files',
-                content,
-                'file'
-            );
+            expect(blob).toHaveBeenCalledWith(mockReadStream);
         });
 
         it('should append file path to data', async () => {

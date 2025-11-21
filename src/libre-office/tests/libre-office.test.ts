@@ -68,10 +68,82 @@ describe('LibreOffice', () => {
                         span: '1-10',
                         unify: true
                     },
-                    flatten: true
+                    flatten: true,
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
                 });
                 expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(16);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(18);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when userPassword parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    userPassword: 'my_user_password'
+                });
+                expect(buffer).toEqual(await getResponseBuffer());
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+            });
+        });
+
+        describe('when ownerPassword parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(buffer).toEqual(await getResponseBuffer());
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when both userPassword and ownerPassword are passed', () => {
+            it('should return a buffer', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(buffer).toEqual(await getResponseBuffer());
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when embeds parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
+                });
+                expect(buffer).toEqual(await getResponseBuffer());
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
             });
         });
     });

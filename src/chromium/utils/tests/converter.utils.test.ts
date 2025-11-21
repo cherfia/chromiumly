@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { createReadStream, promises } from 'fs';
+import { createReadStream, promises, ReadStream } from 'fs';
 import { blob } from 'node:stream/consumers';
 
 import { ConverterUtils } from '../converter.utils';
@@ -17,10 +17,12 @@ jest.mock('node:stream/consumers', () => ({
 
 describe('ConverterUtils', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
+    const mockPromisesAccess = jest.spyOn(promises, 'access');
     const data = new FormData();
 
     beforeEach(() => {
         jest.clearAllMocks();
+        mockPromisesAccess.mockResolvedValue();
     });
 
     afterEach(() => {
@@ -480,6 +482,93 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when userPassword parameter is passed', () => {
+            it('should append userPassword', async () => {
+                await ConverterUtils.customize(data, {
+                    userPassword: 'my_user_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+            });
+        });
+
+        describe('when ownerPassword parameter is passed', () => {
+            it('should append ownerPassword', async () => {
+                await ConverterUtils.customize(data, {
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when both userPassword and ownerPassword are passed', () => {
+            it('should append both passwords', async () => {
+                await ConverterUtils.customize(data, {
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when embeds parameter is passed', () => {
+            it('should append embeds with string paths', async () => {
+                await ConverterUtils.customize(data, {
+                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+            });
+
+            it('should append embeds with Buffer', async () => {
+                await ConverterUtils.customize(data, {
+                    embeds: [Buffer.from('embed content')]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'embeds',
+                    expect.any(Blob),
+                    'file1'
+                );
+            });
+
+            it('should append embeds with ReadStream', async () => {
+                const mockReadStream = {
+                    pipe: jest.fn(),
+                    on: jest.fn(),
+                    read: jest.fn(),
+                    [Symbol.toStringTag]: 'ReadStream'
+                } as unknown as ReadStream;
+                Object.setPrototypeOf(mockReadStream, ReadStream.prototype);
+                const mockBlob = new Blob(['stream content']);
+                (blob as jest.Mock).mockResolvedValue(mockBlob);
+                await ConverterUtils.customize(data, {
+                    embeds: [mockReadStream]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(blob).toHaveBeenCalledWith(mockReadStream);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'embeds',
+                    mockBlob,
+                    'file1'
+                );
+            });
+        });
+
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ConverterUtils.customize(data, {
@@ -505,9 +594,11 @@ describe('ConverterUtils', () => {
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     },
                     generateDocumentOutline: true,
-                    split: { mode: 'pages', span: '1-10', unify: true }
+                    split: { mode: 'pages', span: '1-10', unify: true },
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(22);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(24);
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -622,6 +713,16 @@ describe('ConverterUtils', () => {
                     22,
                     'splitUnify',
                     'true'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    23,
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    24,
+                    'ownerPassword',
+                    'my_owner_password'
                 );
             });
         });

@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { promises, createReadStream } from 'fs';
+import { promises, ReadStream } from 'fs';
+import { blob } from 'node:stream/consumers';
 import { LibreOfficeUtils } from '../libre-office.utils';
 
 import { PdfFormat } from '../../../common';
@@ -9,6 +9,10 @@ jest.mock('fs', () => ({
     openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content']))
 }));
 
+jest.mock('node:stream/consumers', () => ({
+    blob: jest.fn().mockResolvedValue(new Blob(['stream content']))
+}));
+
 describe('LibreOfficeUtils', () => {
     const mockPromisesAccess = jest.spyOn(promises, 'access');
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
@@ -16,9 +20,7 @@ describe('LibreOfficeUtils', () => {
     const data = new FormData();
 
     beforeEach(() => {
-        (createReadStream as jest.Mock) = jest
-            .fn()
-            .mockImplementation((file) => file);
+        jest.clearAllMocks();
     });
 
     afterEach(() => {
@@ -48,6 +50,28 @@ describe('LibreOfficeUtils', () => {
                         data
                     );
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                });
+            });
+
+            describe('when files parameter contains a ReadStream', () => {
+                it('should append each file to data', async () => {
+                    const mockReadStream = {
+                        pipe: jest.fn(),
+                        on: jest.fn(),
+                        read: jest.fn(),
+                        [Symbol.toStringTag]: 'ReadStream'
+                    } as unknown as ReadStream;
+                    Object.setPrototypeOf(mockReadStream, ReadStream.prototype);
+                    mockPromisesAccess.mockResolvedValueOnce();
+                    await LibreOfficeUtils.addFiles(
+                        [
+                            { data: mockReadStream, ext: 'docx' },
+                            'path/to/file.bib'
+                        ],
+                        data
+                    );
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(blob).toHaveBeenCalledWith(mockReadStream);
                 });
             });
         });
@@ -485,6 +509,148 @@ describe('LibreOfficeUtils', () => {
                 expect(data.append).toHaveBeenCalledWith(
                     'singlePageSheets',
                     'true'
+                );
+            });
+        });
+
+        describe('when split parameter is passed', () => {
+            it('should append split mode and span', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    split: {
+                        mode: 'pages',
+                        span: '1-10'
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(data.append).toHaveBeenCalledWith('splitMode', 'pages');
+                expect(data.append).toHaveBeenCalledWith('splitSpan', '1-10');
+            });
+
+            it('should append split unify when unify is true and mode is pages', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    split: {
+                        mode: 'pages',
+                        span: '1-10',
+                        unify: true
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+                expect(data.append).toHaveBeenCalledWith('splitMode', 'pages');
+                expect(data.append).toHaveBeenCalledWith('splitSpan', '1-10');
+                expect(data.append).toHaveBeenCalledWith('splitUnify', 'true');
+            });
+
+            it('should throw an error when unify is true but mode is not pages', async () => {
+                await expect(
+                    LibreOfficeUtils.customize(data, {
+                        split: {
+                            mode: 'intervals',
+                            span: '1-10',
+                            unify: true
+                        }
+                    })
+                ).rejects.toThrow(
+                    'split unify is only supported for pages mode'
+                );
+            });
+        });
+
+        describe('when flatten parameter is passed', () => {
+            it('should append flatten', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    flatten: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith('flatten', 'true');
+            });
+        });
+
+        describe('when userPassword parameter is passed', () => {
+            it('should append userPassword', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    userPassword: 'my_user_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+            });
+        });
+
+        describe('when ownerPassword parameter is passed', () => {
+            it('should append ownerPassword', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when both userPassword and ownerPassword are passed', () => {
+            it('should append both passwords', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(data.append).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when embeds parameter is passed', () => {
+            it('should append embeds with string paths', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await LibreOfficeUtils.customize(data, {
+                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+            });
+
+            it('should append embeds with Buffer', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await LibreOfficeUtils.customize(data, {
+                    embeds: [{ data: Buffer.from('embed content'), ext: 'xml' }]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'embeds',
+                    expect.any(Blob),
+                    'file1'
+                );
+            });
+
+            it('should append embeds with ReadStream', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const mockReadStream = {
+                    pipe: jest.fn(),
+                    on: jest.fn(),
+                    read: jest.fn(),
+                    [Symbol.toStringTag]: 'ReadStream'
+                } as unknown as ReadStream;
+                Object.setPrototypeOf(mockReadStream, ReadStream.prototype);
+                const mockBlob = new Blob(['stream content']);
+                (blob as jest.Mock).mockResolvedValue(mockBlob);
+                await LibreOfficeUtils.customize(data, {
+                    embeds: [{ data: mockReadStream, ext: 'xml' }]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(blob).toHaveBeenCalledWith(mockReadStream);
+                expect(data.append).toHaveBeenCalledWith(
+                    'embeds',
+                    mockBlob,
+                    'file1'
                 );
             });
         });

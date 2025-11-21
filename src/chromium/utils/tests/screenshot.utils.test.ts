@@ -1,8 +1,25 @@
+import { promises, ReadStream } from 'fs';
+import { blob } from 'node:stream/consumers';
 import { ScreenshotUtils } from './../screenshot.utils';
+
+jest.mock('fs', () => ({
+    ...jest.requireActual('fs'),
+    openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content']))
+}));
+
+jest.mock('node:stream/consumers', () => ({
+    blob: jest.fn().mockResolvedValue(new Blob(['stream content']))
+}));
 
 describe('ScreenshotUtils', () => {
     const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
+    const mockPromisesAccess = jest.spyOn(promises, 'access');
     const data = new FormData();
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockPromisesAccess.mockResolvedValue();
+    });
 
     afterEach(() => {
         jest.resetAllMocks();
@@ -244,6 +261,93 @@ describe('ScreenshotUtils', () => {
             });
         });
 
+        describe('when userPassword parameter is passed', () => {
+            it('should append userPassword', async () => {
+                await ScreenshotUtils.customize(data, {
+                    userPassword: 'my_user_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+            });
+        });
+
+        describe('when ownerPassword parameter is passed', () => {
+            it('should append ownerPassword', async () => {
+                await ScreenshotUtils.customize(data, {
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when both userPassword and ownerPassword are passed', () => {
+            it('should append both passwords', async () => {
+                await ScreenshotUtils.customize(data, {
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(data.append).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+            });
+        });
+
+        describe('when embeds parameter is passed', () => {
+            it('should append embeds with string paths', async () => {
+                await ScreenshotUtils.customize(data, {
+                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+            });
+
+            it('should append embeds with Buffer', async () => {
+                await ScreenshotUtils.customize(data, {
+                    embeds: [Buffer.from('embed content')]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'embeds',
+                    expect.any(Blob),
+                    'file1'
+                );
+            });
+
+            it('should append embeds with ReadStream', async () => {
+                const mockReadStream = {
+                    pipe: jest.fn(),
+                    on: jest.fn(),
+                    read: jest.fn(),
+                    [Symbol.toStringTag]: 'ReadStream'
+                } as unknown as ReadStream;
+                Object.setPrototypeOf(mockReadStream, ReadStream.prototype);
+                const mockBlob = new Blob(['stream content']);
+                (blob as jest.Mock).mockResolvedValue(mockBlob);
+                await ScreenshotUtils.customize(data, {
+                    embeds: [mockReadStream]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(blob).toHaveBeenCalledWith(mockReadStream);
+                expect(data.append).toHaveBeenCalledWith(
+                    'embeds',
+                    mockBlob,
+                    'file1'
+                );
+            });
+        });
+
         describe('when all options are passed', () => {
             it('should append all options', async () => {
                 await ScreenshotUtils.customize(data, {
@@ -265,9 +369,11 @@ describe('ScreenshotUtils', () => {
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
-                    }
+                    },
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(14);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(16);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'emulatedMediaType',
@@ -337,6 +443,16 @@ describe('ScreenshotUtils', () => {
                     14,
                     'generateDocumentOutline',
                     'true'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    15,
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    16,
+                    'ownerPassword',
+                    'my_owner_password'
                 );
             });
         });

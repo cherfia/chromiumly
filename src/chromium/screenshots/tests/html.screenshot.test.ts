@@ -118,6 +118,68 @@ describe('HtmlScreenshot', () => {
             });
         });
 
+        describe('when userPassword parameter is passed', () => {
+            it('should return a buffer', async () => {
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    userPassword: 'my_user_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
+        describe('when ownerPassword parameter is passed', () => {
+            it('should return a buffer', async () => {
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
+        describe('when both userPassword and ownerPassword are passed', () => {
+            it('should return a buffer', async () => {
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    userPassword: 'my_user_password',
+                    ownerPassword: 'my_owner_password'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userPassword',
+                    'my_user_password'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'ownerPassword',
+                    'my_owner_password'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
+        describe('when embeds parameter is passed', () => {
+            it('should return a buffer', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
