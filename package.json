@@ -74,6 +74,9 @@
     "config": "4.x",
     "dotenv": "17.x"
   },
+  "resolutions": {
+    "conventional-changelog-conventionalcommits": "8.0.0"
+  },
   "lint-staged": {
     "**/*": "yarn prettier --write --ignore-unknown"
   }
