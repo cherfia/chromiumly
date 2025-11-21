@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.2.0](///compare/v4.1.6...v4.2.0) (2025-11-21)
+
+### Features
+
+- **chromium:** add embeds option for each route ce247e7
+- **chromium:** add encrypt for each route 674ef4d
+- **libre-office:** add embeds option 5d017e8
+- **libre-office:** add user and owner password options for PDF encryption 1c90b15
+- **pdf-engines:** add PDF embedding functionality 3c7ebc1
+- **pdf-engines:** add PDF encryption functionality fc025fd
+
 ## <small>4.1.6 (2025-11-10)</small>
 
 - chore(tsconfig): remove unused TypeScript compiler options ([4880cca](https://github.com/cherfia/chromiumly/commit/4880cca))
