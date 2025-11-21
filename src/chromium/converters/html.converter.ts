@@ -68,7 +68,9 @@ export class HtmlConverter extends Converter {
         metadata,
         cookies,
         downloadFrom,
-        split
+        split,
+        userPassword,
+        ownerPassword
     }: HtmlConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -102,7 +104,9 @@ export class HtmlConverter extends Converter {
             metadata,
             cookies,
             downloadFrom,
-            split
+            split,
+            userPassword,
+            ownerPassword
         });
 
         return GotenbergUtils.fetch(

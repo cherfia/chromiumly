@@ -42,6 +42,8 @@ export type ConversionOptions = ChromiumOptions & {
     metadata?: Metadata;
     cookies?: Cookie[];
     split?: Split;
+    userPassword?: string; // Password for opening the resulting PDF(s)
+    ownerPassword?: string; // Password for full access on the resulting PDF(s)
 };
 
 export type HtmlConversionOptions = ConversionOptions & {

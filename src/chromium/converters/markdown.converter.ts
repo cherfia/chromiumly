@@ -69,7 +69,9 @@ export class MarkdownConverter extends Converter {
         metadata,
         cookies,
         downloadFrom,
-        split
+        split,
+        userPassword,
+        ownerPassword
     }: MarkdownConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -97,7 +99,9 @@ export class MarkdownConverter extends Converter {
             split,
             failOnResourceHttpStatusCodes,
             failOnResourceLoadingFailed,
-            generateDocumentOutline
+            generateDocumentOutline,
+            userPassword,
+            ownerPassword
         });
 
         return GotenbergUtils.fetch(

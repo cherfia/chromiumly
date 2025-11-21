@@ -16,6 +16,8 @@ export type ScreenshotOptions = Omit<
 > & {
     properties?: ImageProperties;
     optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
+    userPassword?: string; // Password for opening the resulting PDF(s)
+    ownerPassword?: string; // Password for full access on the resulting PDF(s)
 };
 
 export type HtmlScreenshotOptions = ScreenshotOptions & {

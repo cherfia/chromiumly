@@ -69,7 +69,9 @@ export class UrlConverter extends Converter {
         cookies,
         downloadFrom,
         generateDocumentOutline,
-        split
+        split,
+        userPassword,
+        ownerPassword
     }: UrlConversionOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -96,7 +98,9 @@ export class UrlConverter extends Converter {
             failOnResourceHttpStatusCodes,
             failOnResourceLoadingFailed,
             generateDocumentOutline,
-            split
+            split,
+            userPassword,
+            ownerPassword
         });
 
         return GotenbergUtils.fetch(

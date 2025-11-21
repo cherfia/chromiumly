@@ -219,5 +219,13 @@ export class ConverterUtils {
                 data.append('splitUnify', String(options.split.unify));
             }
         }
+
+        if (options.userPassword) {
+            data.append('userPassword', options.userPassword);
+        }
+
+        if (options.ownerPassword) {
+            data.append('ownerPassword', options.ownerPassword);
+        }
     }
 }
