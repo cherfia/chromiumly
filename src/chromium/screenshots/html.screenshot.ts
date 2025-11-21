@@ -55,7 +55,8 @@ export class HtmlScreenshot extends Screenshot {
         downloadFrom,
         generateDocumentOutline,
         userPassword,
-        ownerPassword
+        ownerPassword,
+        embeds
     }: HtmlScreenshotOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -76,7 +77,8 @@ export class HtmlScreenshot extends Screenshot {
             downloadFrom,
             generateDocumentOutline,
             userPassword,
-            ownerPassword
+            ownerPassword,
+            embeds
         });
 
         return GotenbergUtils.fetch(

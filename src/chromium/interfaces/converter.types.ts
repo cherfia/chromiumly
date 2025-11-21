@@ -44,6 +44,7 @@ export type ConversionOptions = ChromiumOptions & {
     split?: Split;
     userPassword?: string; // Password for opening the resulting PDF(s)
     ownerPassword?: string; // Password for full access on the resulting PDF(s)
+    embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
 };
 
 export type HtmlConversionOptions = ConversionOptions & {

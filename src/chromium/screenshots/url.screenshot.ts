@@ -57,7 +57,8 @@ export class UrlScreenshot extends Screenshot {
         cookies,
         generateDocumentOutline,
         userPassword,
-        ownerPassword
+        ownerPassword,
+        embeds
     }: UrlScreenshotOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -79,7 +80,8 @@ export class UrlScreenshot extends Screenshot {
             cookies,
             generateDocumentOutline,
             userPassword,
-            ownerPassword
+            ownerPassword,
+            embeds
         });
 
         return GotenbergUtils.fetch(

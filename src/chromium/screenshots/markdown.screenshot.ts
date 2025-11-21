@@ -57,7 +57,8 @@ export class MarkdownScreenshot extends Screenshot {
         failOnResourceLoadingFailed,
         generateDocumentOutline,
         userPassword,
-        ownerPassword
+        ownerPassword,
+        embeds
     }: MarkdownScreenshotOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -80,7 +81,8 @@ export class MarkdownScreenshot extends Screenshot {
             downloadFrom,
             generateDocumentOutline,
             userPassword,
-            ownerPassword
+            ownerPassword,
+            embeds
         });
 
         return GotenbergUtils.fetch(

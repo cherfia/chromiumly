@@ -1,8 +1,12 @@
+import { constants, openAsBlob, promises, ReadStream } from 'fs';
+import path from 'path';
+import { blob } from 'node:stream/consumers';
+
 import {
     ConversionOptions,
     PageProperties
 } from '../interfaces/converter.types';
-import { GotenbergUtils } from '../../common';
+import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
 
 /**
  * Utility class for handling common tasks related to conversion.
@@ -96,6 +100,39 @@ export class ConverterUtils {
                 `${pageProperties.nativePageRanges.from}-${pageProperties.nativePageRanges.to}`
             );
         }
+    }
+
+    /**
+     * Adds files to the FormData object with a custom field name.
+     *
+     * @param {PathLikeOrReadStream[]} files - An array of files to be added to the FormData.
+     * @param {FormData} data - The FormData object to which files will be added.
+     * @param {string} fieldName - The field name to use when appending files (e.g., 'files', 'embeds').
+     * @returns {Promise<void>} A Promise that resolves once the files have been added.
+     */
+    public static async addFilesWithFieldName(
+        files: PathLikeOrReadStream[],
+        data: FormData,
+        fieldName: string
+    ): Promise<void> {
+        await Promise.all(
+            files.map(async (file, index) => {
+                const filename = path.basename(
+                    typeof file === 'string' ? file : `file${index + 1}`
+                );
+                if (Buffer.isBuffer(file)) {
+                    data.append(fieldName, new Blob([file]), filename);
+                } else if (file instanceof ReadStream) {
+                    const content = await blob(file);
+                    data.append(fieldName, content, filename);
+                } else {
+                    await promises.access(file, constants.R_OK);
+                    const _filename = path.basename(file.toString());
+                    const content = await openAsBlob(file);
+                    data.append(fieldName, content, _filename);
+                }
+            })
+        );
     }
 
     /**
@@ -226,6 +263,14 @@ export class ConverterUtils {
 
         if (options.ownerPassword) {
             data.append('ownerPassword', options.ownerPassword);
+        }
+
+        if (options.embeds && options.embeds.length > 0) {
+            await ConverterUtils.addFilesWithFieldName(
+                options.embeds,
+                data,
+                'embeds'
+            );
         }
     }
 }
