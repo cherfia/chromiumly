@@ -1,8 +1,7 @@
 plugins:
   "@release-it/conventional-changelog":
     infile: "CHANGELOG.md"
-    preset:
-      name: conventionalcommits
+    preset: "conventionalcommits"
     types:
       - type: "feat"
         section: "Features"
