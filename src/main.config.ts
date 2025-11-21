@@ -20,7 +20,8 @@ enum PdfEngineRoute {
     READ_METADATA = 'metadata/read',
     WRITE_METADATA = 'metadata/write',
     SPLIT = 'split',
-    FLATTEN = 'flatten'
+    FLATTEN = 'flatten',
+    ENCRYPT = 'encrypt'
 }
 
 /**
@@ -106,7 +107,8 @@ export class Chromiumly {
         readMetadata: PdfEngineRoute.READ_METADATA,
         writeMetadata: PdfEngineRoute.WRITE_METADATA,
         split: PdfEngineRoute.SPLIT,
-        flatten: PdfEngineRoute.FLATTEN
+        flatten: PdfEngineRoute.FLATTEN,
+        encrypt: PdfEngineRoute.ENCRYPT
     };
 
     /**

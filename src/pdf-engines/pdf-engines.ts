@@ -10,6 +10,7 @@ import {
 } from '../common';
 import { PDFEnginesUtils } from './utils/pdf-engines.utils';
 import { DownloadFrom, Split } from '../common/types';
+import { EncryptOptions } from './interfaces/pdf-engines.types';
 
 /**
  * Class uses PDF engines for various operations such as merging and conversion.
@@ -215,6 +216,41 @@ export class PDFEngines {
         await PDFEnginesUtils.addFiles(files, data);
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeMetadata}`;
+
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
+        );
+    }
+
+    /**
+     * Encrypts a PDF file.
+     *
+     * @param {Object} options - Options for the encrypt operation.
+     * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to be encrypted.
+     * @param {EncryptOptions} options.options - Encryption configuration specifying userPassword (required) and ownerPassword (optional).
+     * @returns {Promise<Buffer>} A Promise resolving to the encrypted PDF content as a buffer
+     */
+    public static async encrypt({
+        files,
+        options
+    }: {
+        files: PathLikeOrReadStream[];
+        options: EncryptOptions;
+    }): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+
+        data.append('userPassword', options.userPassword);
+
+        if (options.ownerPassword) {
+            data.append('ownerPassword', options.ownerPassword);
+        }
+
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.encrypt}`;
 
         return GotenbergUtils.fetch(
             endpoint,

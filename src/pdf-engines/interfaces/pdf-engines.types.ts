@@ -11,3 +11,8 @@ export type MergeOptions = ConversionOptions & {
     metadata?: Metadata;
     flatten?: boolean;
 };
+
+export type EncryptOptions = {
+    userPassword: string;
+    ownerPassword?: string;
+};
