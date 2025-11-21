@@ -1,20 +1,38 @@
 plugins:
   "@release-it/conventional-changelog":
     infile: "CHANGELOG.md"
-    preset: "conventionalcommits"
-    types:
-      - type: "feat"
-        section: "Features"
-      - type: "fix"
-        section: "Bug Fixes"
+    preset:
+      name: conventionalcommits
+      types:
+        - type: "feat"
+          section: "Features"
+        - type: "fix"
+          section: "Bug Fixes"
+        - type: "docs"
+          section: "Documentation"
+        - type: "style"
+          section: "Styles"
+        - type: "refactor"
+          section: "Code Refactoring"
+        - type: "perf"
+          section: "Performance Improvements"
+        - type: "test"
+          section: "Tests"
+        - type: "build"
+          section: "Build System"
+        - type: "ci"
+          section: "Continuous Integration"
+        - type: "chore"
+          section: "Chores"
+        - type: "revert"
+          section: "Reverts"
 git:
   requireBranch: main
   commitMessage: "chore: release v${version}"
-  changelog: "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
 
 hooks:
   before:init: ["git pull", "yarn", "yarn lint", "yarn build", "yarn test"]
-  after:bump: "npx auto-changelog -p && git add CHANGELOG.md"
+  after:bump: "git add CHANGELOG.md"
   after:release:
     - "echo Successfully released ${name} v${version} to ${repo.repository}."
 
