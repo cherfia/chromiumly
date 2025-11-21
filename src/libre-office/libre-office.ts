@@ -41,7 +41,9 @@ export class LibreOffice {
         quality,
         maxImageResolution,
         split,
-        flatten
+        flatten,
+        userPassword,
+        ownerPassword
     }: {
         files: PathLikeOrReadStream[];
     } & ConversionOptions): Promise<Buffer> {
@@ -59,7 +61,9 @@ export class LibreOffice {
             quality,
             maxImageResolution,
             split,
-            flatten
+            flatten,
+            userPassword,
+            ownerPassword
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;

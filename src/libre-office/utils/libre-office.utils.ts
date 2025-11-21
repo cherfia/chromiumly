@@ -281,5 +281,13 @@ export class LibreOfficeUtils {
         if (options.flatten) {
             data.append('flatten', String(options.flatten));
         }
+
+        if (options.userPassword) {
+            data.append('userPassword', options.userPassword);
+        }
+
+        if (options.ownerPassword) {
+            data.append('ownerPassword', options.ownerPassword);
+        }
     }
 }

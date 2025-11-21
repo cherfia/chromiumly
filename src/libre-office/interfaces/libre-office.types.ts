@@ -175,4 +175,6 @@ export type ConversionOptions = {
     downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
     split?: Split; // Split the PDF into multiple files.
     flatten?: boolean; // Flatten the PDF document.
+    userPassword?: string; // Password for opening the resulting PDF(s)
+    ownerPassword?: string; // Password for full access on the resulting PDF(s)
 };
