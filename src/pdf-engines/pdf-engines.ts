@@ -262,6 +262,36 @@ export class PDFEngines {
     }
 
     /**
+     * Embeds files into PDF files.
+     *
+     * @param {Object} options - Options for the embed operation.
+     * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to embed files into.
+     * @param {PathLikeOrReadStream[]} options.embeds - An array of PathLikes or ReadStreams to the files to embed in the PDF.
+     * @returns {Promise<Buffer>} A Promise resolving to the PDF content with embedded files as a buffer
+     */
+    public static async embed({
+        files,
+        embeds
+    }: {
+        files: PathLikeOrReadStream[];
+        embeds: PathLikeOrReadStream[];
+    }): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+        await PDFEnginesUtils.addFilesWithFieldName(embeds, data, 'embeds');
+
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.embed}`;
+
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
+        );
+    }
+
+    /**
      * Generates a PDF file from a buffer and saves it to the "__generated__" directory.
      *
      * @param {string} filename - The filename for the generated PDF.
