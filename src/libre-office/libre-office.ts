@@ -43,7 +43,8 @@ export class LibreOffice {
         split,
         flatten,
         userPassword,
-        ownerPassword
+        ownerPassword,
+        embeds
     }: {
         files: PathLikeOrReadStream[];
     } & ConversionOptions): Promise<Buffer> {
@@ -63,7 +64,8 @@ export class LibreOffice {
             split,
             flatten,
             userPassword,
-            ownerPassword
+            ownerPassword,
+            embeds
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;

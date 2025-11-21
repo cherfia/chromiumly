@@ -200,6 +200,40 @@ export class LibreOfficeUtils {
     }
 
     /**
+     * Adds files to the FormData object with a custom field name.
+     *
+     * @param {PathLikeOrReadStream[]} files - An array of files to be added to the FormData.
+     * @param {FormData} data - The FormData object to which files will be added.
+     * @param {string} fieldName - The field name to use when appending files (e.g., 'files', 'embeds').
+     * @returns {Promise<void>} A Promise that resolves once the files have been added.
+     */
+    public static async addFilesWithFieldName(
+        files: PathLikeOrReadStream[],
+        data: FormData,
+        fieldName: string
+    ): Promise<void> {
+        await Promise.all(
+            files.map(async (file, index) => {
+                const fileInfo = await this.getFileInfo(file);
+                const filename = path.basename(
+                    typeof file === 'string' ? file : `file${index + 1}`
+                );
+                if (Buffer.isBuffer(fileInfo.data)) {
+                    data.append(fieldName, new Blob([fileInfo.data]), filename);
+                } else if (fileInfo.data instanceof ReadStream) {
+                    const content = await blob(fileInfo.data);
+                    data.append(fieldName, content, filename);
+                } else {
+                    await promises.access(fileInfo.data, constants.R_OK);
+                    const _filename = path.basename(fileInfo.data.toString());
+                    const content = await openAsBlob(fileInfo.data);
+                    data.append(fieldName, content, _filename);
+                }
+            })
+        );
+    }
+
+    /**
      * Customizes the FormData object based on the provided conversion options.
      *
      * @param {FormData} data - The FormData object to be customized.
@@ -288,6 +322,14 @@ export class LibreOfficeUtils {
 
         if (options.ownerPassword) {
             data.append('ownerPassword', options.ownerPassword);
+        }
+
+        if (options.embeds && options.embeds.length > 0) {
+            await LibreOfficeUtils.addFilesWithFieldName(
+                options.embeds,
+                data,
+                'embeds'
+            );
         }
     }
 }
