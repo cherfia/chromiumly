@@ -48,7 +48,7 @@
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@commitlint/cz-commitlint": "^20.0.0",
-    "@release-it/conventional-changelog": "10.0.3",
+    "@release-it/conventional-changelog": "10.0.4",
     "@types/config": "3.3.5",
     "@types/dotenv": "8.2.3",
     "@types/jest": "30.0.0",
