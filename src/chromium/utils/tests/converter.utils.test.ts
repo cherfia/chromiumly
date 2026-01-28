@@ -354,6 +354,19 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when waitForSelector parameter is passed', () => {
+            it('should append waitForSelector', async () => {
+                await ConverterUtils.customize(data, {
+                    waitForSelector: '#ready-node'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'waitForSelector',
+                    '#ready-node'
+                );
+            });
+        });
+
         describe('when userAgent parameter is passed', () => {
             it('should append userAgent', async () => {
                 const userAgent =
@@ -580,6 +593,7 @@ describe('ConverterUtils', () => {
                     properties: { size: { width: 8.3, height: 11.7 } },
                     waitDelay: '5s',
                     waitForExpression: "document.readyState === 'complete'",
+                    waitForSelector: '#ready-node',
                     userAgent:
                         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
@@ -598,7 +612,7 @@ describe('ConverterUtils', () => {
                     userPassword: 'my_user_password',
                     ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(24);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(25);
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -648,46 +662,51 @@ describe('ConverterUtils', () => {
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     10,
+                    'waitForSelector',
+                    '#ready-node'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    11,
                     'userAgent',
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    11,
+                    12,
                     'extraHttpHeaders',
                     JSON.stringify({ 'X-Custom-Header': 'value' })
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    12,
+                    13,
                     'failOnHttpStatusCodes',
                     JSON.stringify([499, 599])
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    13,
+                    14,
                     'failOnResourceHttpStatusCodes',
                     JSON.stringify([499, 599])
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    14,
+                    15,
                     'failOnResourceLoadingFailed',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    15,
+                    16,
                     'failOnConsoleExceptions',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    16,
+                    17,
                     'skipNetworkIdleEvent',
                     'false'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    17,
+                    18,
                     'metadata',
                     JSON.stringify({ Author: 'John Doe' })
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    18,
+                    19,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',
@@ -695,32 +714,32 @@ describe('ConverterUtils', () => {
                     })
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    19,
+                    20,
                     'generateDocumentOutline',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    20,
+                    21,
                     'splitMode',
                     'pages'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    21,
+                    22,
                     'splitSpan',
                     '1-10'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    22,
+                    23,
                     'splitUnify',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    23,
+                    24,
                     'userPassword',
                     'my_user_password'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    24,
+                    25,
                     'ownerPassword',
                     'my_owner_password'
                 );

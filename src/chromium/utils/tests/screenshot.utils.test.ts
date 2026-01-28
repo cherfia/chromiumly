@@ -173,6 +173,19 @@ describe('ScreenshotUtils', () => {
             });
         });
 
+        describe('when waitForSelector parameter is passed', () => {
+            it('should append waitForSelector', async () => {
+                await ScreenshotUtils.customize(data, {
+                    waitForSelector: '#ready-node'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'waitForSelector',
+                    '#ready-node'
+                );
+            });
+        });
+
         describe('when extraHttpHeaders parameter is passed', () => {
             it('should append extraHttpHeaders', async () => {
                 const extraHttpHeaders = {
@@ -364,6 +377,7 @@ describe('ScreenshotUtils', () => {
                     },
                     waitDelay: '5s',
                     waitForExpression: "document.readyState === 'complete'",
+                    waitForSelector: '#ready-node',
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
                     optimizeForSpeed: true,
                     downloadFrom: {
@@ -373,7 +387,7 @@ describe('ScreenshotUtils', () => {
                     userPassword: 'my_user_password',
                     ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(16);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(17);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'emulatedMediaType',
@@ -397,42 +411,47 @@ describe('ScreenshotUtils', () => {
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     6,
+                    'waitForSelector',
+                    '#ready-node'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    7,
                     'extraHttpHeaders',
                     JSON.stringify({ 'X-Custom-Header': 'value' })
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    7,
+                    8,
                     'failOnHttpStatusCodes',
                     JSON.stringify([499, 599])
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    8,
+                    9,
                     'failOnResourceHttpStatusCodes',
                     JSON.stringify([499, 599])
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    9,
+                    10,
                     'failOnResourceLoadingFailed',
                     'true'
                 );
 
                 expect(data.append).toHaveBeenNthCalledWith(
-                    10,
+                    11,
                     'failOnConsoleExceptions',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    11,
+                    12,
                     'skipNetworkIdleEvent',
                     'false'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    12,
+                    13,
                     'optimizeForSpeed',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    13,
+                    14,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',
@@ -440,17 +459,17 @@ describe('ScreenshotUtils', () => {
                     })
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    14,
+                    15,
                     'generateDocumentOutline',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    15,
+                    16,
                     'userPassword',
                     'my_user_password'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    16,
+                    17,
                     'ownerPassword',
                     'my_owner_password'
                 );
