@@ -5,22 +5,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: "lts/*"
           registry-url: "https://registry.npmjs.org"
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Setup Git user
-        run: |
-          git config user.name "${GITHUB_ACTOR}"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - name: Release
-        run: yarn release --ci
+      - run: git config user.name "${GITHUB_ACTOR}"
+      - run: git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn dlx release-it --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
