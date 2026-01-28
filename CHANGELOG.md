@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.2.3 (2026-01-28)
+
+### Documentation
+
+- update README.md ([6221f96](https://github.com/cherfia/chromiumly/commit/6221f96988097d5c541bb5239f37d4b6142130ca))
+
 ## 4.2.2 (2026-01-28)
 
 ### Chores
