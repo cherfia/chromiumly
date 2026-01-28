@@ -285,6 +285,9 @@ type ConversionOptions = {
   extraHttpHeaders?: Record<string, string>; // Include additional HTTP headers in the request
   failOnHttpStatusCodes?: number[]; // List of HTTP status codes triggering a 409 Conflict response (default [499, 599])
   failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
+  failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
+  ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
+  failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
   metadata?: Metadata; // Metadata to be written.
   cookies?: Cookie[]; // Cookies to be written.
@@ -325,6 +328,9 @@ type ScreenshotOptions = {
   extraHttpHeaders?: Record<string, string>;
   failOnHttpStatusCodes?: number[]; // Return a 409 Conflict response if the HTTP status code is in the list (default [499,599])
   failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
+  failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
+  ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
+  failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
   optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
   cookies?: Cookie[]; // Cookies to be written.
