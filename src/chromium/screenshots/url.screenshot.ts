@@ -30,6 +30,7 @@ export class UrlScreenshot extends Screenshot {
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the screenshot.
      * @param {string} [options.waitDelay] - Delay before the screenshot process starts.
      * @param {string} [options.waitForExpression] - JavaScript expression to wait for before completing the screenshot.
+     * @param {string} [options.waitForSelector] - CSS selector to wait for before completing the screenshot.
      * @param {Record<string, string>} [options.extraHttpHeaders] - Additional HTTP headers for the screenshot.
      * @param {number []} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during screenshot.
@@ -47,6 +48,7 @@ export class UrlScreenshot extends Screenshot {
         emulatedMediaType,
         waitDelay,
         waitForExpression,
+        waitForSelector,
         extraHttpHeaders,
         failOnHttpStatusCodes,
         failOnConsoleExceptions,
@@ -70,6 +72,7 @@ export class UrlScreenshot extends Screenshot {
             emulatedMediaType,
             waitDelay,
             waitForExpression,
+            waitForSelector,
             extraHttpHeaders,
             failOnHttpStatusCodes,
             failOnConsoleExceptions,

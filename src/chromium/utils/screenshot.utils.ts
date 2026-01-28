@@ -118,6 +118,10 @@ export class ScreenshotUtils {
             data.append('waitForExpression', options.waitForExpression);
         }
 
+        if (options.waitForSelector) {
+            data.append('waitForSelector', options.waitForSelector);
+        }
+
         if (options.extraHttpHeaders) {
             data.append(
                 'extraHttpHeaders',
