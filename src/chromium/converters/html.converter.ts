@@ -32,6 +32,7 @@ export class HtmlConverter extends Converter {
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the conversion.
      * @param {string} [options.waitDelay] - Delay before the conversion process starts.
      * @param {string} [options.waitForExpression] - JavaScript expression to wait for before completing the conversion.
+     * @param {string} [options.waitForSelector] - CSS selector to wait for before completing the conversion.
      * @param {string} [options.userAgent] - User agent string to use during the conversion.
      * @param {Record<string, string>} [options.extraHttpHeaders] - Additional HTTP headers for the conversion.
      * @param {number[]} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
@@ -57,6 +58,7 @@ export class HtmlConverter extends Converter {
         emulatedMediaType,
         waitDelay,
         waitForExpression,
+        waitForSelector,
         userAgent,
         extraHttpHeaders,
         failOnHttpStatusCodes,
@@ -94,6 +96,7 @@ export class HtmlConverter extends Converter {
             emulatedMediaType,
             waitDelay,
             waitForExpression,
+            waitForSelector,
             userAgent,
             extraHttpHeaders,
             failOnHttpStatusCodes,

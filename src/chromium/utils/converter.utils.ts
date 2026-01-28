@@ -180,6 +180,10 @@ export class ConverterUtils {
             data.append('waitForExpression', options.waitForExpression);
         }
 
+        if (options.waitForSelector) {
+            data.append('waitForSelector', options.waitForSelector);
+        }
+
         if (options.userAgent) {
             data.append('userAgent', options.userAgent);
         }
