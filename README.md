@@ -281,6 +281,7 @@ type ConversionOptions = {
   emulatedMediaType?: EmulatedMediaType; // Specify the emulated media type for conversion
   waitDelay?: string; // Duration (e.g., '5s') to wait when loading an HTML document before conversion
   waitForExpression?: string; // JavaScript expression to wait before converting an HTML document into PDF
+  waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node
   extraHttpHeaders?: Record<string, string>; // Include additional HTTP headers in the request
   failOnHttpStatusCodes?: number[]; // List of HTTP status codes triggering a 409 Conflict response (default [499, 599])
   failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
@@ -320,6 +321,7 @@ type ScreenshotOptions = {
   emulatedMediaType?: EmulatedMediaType;
   waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before convertion.
   waitForExpression?: string; // JavaScript's expression to wait before converting an HTML document into PDF until it returns true.
+  waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node.
   extraHttpHeaders?: Record<string, string>;
   failOnHttpStatusCodes?: number[]; // Return a 409 Conflict response if the HTTP status code is in the list (default [499,599])
   failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
