@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.2.2 (2026-01-28)
+
+### Chores
+
+- bump version to 4.2.1 ([d79fdbc](https://github.com/cherfia/chromiumly/commit/d79fdbc3db6d60b9c8f27d1d97d6a021eba9e75b))
+
 ## [4.2.0](///compare/v4.1.6...v4.2.0) (2025-11-21)
 
 ### Features
