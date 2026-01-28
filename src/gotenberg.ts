@@ -18,7 +18,10 @@ if (dotenv) {
     const envFile = `.env.${process.env.NODE_ENV}`;
     const envFileFallback = '.env';
 
-    const dotenvConfig = dotenv.config({ path: path.resolve(envFile), quiet: true });
+    const dotenvConfig = dotenv.config({
+        path: path.resolve(envFile),
+        quiet: true
+    });
 
     // Fallback to loading the default environment file.
     if (dotenvConfig.error) {
