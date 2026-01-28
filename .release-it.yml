@@ -40,5 +40,6 @@ github:
   release: true
 npm:
   publish: true
+  skipChecks: true
   publishConfig:
     registry: "https://registry.npmjs.org"
