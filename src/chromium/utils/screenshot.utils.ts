@@ -143,6 +143,13 @@ export class ScreenshotUtils {
             );
         }
 
+        if (options.ignoreResourceHttpStatusDomains) {
+            data.append(
+                'ignoreResourceHttpStatusDomains',
+                JSON.stringify(options.ignoreResourceHttpStatusDomains)
+            );
+        }
+
         if (options.failOnResourceLoadingFailed) {
             data.append(
                 'failOnResourceLoadingFailed',

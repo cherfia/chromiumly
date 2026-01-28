@@ -39,6 +39,7 @@ export class UrlConverter extends Converter {
      * @param {Record<string, string>} [options.extraHttpHeaders] - Additional HTTP headers for the conversion.
      * @param {number[]} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {number[]} [options.failOnResourceHttpStatusCodes] - Whether to fail on resource HTTP status code.
+     * @param {string[]} [options.ignoreResourceHttpStatusDomains] - Domains to exclude from resource HTTP status code checks.
      * @param {boolean} [options.failOnResourceLoadingFailed] - Whether to fail on resource loading failed.
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during conversion.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
@@ -64,6 +65,7 @@ export class UrlConverter extends Converter {
         extraHttpHeaders,
         failOnHttpStatusCodes,
         failOnResourceHttpStatusCodes,
+        ignoreResourceHttpStatusDomains,
         failOnResourceLoadingFailed,
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
@@ -100,6 +102,7 @@ export class UrlConverter extends Converter {
             cookies,
             downloadFrom,
             failOnResourceHttpStatusCodes,
+            ignoreResourceHttpStatusDomains,
             failOnResourceLoadingFailed,
             generateDocumentOutline,
             split,

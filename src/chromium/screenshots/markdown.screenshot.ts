@@ -37,6 +37,7 @@ export class MarkdownScreenshot extends Screenshot {
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @param {number[]} [options.failOnResourceHttpStatusCodes] - Whether to fail on resource HTTP status code.
+     * @param {string[]} [options.ignoreResourceHttpStatusDomains] - Domains to exclude from resource HTTP status code checks.
      * @param {boolean} [options.failOnResourceLoadingFailed] - Whether to fail on resource loading failed.
      * @param {boolean} [options.generateDocumentOutline] - Whether to generate document outline.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
@@ -56,6 +57,7 @@ export class MarkdownScreenshot extends Screenshot {
         optimizeForSpeed,
         downloadFrom,
         failOnResourceHttpStatusCodes,
+        ignoreResourceHttpStatusDomains,
         failOnResourceLoadingFailed,
         generateDocumentOutline,
         userPassword,
@@ -78,6 +80,7 @@ export class MarkdownScreenshot extends Screenshot {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             failOnResourceHttpStatusCodes,
+            ignoreResourceHttpStatusDomains,
             failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
             optimizeForSpeed,

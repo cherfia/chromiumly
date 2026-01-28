@@ -33,6 +33,7 @@ export class HtmlScreenshot extends Screenshot {
      * @param {boolean} [options.failOnConsoleExceptions] - Whether to fail on console exceptions during screenshot.
      * @param {number []} [options.failOnHttpStatusCodes] - Whether to fail on HTTP status code.
      * @param {number[]} [options.failOnResourceHttpStatusCodes] - Whether to fail on resource HTTP status code.
+     * @param {string[]} [options.ignoreResourceHttpStatusDomains] - Domains to exclude from resource HTTP status code checks.
      * @param {boolean} [options.failOnResourceLoadingFailed] - Whether to fail on resource loading failed.
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
@@ -51,6 +52,7 @@ export class HtmlScreenshot extends Screenshot {
         failOnConsoleExceptions,
         failOnHttpStatusCodes,
         failOnResourceHttpStatusCodes,
+        ignoreResourceHttpStatusDomains,
         failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
         optimizeForSpeed,
@@ -74,6 +76,7 @@ export class HtmlScreenshot extends Screenshot {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             failOnResourceHttpStatusCodes,
+            ignoreResourceHttpStatusDomains,
             failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
             optimizeForSpeed,
