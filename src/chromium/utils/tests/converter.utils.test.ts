@@ -599,6 +599,10 @@ describe('ConverterUtils', () => {
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
                     failOnHttpStatusCodes: [499, 599],
                     failOnResourceHttpStatusCodes: [499, 599],
+                    ignoreResourceHttpStatusDomains: [
+                        'sentry-cdn.com',
+                        'analytics.example.com'
+                    ],
                     failOnResourceLoadingFailed: true,
                     skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
@@ -612,7 +616,7 @@ describe('ConverterUtils', () => {
                     userPassword: 'my_user_password',
                     ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(25);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(26);
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -687,26 +691,31 @@ describe('ConverterUtils', () => {
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     15,
+                    'ignoreResourceHttpStatusDomains',
+                    JSON.stringify(['sentry-cdn.com', 'analytics.example.com'])
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    16,
                     'failOnResourceLoadingFailed',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    16,
+                    17,
                     'failOnConsoleExceptions',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    17,
+                    18,
                     'skipNetworkIdleEvent',
                     'false'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    18,
+                    19,
                     'metadata',
                     JSON.stringify({ Author: 'John Doe' })
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    19,
+                    20,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',
@@ -714,32 +723,32 @@ describe('ConverterUtils', () => {
                     })
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    20,
+                    21,
                     'generateDocumentOutline',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    21,
+                    22,
                     'splitMode',
                     'pages'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    22,
+                    23,
                     'splitSpan',
                     '1-10'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    23,
+                    24,
                     'splitUnify',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    24,
+                    25,
                     'userPassword',
                     'my_user_password'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    25,
+                    26,
                     'ownerPassword',
                     'my_owner_password'
                 );

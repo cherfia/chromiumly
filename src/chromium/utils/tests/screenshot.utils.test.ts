@@ -367,6 +367,10 @@ describe('ScreenshotUtils', () => {
                     emulatedMediaType: 'screen',
                     failOnHttpStatusCodes: [499, 599],
                     failOnResourceHttpStatusCodes: [499, 599],
+                    ignoreResourceHttpStatusDomains: [
+                        'sentry-cdn.com',
+                        'analytics.example.com'
+                    ],
                     failOnResourceLoadingFailed: true,
                     skipNetworkIdleEvent: false,
                     failOnConsoleExceptions: true,
@@ -387,7 +391,7 @@ describe('ScreenshotUtils', () => {
                     userPassword: 'my_user_password',
                     ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(17);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(18);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'emulatedMediaType',
@@ -431,27 +435,32 @@ describe('ScreenshotUtils', () => {
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     10,
+                    'ignoreResourceHttpStatusDomains',
+                    JSON.stringify(['sentry-cdn.com', 'analytics.example.com'])
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    11,
                     'failOnResourceLoadingFailed',
                     'true'
                 );
 
                 expect(data.append).toHaveBeenNthCalledWith(
-                    11,
+                    12,
                     'failOnConsoleExceptions',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    12,
+                    13,
                     'skipNetworkIdleEvent',
                     'false'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    13,
+                    14,
                     'optimizeForSpeed',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    14,
+                    15,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',
@@ -459,17 +468,17 @@ describe('ScreenshotUtils', () => {
                     })
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    15,
+                    16,
                     'generateDocumentOutline',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    16,
+                    17,
                     'userPassword',
                     'my_user_password'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    17,
+                    18,
                     'ownerPassword',
                     'my_owner_password'
                 );
