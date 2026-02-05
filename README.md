@@ -250,14 +250,14 @@ file will look like.
 type PageProperties = {
   singlePage?: boolean; // Print the entire content in one single page (default false)
   size?: {
-    width: number; // Paper width, in inches (default 8.5)
-    height: number; //Paper height, in inches (default 11)
+    width: number | string; // Paper width (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 8.5)
+    height: number | string; // Paper height (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 11)
   };
   margins?: {
-    top: number; // Top margin, in inches (default 0.39)
-    bottom: number; // Bottom margin, in inches (default 0.39)
-    left: number; // Left margin, in inches (default 0.39)
-    right: number; // Right margin, in inches (default 0.39)
+    top: number | string; // Top margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+    bottom: number | string; // Bottom margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+    left: number | string; // Left margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+    right: number | string; // Right margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
   };
   preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
   printBackground?: boolean; // Print the background graphics (default false)
@@ -266,6 +266,41 @@ type PageProperties = {
   scale?: number; // The scale of the page rendering (default 1.0)
   nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
+```
+
+**Page Size and Margins Units**
+
+Both `size` and `margins` properties support two formats:
+
+1. **Numeric values** (in inches): For backward compatibility, you can continue using numbers which represent inches.
+2. **String values with units**: You can now specify explicit units using the following formats:
+   - `pt` (points): e.g., `"72pt"`
+   - `px` (pixels): e.g., `"96px"`
+   - `in` (inches): e.g., `"1in"`
+   - `mm` (millimeters): e.g., `"25.4mm"`
+   - `cm` (centimeters): e.g., `"2.54cm"`
+   - `pc` (picas): e.g., `"6pc"`
+
+**Examples:**
+
+```typescript
+// Using numeric values (inches)
+properties: {
+  size: { width: 8.5, height: 11 },
+  margins: { top: 0.5, bottom: 0.5, left: 1, right: 1 }
+}
+
+// Using string values with units
+properties: {
+  size: { width: "210mm", height: "297mm" }, // A4 size
+  margins: { top: "1cm", bottom: "1cm", left: "2cm", right: "2cm" }
+}
+
+// Mixing numeric and string values
+properties: {
+  size: { width: 8.5, height: "11in" },
+  margins: { top: "10mm", bottom: 0.5, left: "72pt", right: 1 }
+}
 ```
 
 In addition to the `PageProperties` customization options, the `convert()` method also accepts a set of parameters to further enhance the versatility of the conversion process. Here's an overview of the full list of parameters:
