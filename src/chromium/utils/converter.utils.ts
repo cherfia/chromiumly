@@ -13,6 +13,16 @@ import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
  */
 export class ConverterUtils {
     /**
+     * Validates if a value is a valid unit string (e.g., "72pt", "1in", "25.4mm").
+     *
+     * @param {string} value - The value to validate.
+     * @returns {boolean} True if the value matches the expected unit format.
+     */
+    private static isValidUnitString(value: string): boolean {
+        return /^\d+(\.\d+)?(pt|px|in|mm|cm|pc)$/.test(value);
+    }
+
+    /**
      * Adds page properties to the FormData object based on the provided PageProperties.
      *
      * @param {FormData} data - The FormData object to which page properties will be added.
@@ -27,29 +37,90 @@ export class ConverterUtils {
         }
 
         if (pageProperties.size) {
-            GotenbergUtils.assert(
-                pageProperties.size.width >= 1.0 &&
-                    pageProperties.size.height >= 1.5,
-                'size is smaller than the minimum printing requirements (i.e. 1.0 x 1.5 in)'
-            );
+            const { width, height } = pageProperties.size;
 
-            data.append('paperWidth', pageProperties.size.width);
-            data.append('paperHeight', pageProperties.size.height);
+            // Validate based on type
+            if (typeof width === 'number') {
+                GotenbergUtils.assert(
+                    width >= 1.0,
+                    'width is smaller than the minimum printing requirement (1.0 in)'
+                );
+            } else {
+                GotenbergUtils.assert(
+                    ConverterUtils.isValidUnitString(width),
+                    'width must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                );
+            }
+
+            if (typeof height === 'number') {
+                GotenbergUtils.assert(
+                    height >= 1.5,
+                    'height is smaller than the minimum printing requirement (1.5 in)'
+                );
+            } else {
+                GotenbergUtils.assert(
+                    ConverterUtils.isValidUnitString(height),
+                    'height must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                );
+            }
+
+            data.append('paperWidth', width);
+            data.append('paperHeight', height);
         }
 
         if (pageProperties.margins) {
-            GotenbergUtils.assert(
-                pageProperties.margins.top >= 0 &&
-                    pageProperties.margins.bottom >= 0 &&
-                    pageProperties.margins.left >= 0 &&
-                    pageProperties.margins.left >= 0,
-                'negative margins are not allowed'
-            );
+            const { top, bottom, left, right } = pageProperties.margins;
 
-            data.append('marginTop', pageProperties.margins.top);
-            data.append('marginBottom', pageProperties.margins.bottom);
-            data.append('marginLeft', pageProperties.margins.left);
-            data.append('marginRight', pageProperties.margins.right);
+            // Validate each margin based on type
+            if (typeof top === 'number') {
+                GotenbergUtils.assert(top >= 0, 'marginTop cannot be negative');
+            } else {
+                GotenbergUtils.assert(
+                    ConverterUtils.isValidUnitString(top),
+                    'marginTop must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                );
+            }
+
+            if (typeof bottom === 'number') {
+                GotenbergUtils.assert(
+                    bottom >= 0,
+                    'marginBottom cannot be negative'
+                );
+            } else {
+                GotenbergUtils.assert(
+                    ConverterUtils.isValidUnitString(bottom),
+                    'marginBottom must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                );
+            }
+
+            if (typeof left === 'number') {
+                GotenbergUtils.assert(
+                    left >= 0,
+                    'marginLeft cannot be negative'
+                );
+            } else {
+                GotenbergUtils.assert(
+                    ConverterUtils.isValidUnitString(left),
+                    'marginLeft must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                );
+            }
+
+            if (typeof right === 'number') {
+                GotenbergUtils.assert(
+                    right >= 0,
+                    'marginRight cannot be negative'
+                );
+            } else {
+                GotenbergUtils.assert(
+                    ConverterUtils.isValidUnitString(right),
+                    'marginRight must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                );
+            }
+
+            data.append('marginTop', top);
+            data.append('marginBottom', bottom);
+            data.append('marginLeft', left);
+            data.append('marginRight', right);
         }
 
         if (pageProperties.preferCssPageSize) {
