@@ -63,6 +63,164 @@ describe('ConverterUtils', () => {
                     );
                 });
             });
+
+            describe('when page size is valid with string units', () => {
+                it('should append page size with inches', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: '8.5in', height: '11in' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        '8.5in'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'paperHeight',
+                        '11in'
+                    );
+                });
+
+                it('should append page size with millimeters', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: '216mm', height: '279mm' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        '216mm'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'paperHeight',
+                        '279mm'
+                    );
+                });
+
+                it('should append page size with points', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: '612pt', height: '792pt' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        '612pt'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'paperHeight',
+                        '792pt'
+                    );
+                });
+
+                it('should append page size with pixels', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: '800px', height: '1056px' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        '800px'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'paperHeight',
+                        '1056px'
+                    );
+                });
+
+                it('should append page size with centimeters', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: '21.6cm', height: '27.9cm' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        '21.6cm'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'paperHeight',
+                        '27.9cm'
+                    );
+                });
+
+                it('should append page size with picas', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: '51pc', height: '66pc' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        '51pc'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'paperHeight',
+                        '66pc'
+                    );
+                });
+            });
+
+            describe('when page size has mixed numeric and string values', () => {
+                it('should append mixed page size', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: 8.5, height: '11in' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        8.5
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'paperHeight',
+                        '11in'
+                    );
+                });
+            });
+
+            describe('when page size has invalid string format', () => {
+                it('should throw error for invalid width unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            size: { width: '8.5inches', height: '11in' }
+                        });
+                    }).toThrow(
+                        'width must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for invalid height unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            size: { width: '8.5in', height: '11inch' }
+                        });
+                    }).toThrow(
+                        'height must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for missing unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            size: { width: '8.5', height: '11in' }
+                        });
+                    }).toThrow(
+                        'width must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for invalid format', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            size: { width: 'invalidin', height: '11in' }
+                        });
+                    }).toThrow(
+                        'width must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+            });
         });
 
         describe('Page margins', () => {
@@ -91,6 +249,224 @@ describe('ConverterUtils', () => {
                         'marginRight',
                         1
                     );
+                });
+            });
+
+            describe('when page margins are valid with string units', () => {
+                it('should append page margins with mixed units', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        margins: {
+                            top: '0.5in',
+                            bottom: '10mm',
+                            left: '1cm',
+                            right: '72pt'
+                        }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginTop',
+                        '0.5in'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'marginBottom',
+                        '10mm'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        3,
+                        'marginLeft',
+                        '1cm'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        4,
+                        'marginRight',
+                        '72pt'
+                    );
+                });
+
+                it('should append page margins with pixels', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        margins: {
+                            top: '50px',
+                            bottom: '50px',
+                            left: '100px',
+                            right: '100px'
+                        }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginTop',
+                        '50px'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'marginBottom',
+                        '50px'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        3,
+                        'marginLeft',
+                        '100px'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        4,
+                        'marginRight',
+                        '100px'
+                    );
+                });
+
+                it('should append page margins with picas', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        margins: {
+                            top: '3pc',
+                            bottom: '3pc',
+                            left: '5pc',
+                            right: '5pc'
+                        }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginTop',
+                        '3pc'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'marginBottom',
+                        '3pc'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        3,
+                        'marginLeft',
+                        '5pc'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        4,
+                        'marginRight',
+                        '5pc'
+                    );
+                });
+            });
+
+            describe('when page margins have mixed numeric and string values', () => {
+                it('should append mixed page margins', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        margins: {
+                            top: 0.5,
+                            bottom: '10mm',
+                            left: 1,
+                            right: '72pt'
+                        }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginTop',
+                        0.5
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        2,
+                        'marginBottom',
+                        '10mm'
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        3,
+                        'marginLeft',
+                        1
+                    );
+                    expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                        4,
+                        'marginRight',
+                        '72pt'
+                    );
+                });
+            });
+
+            describe('when page margins have invalid string format', () => {
+                it('should throw error for invalid marginTop unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            margins: {
+                                top: '0.5inches',
+                                bottom: '10mm',
+                                left: '1cm',
+                                right: '72pt'
+                            }
+                        });
+                    }).toThrow(
+                        'marginTop must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for invalid marginBottom unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            margins: {
+                                top: '0.5in',
+                                bottom: '10millimeters',
+                                left: '1cm',
+                                right: '72pt'
+                            }
+                        });
+                    }).toThrow(
+                        'marginBottom must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for invalid marginLeft unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            margins: {
+                                top: '0.5in',
+                                bottom: '10mm',
+                                left: '1centimeter',
+                                right: '72pt'
+                            }
+                        });
+                    }).toThrow(
+                        'marginLeft must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for invalid marginRight unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            margins: {
+                                top: '0.5in',
+                                bottom: '10mm',
+                                left: '1cm',
+                                right: '72points'
+                            }
+                        });
+                    }).toThrow(
+                        'marginRight must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for missing unit', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            margins: {
+                                top: '0.5',
+                                bottom: '10mm',
+                                left: '1cm',
+                                right: '72pt'
+                            }
+                        });
+                    }).toThrow(
+                        'marginTop must be a valid unit string (e.g., "72pt", "96px", "1in", "25.4mm", "2.54cm", "6pc")'
+                    );
+                });
+
+                it('should throw error for negative numeric margin', () => {
+                    expect(() => {
+                        ConverterUtils.addPageProperties(data, {
+                            margins: {
+                                top: -0.5,
+                                bottom: 0.5,
+                                left: 1,
+                                right: 1
+                            }
+                        });
+                    }).toThrow('marginTop cannot be negative');
                 });
             });
         });
