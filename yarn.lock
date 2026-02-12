@@ -3748,11 +3748,11 @@ __metadata:
   linkType: hard
 
 "config@npm:4.x":
-  version: 4.2.0
-  resolution: "config@npm:4.2.0"
+  version: 4.2.1
+  resolution: "config@npm:4.2.1"
   dependencies:
     json5: "npm:^2.2.3"
-  checksum: 10c0/a0f81ee93a3b7fe26870b6b53eefb17302224477f5b3a12d990f9dcaaa50ec5881a23daaed13c0a77319dadda02cb679b6988087939c58cdbb36527745d6d4af
+  checksum: 10c0/4396c69c8fe60800f73711e7446cc1cf7232fde194e4aa51f7f8d9ee3f27c728d8bd5988f65541cdb4e8ce639560b836538a4518cb80a3920555c0b7fd52b0d8
   languageName: node
   linkType: hard
 
