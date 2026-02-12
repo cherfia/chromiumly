@@ -54,7 +54,7 @@
     "@types/config": "3.3.5",
     "@types/dotenv": "8.2.3",
     "@types/jest": "30.0.0",
-    "@types/node": "24.10.12",
+    "@types/node": "24.10.13",
     "@typescript-eslint/eslint-plugin": "8.55.0",
     "@typescript-eslint/parser": "8.55.0",
     "commitizen": "4.3.1",
