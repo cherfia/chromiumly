@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.3.0](https://github.com/cherfia/chromiumly/compare/4.2.4...4.3.0) (2026-02-23)
+
+### Features
+
+- **chromium:** add emulated media features support ([88c205b](https://github.com/cherfia/chromiumly/commit/88c205b0669e6a98d96d584d4c950892f3985228))
+
+### Documentation
+
+- update README.md ([e7cb87a](https://github.com/cherfia/chromiumly/commit/e7cb87a24dc7c54b6048381e961c25f19b0bf801))
+
+### Tests
+
+- **chromium:** add tests for emulated media features ([f25af46](https://github.com/cherfia/chromiumly/commit/f25af466042d7385e7df3cd73149c31439e50971))
+
+### Chores
+
+- **ci:** set fetch-depth to 0 in publish workflow for full history ([55a3ccf](https://github.com/cherfia/chromiumly/commit/55a3ccf646183b1d1dacfe4b06720b7537b4b9e5))
+- **deps:** update commitlint monorepo to v20.4.2 ([#763](https://github.com/cherfia/chromiumly/issues/763)) ([442bbbc](https://github.com/cherfia/chromiumly/commit/442bbbc5882bb7cc7ec42989e4177a8018e50bb1))
+- **deps:** update dependency @release-it/conventional-changelog to v10.0.5 ([#754](https://github.com/cherfia/chromiumly/issues/754)) ([db1221b](https://github.com/cherfia/chromiumly/commit/db1221be9fb3a4bb13459b460aac638a22acadd2))
+- **deps:** update dependency @types/node to v24.10.11 ([#753](https://github.com/cherfia/chromiumly/issues/753)) ([7951e8a](https://github.com/cherfia/chromiumly/commit/7951e8a3e26da07c04548583e29e0df33bbc08ec))
+- **deps:** update dependency @types/node to v24.10.12 ([#756](https://github.com/cherfia/chromiumly/issues/756)) ([bf925f6](https://github.com/cherfia/chromiumly/commit/bf925f6f1e1ca991ca9bd94e5f3516b1d4d96a23))
+- **deps:** update dependency config to v4.2.1 ([9877f51](https://github.com/cherfia/chromiumly/commit/9877f51822fb60e47c2be23746ef38fa7526cccb))
+- **deps:** update dependency config to v4.3.0 ([#760](https://github.com/cherfia/chromiumly/issues/760)) ([d9b5815](https://github.com/cherfia/chromiumly/commit/d9b5815ff6b6a68c98b5c654bcc929511001b550))
+- **deps:** update dependency dotenv to v17.2.4 ([#755](https://github.com/cherfia/chromiumly/issues/755)) ([24e2c5a](https://github.com/cherfia/chromiumly/commit/24e2c5a7f766272c8c69ea7de5a1e953a92121b4))
+- **deps:** update dependency dotenv to v17.3.1 ([#761](https://github.com/cherfia/chromiumly/issues/761)) ([b552a0e](https://github.com/cherfia/chromiumly/commit/b552a0e2140354913b6158c92781a0b35a168ef1))
+- **deps:** update node.js to v24.13.1 ([7780af2](https://github.com/cherfia/chromiumly/commit/7780af2507df453dca19c68963a69e68fc8b70b3))
+- **deps:** update typescript-eslint monorepo to v8.55.0 ([#757](https://github.com/cherfia/chromiumly/issues/757)) ([b7f031c](https://github.com/cherfia/chromiumly/commit/b7f031c0dd97105cebd77ce346135ca6fc6de2e0))
+- **deps:** update typescript-eslint monorepo to v8.56.0 ([#762](https://github.com/cherfia/chromiumly/issues/762)) ([a5c1cc0](https://github.com/cherfia/chromiumly/commit/a5c1cc0c115f1bcb94ff2cb28f79169a01440024))
+
 ## 4.2.4 (2026-02-05)
 
 ### Documentation
