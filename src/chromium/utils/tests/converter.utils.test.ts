@@ -704,6 +704,23 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when emulatedMediaFeatures parameter is passed', () => {
+            it('should append emulatedMediaFeatures', async () => {
+                const emulatedMediaFeatures = [
+                    { name: 'prefers-color-scheme', value: 'dark' },
+                    { name: 'prefers-reduced-motion', value: 'reduce' }
+                ];
+                await ConverterUtils.customize(data, {
+                    emulatedMediaFeatures
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'emulatedMediaFeatures',
+                    JSON.stringify(emulatedMediaFeatures)
+                );
+            });
+        });
+
         describe('when waitDelay parameter is passed', () => {
             it('should append waitDelay', async () => {
                 await ConverterUtils.customize(data, {
