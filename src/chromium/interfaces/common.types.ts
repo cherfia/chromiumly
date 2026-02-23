@@ -3,6 +3,8 @@ import { DownloadFrom } from '../../common/types';
 
 export type EmulatedMediaType = 'screen' | 'print';
 
+export type EmulatedMediaFeature = { name: string; value: string };
+
 export type Cookie = {
     name: string;
     value: string;
@@ -17,6 +19,7 @@ export type ChromiumOptions = {
     header?: PathLikeOrReadStream;
     footer?: PathLikeOrReadStream;
     emulatedMediaType?: EmulatedMediaType;
+    emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g. prefers-color-scheme). Default: None.
     waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before conversion.
     waitForExpression?: string; // JavaScript's expression to wait before converting an HTML document into PDF until it returns true.
     waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node.

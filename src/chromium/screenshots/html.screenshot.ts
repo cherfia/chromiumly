@@ -26,6 +26,7 @@ export class HtmlScreenshot extends Screenshot {
      * @param {PathLikeOrReadStream} options.html - PathLike or ReadStream of the HTML content to be screenshoted.
      * @param {ImageProperties} [options.properties] - Image properties for the screenshot.
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the screenshot.
+     * @param {EmulatedMediaFeature[]} [options.emulatedMediaFeatures] - Override CSS media features (e.g. prefers-color-scheme).
      * @param {string} [options.waitDelay] - Delay before the screenshot process starts.
      * @param {string} [options.waitForExpression] - JavaScript expression to wait for before completing the screenshot.
      * @param {string} [options.waitForSelector] - CSS selector to wait for before completing the screenshot.
@@ -45,6 +46,7 @@ export class HtmlScreenshot extends Screenshot {
         html,
         properties,
         emulatedMediaType,
+        emulatedMediaFeatures,
         waitDelay,
         waitForExpression,
         waitForSelector,
@@ -69,6 +71,7 @@ export class HtmlScreenshot extends Screenshot {
         await ScreenshotUtils.customize(data, {
             properties,
             emulatedMediaType,
+            emulatedMediaFeatures,
             waitDelay,
             waitForExpression,
             waitForSelector,

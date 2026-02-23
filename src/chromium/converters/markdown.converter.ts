@@ -31,6 +31,7 @@ export class MarkdownConverter extends Converter {
      * @param {PdfFormat} [options.pdfFormat] - PDF format options.
      * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the conversion.
+     * @param {EmulatedMediaFeature[]} [options.emulatedMediaFeatures] - Override CSS media features (e.g. prefers-color-scheme).
      * @param {string} [options.waitDelay] - Delay before the conversion process starts.
      * @param {string} [options.waitForExpression] - JavaScript expression to wait for before completing the conversion.
      * @param {string} [options.waitForSelector] - CSS selector to wait for before completing the conversion.
@@ -58,6 +59,7 @@ export class MarkdownConverter extends Converter {
         pdfFormat,
         pdfUA,
         emulatedMediaType,
+        emulatedMediaFeatures,
         waitDelay,
         waitForExpression,
         waitForSelector,
@@ -91,6 +93,7 @@ export class MarkdownConverter extends Converter {
             pdfFormat,
             pdfUA,
             emulatedMediaType,
+            emulatedMediaFeatures,
             waitDelay,
             waitForExpression,
             waitForSelector,

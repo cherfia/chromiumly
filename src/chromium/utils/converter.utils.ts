@@ -239,6 +239,13 @@ export class ConverterUtils {
             data.append('emulatedMediaType', options.emulatedMediaType);
         }
 
+        if (options.emulatedMediaFeatures?.length) {
+            data.append(
+                'emulatedMediaFeatures',
+                JSON.stringify(options.emulatedMediaFeatures)
+            );
+        }
+
         if (options.properties) {
             ConverterUtils.addPageProperties(data, options.properties);
         }

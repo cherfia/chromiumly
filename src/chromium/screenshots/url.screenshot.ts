@@ -28,6 +28,7 @@ export class UrlScreenshot extends Screenshot {
      * @param {string} options.url - The URL of the content to be screenshoted
      * @param {ImageProperties} [options.properties] - Image properties for the screenshot.
      * @param {EmulatedMediaType} [options.emulatedMediaType] - Emulated media type for the screenshot.
+     * @param {EmulatedMediaFeature[]} [options.emulatedMediaFeatures] - Override CSS media features (e.g. prefers-color-scheme).
      * @param {string} [options.waitDelay] - Delay before the screenshot process starts.
      * @param {string} [options.waitForExpression] - JavaScript expression to wait for before completing the screenshot.
      * @param {string} [options.waitForSelector] - CSS selector to wait for before completing the screenshot.
@@ -47,6 +48,7 @@ export class UrlScreenshot extends Screenshot {
         url,
         properties,
         emulatedMediaType,
+        emulatedMediaFeatures,
         waitDelay,
         waitForExpression,
         waitForSelector,
@@ -72,6 +74,7 @@ export class UrlScreenshot extends Screenshot {
         await ScreenshotUtils.customize(data, {
             properties,
             emulatedMediaType,
+            emulatedMediaFeatures,
             waitDelay,
             waitForExpression,
             waitForSelector,
