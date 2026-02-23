@@ -314,6 +314,7 @@ type ConversionOptions = {
   header?: PathLikeOrReadStream; // Specify a custom header for the PDF
   footer?: PathLikeOrReadStream; // Specify a custom footer for the PDF
   emulatedMediaType?: EmulatedMediaType; // Specify the emulated media type for conversion
+  emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g., prefers-color-scheme). Default: None.
   waitDelay?: string; // Duration (e.g., '5s') to wait when loading an HTML document before conversion
   waitForExpression?: string; // JavaScript expression to wait before converting an HTML document into PDF
   waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node
@@ -357,6 +358,7 @@ type ScreenshotOptions = {
   header?: PathLikeOrReadStream;
   footer?: PathLikeOrReadStream;
   emulatedMediaType?: EmulatedMediaType;
+  emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g., prefers-color-scheme). Default: None.
   waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before convertion.
   waitForExpression?: string; // JavaScript's expression to wait before converting an HTML document into PDF until it returns true.
   waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node.
@@ -593,6 +595,10 @@ async function run() {
       },
     },
     emulatedMediaType: "screen",
+    emulatedMediaFeatures: [
+      { name: "prefers-color-scheme", value: "dark" },
+      { name: "prefers-reduced-motion", value: "reduce" },
+    ],
     failOnHttpStatusCodes: [404],
     failOnConsoleExceptions: true,
     skipNetworkIdleEvent: false,
