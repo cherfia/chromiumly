@@ -2391,20 +2391,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@release-it/conventional-changelog@npm:10.0.5":
-  version: 10.0.5
-  resolution: "@release-it/conventional-changelog@npm:10.0.5"
+"@release-it/conventional-changelog@npm:10.0.6":
+  version: 10.0.6
+  resolution: "@release-it/conventional-changelog@npm:10.0.6"
   dependencies:
-    "@conventional-changelog/git-client": "npm:^2.5.1"
+    "@conventional-changelog/git-client": "npm:^2.6.0"
     concat-stream: "npm:^2.0.0"
-    conventional-changelog: "npm:^7.1.1"
-    conventional-changelog-angular: "npm:^8.1.0"
-    conventional-changelog-conventionalcommits: "npm:^9.1.0"
+    conventional-changelog: "npm:^7.2.0"
+    conventional-changelog-angular: "npm:^8.3.0"
+    conventional-changelog-conventionalcommits: "npm:^9.3.0"
     conventional-recommended-bump: "npm:^11.2.0"
-    semver: "npm:^7.7.3"
+    semver: "npm:^7.7.4"
   peerDependencies:
     release-it: ^18.0.0 || ^19.0.0
-  checksum: 10c0/a7a48c09532151ecc2ddb7e6420e3c54814f6a7c10279a4e0b378c07635a3323fe15ce1e85db530a83094fee7a2116a01b4f031eacbf4cbf9f7bd960f0589908
+  checksum: 10c0/d7812cfbbc34f7258385801393a1d88d7d6f76aeebb4fa2a884156f5382ba93f7f14be1f7b4d1f2b6982c1bf10e33c4ca3a8374fc2cde50cf4e1d1a929129da4
   languageName: node
   linkType: hard
 
@@ -2415,6 +2415,13 @@ __metadata:
     "@simple-libs/stream-utils": "npm:^1.1.0"
     "@types/node": "npm:^22.0.0"
   checksum: 10c0/3c875a4c0b36dba8948628a77ec9671a946123f664e5632f2a4897b8fc8235a78108ba1412e40f2b1682b4646b9f2a984f0b3dfff144ae76e708bb1b5d25d8ef
+  languageName: node
+  linkType: hard
+
+"@simple-libs/hosted-git-info@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@simple-libs/hosted-git-info@npm:1.0.2"
+  checksum: 10c0/6f22b598b9d37f3e37e409eb588126d14a68f62d52f6e2bb1d99745eb86de8843a02a6fbf7e7f4d026a07fcb1f98d0036d9dcb47363275fa86e67c237fadac75
   languageName: node
   linkType: hard
 
@@ -3530,7 +3537,7 @@ __metadata:
     "@commitlint/cli": "npm:^20.0.0"
     "@commitlint/config-conventional": "npm:^20.0.0"
     "@commitlint/cz-commitlint": "npm:^20.0.0"
-    "@release-it/conventional-changelog": "npm:10.0.5"
+    "@release-it/conventional-changelog": "npm:10.0.6"
     "@types/config": "npm:3.3.5"
     "@types/dotenv": "npm:8.2.3"
     "@types/jest": "npm:30.0.0"
@@ -3803,16 +3810,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-angular@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "conventional-changelog-angular@npm:8.1.0"
-  dependencies:
-    compare-func: "npm:^2.0.0"
-  checksum: 10c0/b82aab869117fd9bd6ccfa960521e7638d3c2a3599c95fd5ba30d3b3fe972b5f819af4d57229f2973a7129ea18546cdf5822004565cab1ee35355cc90ac4588f
-  languageName: node
-  linkType: hard
-
-"conventional-changelog-angular@npm:^8.2.0":
+"conventional-changelog-angular@npm:^8.2.0, conventional-changelog-angular@npm:^8.3.0":
   version: 8.3.0
   resolution: "conventional-changelog-angular@npm:8.3.0"
   dependencies:
@@ -3837,35 +3835,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-writer@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "conventional-changelog-writer@npm:8.2.0"
+"conventional-changelog-writer@npm:^8.3.0":
+  version: 8.4.0
+  resolution: "conventional-changelog-writer@npm:8.4.0"
   dependencies:
+    "@simple-libs/stream-utils": "npm:^1.2.0"
     conventional-commits-filter: "npm:^5.0.0"
     handlebars: "npm:^4.7.7"
     meow: "npm:^13.0.0"
     semver: "npm:^7.5.2"
   bin:
     conventional-changelog-writer: dist/cli/index.js
-  checksum: 10c0/e25052bb366ecee6389326fd5b7d3ecbd6f6a65439f45b5a2b1d4096baeb1bbfa93cd6bea686f419423265db5bbb02870a014cb92f43f972c00191c60711e9b6
+  checksum: 10c0/d657bf74c470e5d515d3a07814d266e6e2aea018e6867bfefa4bc486bb3f948b47b01936d65e46b3090111823364c21c201f9fbe875b1fc805cdf884bb032bc1
   languageName: node
   linkType: hard
 
-"conventional-changelog@npm:^7.1.1":
-  version: 7.1.1
-  resolution: "conventional-changelog@npm:7.1.1"
+"conventional-changelog@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "conventional-changelog@npm:7.2.0"
   dependencies:
-    "@conventional-changelog/git-client": "npm:^2.5.1"
+    "@conventional-changelog/git-client": "npm:^2.6.0"
+    "@simple-libs/hosted-git-info": "npm:^1.0.2"
     "@types/normalize-package-data": "npm:^2.4.4"
     conventional-changelog-preset-loader: "npm:^5.0.0"
-    conventional-changelog-writer: "npm:^8.2.0"
-    conventional-commits-parser: "npm:^6.2.0"
+    conventional-changelog-writer: "npm:^8.3.0"
+    conventional-commits-parser: "npm:^6.3.0"
     fd-package-json: "npm:^2.0.0"
     meow: "npm:^13.0.0"
     normalize-package-data: "npm:^7.0.0"
   bin:
     conventional-changelog: dist/cli/index.js
-  checksum: 10c0/8f2c36b7a463bdedc9f919a50458a061b8017d003452b5bc648a6c43a0affe2e76ed9cb5933aa55ad4d6c99061c0b9a567ec5c528333593ec0f210151e1e11b7
+  checksum: 10c0/2383d70ae372e6c46c7354e6a697c291b9f977cb5166507b0f187ccbee5cb0c8d6a96ec295e1212cd6abaefc5b00a56e9fb15c12ddc4c3a859f4eb765061e566
   languageName: node
   linkType: hard
 
@@ -3883,7 +3883,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-commits-parser@npm:^6.1.0, conventional-commits-parser@npm:^6.2.0":
+"conventional-commits-parser@npm:^6.1.0":
   version: 6.2.1
   resolution: "conventional-commits-parser@npm:6.2.1"
   dependencies:
@@ -7739,6 +7739,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10c0/aca305edfbf2383c22571cb7714f48cadc7ac95371b4b52362fb8eeffdfbc0de0669368b82b2b15978f8848f01d7114da65697e56cd8c37b0dab8c58e543f9ea
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.7.4":
+  version: 7.7.4
+  resolution: "semver@npm:7.7.4"
+  bin:
+    semver: bin/semver.js
+  checksum: 10c0/5215ad0234e2845d4ea5bb9d836d42b03499546ddafb12075566899fc617f68794bb6f146076b6881d755de17d6c6cc73372555879ec7dce2c2feee947866ad2
   languageName: node
   linkType: hard
 
