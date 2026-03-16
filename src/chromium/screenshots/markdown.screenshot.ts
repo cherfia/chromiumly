@@ -99,7 +99,8 @@ export class MarkdownScreenshot extends Screenshot {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 }

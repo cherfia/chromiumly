@@ -102,4 +102,15 @@ export class Gotenberg {
             ? config?.get<string>('gotenberg.api.basicAuth.password')
             : process.env.GOTENBERG_API_BASIC_AUTH_PASSWORD;
     }
+
+    /**
+     * The API key for X-Api-Key authentication with the Gotenberg service.
+     * @type {string | undefined}
+     */
+    static get apiKey(): string | undefined {
+        const hasApiKey = config?.has('gotenberg.api.apiKey');
+        return hasApiKey
+            ? config?.get<string>('gotenberg.api.apiKey')
+            : process.env.CHROMIUMLY_API_KEY;
+    }
 }

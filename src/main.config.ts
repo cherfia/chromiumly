@@ -38,6 +38,11 @@ enum LibreOfficeRoute {
  */
 export class Chromiumly {
     /**
+     * Default endpoint for the hosted Chromiumly API.
+     */
+    private static readonly HOSTED_API_ENDPOINT = 'https://api.chromiumly.dev';
+
+    /**
      * The Gotenberg service endpoint.
      * @type {string}
      */
@@ -56,6 +61,12 @@ export class Chromiumly {
      */
     private static gotenbergApiBasicAuthPassword: string | undefined =
         Gotenberg.password;
+
+    /**
+     * The API key for X-Api-Key authentication with the Gotenberg service.
+     * @type {string | undefined}
+     */
+    private static gotenbergApiKey: string | undefined = Gotenberg.apiKey;
 
     /**
      * Custom HTTP headers to be sent with each request.
@@ -124,24 +135,35 @@ export class Chromiumly {
     /**
      * Configures the Gotenberg service endpoint and other optional parameters.
      * @param {Object} config - Configuration object.
-     * @param {string} config.endpoint - The Gotenberg service endpoint.
+     * @param {string} [config.endpoint] - The Gotenberg service endpoint. Optional when using the hosted API with an API key.
      * @param {string} [config.username] - The username for basic authentication.
      * @param {string} [config.password] - The password for basic authentication.
+     * @param {string} [config.apiKey] - The API key for X-Api-Key authentication.
      * @param {Record<string, string>} [config.customHttpHeaders] - Custom HTTP headers to be sent with each request.
      */
     public static configure(config: {
-        endpoint: string;
+        endpoint?: string;
         username?: string;
         password?: string;
+        apiKey?: string;
         customHttpHeaders?: Record<string, string>;
     }): void {
-        this.gotenbergEndpoint = config.endpoint;
+        if (config.endpoint !== undefined) {
+            this.gotenbergEndpoint = config.endpoint;
+        }
 
         if (config.username !== undefined) {
             this.gotenbergApiBasicAuthUsername = config.username;
         }
         if (config.password !== undefined) {
             this.gotenbergApiBasicAuthPassword = config.password;
+        }
+        if (config.apiKey !== undefined) {
+            this.gotenbergApiKey = config.apiKey;
+
+            if (!this.gotenbergEndpoint && config.endpoint === undefined) {
+                this.gotenbergEndpoint = this.HOSTED_API_ENDPOINT;
+            }
         }
         if (config.customHttpHeaders !== undefined) {
             this.customHttpHeaders = config.customHttpHeaders;
@@ -153,6 +175,16 @@ export class Chromiumly {
      * @returns {string}
      */
     public static getGotenbergEndpoint(): string {
+        if (!this.gotenbergEndpoint) {
+            const endpointFromEnv = Gotenberg.endpoint;
+
+            if (endpointFromEnv) {
+                this.gotenbergEndpoint = endpointFromEnv;
+            } else if (this.gotenbergApiKey) {
+                this.gotenbergEndpoint = this.HOSTED_API_ENDPOINT;
+            }
+        }
+
         if (!this.gotenbergEndpoint)
             throw new Error(
                 'Gotenberg endpoint is not set. Please ensure that the Gotenberg service endpoint is configured correctly in your environment variables or through the configure method.'
@@ -174,6 +206,14 @@ export class Chromiumly {
      */
     public static getGotenbergApiBasicAuthPassword(): string | undefined {
         return this.gotenbergApiBasicAuthPassword;
+    }
+
+    /**
+     * Gets the API key for X-Api-Key authentication.
+     * @returns {string | undefined}
+     */
+    public static getGotenbergApiKey(): string | undefined {
+        return this.gotenbergApiKey;
     }
 
     /**

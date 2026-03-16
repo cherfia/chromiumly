@@ -189,6 +189,39 @@ describe('GotenbergUtils', () => {
                 })
             );
         });
+
+        it('should use X-Api-Key header and skip basic auth when apiKey is provided', async () => {
+            const apiKey = 'secret-api-key';
+            const buffer = await GotenbergUtils.fetch(
+                endpoint,
+                data,
+                basicAuthUsername,
+                basicAuthPassword,
+                customHttpHeaders,
+                apiKey
+            );
+
+            expect(buffer).toEqual(await getResponseBuffer());
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                endpoint,
+                expect.objectContaining({
+                    method: 'POST',
+                    headers: expect.objectContaining({
+                        'X-Api-Key': apiKey,
+                        'X-Custom-Header': 'value'
+                    }),
+                    body: expect.any(Object)
+                })
+            );
+            const init = mockFetch.mock.calls[0]?.[1] as
+                | RequestInit
+                | undefined;
+            expect(init).toBeDefined();
+            expect((init as RequestInit).headers).not.toHaveProperty(
+                'Authorization'
+            );
+        });
     });
 
     describe('addFile', () => {
