@@ -13,16 +13,58 @@
 A lightweight Typescript library that interacts with [Gotenberg](https://gotenberg.dev/)'s different routes to convert
 a variety of document formats to PDF files.
 
+## API Key Authentication (Hosted API)
+
+Chromiumly now provides a managed, cloud‑hosted PDF API at `https://api.chromiumly.dev`. If you prefer not to run Gotenberg yourself, this option avoids installing Docker or managing servers. You can sign up at `https://chromiumly.dev`, get an API key, and convert URLs, HTML, Markdown, and documents to PDF using the same APIs as with a self‑hosted setup.
+
+When using the hosted API, **you do not need to set `GOTENBERG_ENDPOINT`**. Just provide your API key:
+
+```bash
+CHROMIUMLY_API_KEY=your-api-key
+```
+
+Once the environment variable is set, Chromiumly will automatically send all requests to the hosted API using your key.
+
+You can also configure the hosted API programmatically without an endpoint:
+
+```typescript
+import { Chromiumly } from "chromiumly";
+
+Chromiumly.configure({
+  apiKey: "your-api-key",
+});
+```
+
+### Minimal usage example (hosted API)
+
+```typescript
+import { UrlConverter } from "chromiumly";
+
+async function run() {
+  const urlConverter = new UrlConverter();
+
+  const buffer = await urlConverter.convert({
+    url: "https://www.example.com/",
+  });
+
+  // Write the buffer to disk, send it over HTTP, etc.
+}
+
+run();
+```
+
 # Table of Contents
 
-1. [Getting Started](#getting-started)
+1. [API Key Authentication (Hosted API)](#api-key-authentication-hosted-api)
+2. [Getting Started](#getting-started)
    - [Installation](#installation)
    - [Prerequisites](#prerequisites)
    - [Configuration](#configuration)
-2. [Authentication](#authentication)
+3. [Authentication](#authentication)
    - [Basic Authentication](#basic-authentication)
+   - [API Key Authentication](#api-key-authentication)
    - [Advanced Authentication](#advanced-authentication)
-3. [Core Features](#core-features)
+4. [Core Features](#core-features)
    - [Chromium](#chromium)
      - [URL](#url)
      - [HTML](#html)
@@ -38,7 +80,7 @@ a variety of document formats to PDF files.
    - [PDF Flattening](#pdf-flattening)
    - [PDF Encryption](#pdf-encryption)
    - [Embedding Files](#embedding-files)
-4. [Usage Example](#snippet)
+5. [Usage Example](#snippet)
 
 ## Getting Started
 
@@ -58,8 +100,9 @@ yarn add chromiumly
 
 ### Prerequisites
 
-Before attempting to use Chromiumly, be sure you install [Docker](https://www.docker.com/) if you have not already done
-so.
+If you are using the hosted API key option at `https://api.chromiumly.dev`, you **do not need Docker** or a local Gotenberg instance — the service is fully managed for you.
+
+If you prefer to self‑host Gotenberg, be sure you install [Docker](https://www.docker.com/) if you have not already done so.
 
 After that, you can start a default Docker container of [Gotenberg](https://gotenberg.dev/) as follows:
 
@@ -70,7 +113,7 @@ docker run --rm -p 3000:3000 gotenberg/gotenberg:8
 ### Configuration
 
 Chromiumly supports configurations via both [dotenv](https://www.npmjs.com/package/dotenv)
-and [config](https://www.npmjs.com/package/config) configuration libraries or directly via code to add Gotenberg endpoint to your project.
+and [config](https://www.npmjs.com/package/config) configuration libraries or directly via code to add a Gotenberg endpoint to your project when you are **self‑hosting**.
 
 #### dotenv
 
@@ -143,6 +186,10 @@ Chromiumly.configure({
   password: "pass",
 });
 ```
+
+### API Key Authentication
+
+API key authentication is primarily intended for the **hosted Chromiumly API** at `https://api.chromiumly.dev`. For setup and examples, see [API Key Authentication (Hosted API)](#api-key-authentication-hosted-api). When both API key and basic auth are configured, the API key takes precedence.
 
 ### Advanced Authentication
 
