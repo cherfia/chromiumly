@@ -2551,10 +2551,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/config@npm:3.3.5":
-  version: 3.3.5
-  resolution: "@types/config@npm:3.3.5"
-  checksum: 10c0/32f57d8bd8a6bd79d29a7f26f945b537f745dbadc33cd8eaad98f6e466e0175fb90ae37952352fa6509a0f5de212b9bd0af320bc3bb5f8579af6affe5e3410f6
+"@types/config@npm:4.4.0":
+  version: 4.4.0
+  resolution: "@types/config@npm:4.4.0"
+  dependencies:
+    config: "npm:*"
+  checksum: 10c0/62e803d88e18071f61746d5671eaec2f0f934e9de68f5455e11704deff160775d985e29d112f837ef2c4fb67fc3d90a54a519e8091be4d569fac1c1695efd382
   languageName: node
   linkType: hard
 
@@ -3538,7 +3540,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:^20.0.0"
     "@commitlint/cz-commitlint": "npm:^20.0.0"
     "@release-it/conventional-changelog": "npm:10.0.6"
-    "@types/config": "npm:3.3.5"
+    "@types/config": "npm:4.4.0"
     "@types/dotenv": "npm:8.2.3"
     "@types/jest": "npm:30.0.0"
     "@types/node": "npm:24.12.0"
@@ -3794,7 +3796,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"config@npm:4.x":
+"config@npm:*, config@npm:4.x":
   version: 4.4.1
   resolution: "config@npm:4.4.1"
   dependencies:
