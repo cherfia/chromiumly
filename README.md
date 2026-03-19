@@ -80,6 +80,7 @@ run();
    - [PDF Flattening](#pdf-flattening)
    - [PDF Encryption](#pdf-encryption)
    - [Embedding Files](#embedding-files)
+   - [Templates](#templates)
 5. [Usage Example](#snippet)
 
 ## Getting Started
@@ -622,6 +623,120 @@ const buffer = await htmlConverter.convert({
 ```
 
 All embedded files will be attached to the generated PDF and can be extracted using PDF readers that support file attachments.
+
+### Templates
+
+The `Templates` class generates PDF documents from structured data payloads. Unlike the other converters in this library, it communicates directly with the Chromiumly hosted API and **requires an API key** — a self-hosted Gotenberg instance is not supported.
+
+The following template types are currently available:
+
+| Type                 | Description        |
+| -------------------- | ------------------ |
+| `invoice_saas`       | SaaS-style invoice |
+| `invoice_freelancer` | Freelancer invoice |
+| `invoice_classic`    | Classic invoice    |
+| `invoice_minimal`    | Minimal invoice    |
+| `invoice_modern`     | Modern invoice     |
+
+#### Basic Usage
+
+```typescript
+import { Templates } from "chromiumly";
+
+const templates = new Templates();
+const buffer = await templates.generate({
+  type: "invoice_saas",
+  data: {
+    invoiceNumber: "INV-319",
+    createdDate: "2026-03-19",
+    dueDate: "2026-04-02",
+    companyLogo: "https://cdn.acmecloud.com/assets/logo-mark.png",
+    sender: {
+      name: "Acme Cloud LLC",
+      addressLine1: "450 Madison Ave",
+      addressLine2: "New York, NY 10022",
+    },
+    receiver: {
+      name: "Northwind Health Inc.",
+      addressLine1: "221 Harbor Blvd",
+      addressLine2: "San Diego, CA 92101",
+    },
+    items: [
+      {
+        description: "Platform Subscription (Annual)",
+        qty: 1,
+        unitPrice: "1500.00",
+        amount: "1500.00",
+      },
+      {
+        description: "Onboarding",
+        qty: 1,
+        unitPrice: "300.00",
+        amount: "300.00",
+      },
+    ],
+    currency: "USD",
+    subTotal: "1800.00",
+    taxRate: 8.25,
+    taxAmount: "148.50",
+    total: "1948.50",
+    footerNote: "Payment due in 14 days.",
+    footerDisclaimer: "Late fees may apply.",
+  },
+});
+```
+
+#### Payload Validation
+
+Pass `{ validate: true }` to run runtime validation on the data before sending the request. An error is thrown if the payload does not match the expected structure for the given template type.
+
+```typescript
+const buffer = await generator.generate(request, { validate: true });
+```
+
+#### Payload Shape
+
+```typescript
+type TemplateRequest<TType extends TemplateType> = {
+  type: TType;
+  data: TemplateDataByType[TType];
+};
+
+interface InvoiceSaasTemplateData {
+  invoiceNumber: string;
+  createdDate: string;
+  dueDate: string;
+  companyLogo: string;
+  sender: TemplateParty;
+  receiver: TemplateParty;
+  items: InvoiceItem[];
+  currency: Currency;
+  subTotal: string;
+  taxRate: number;
+  taxAmount: string;
+  total: string;
+  footerNote: string;
+  footerDisclaimer: string;
+}
+
+interface TemplateParty {
+  name: string;
+  addressLine1: string;
+  addressLine2: string;
+  tax?: string;
+  iban?: string;
+  bic?: string;
+}
+
+interface InvoiceItem {
+  description: string;
+  qty: number;
+  unitPrice: string;
+  amount: string;
+}
+```
+
+The `currency` field accepts any [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code exported as the `Currency` type (e.g. `"USD"`, `"EUR"`, `"GBP"`).
 
 ## Snippet
 

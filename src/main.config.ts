@@ -34,6 +34,13 @@ enum LibreOfficeRoute {
 }
 
 /**
+ * Enum representing the available routes for Templates.
+ * @enum {string}
+ */
+export enum TemplatesRoute {
+    GENERATE = 'generate'
+}
+/**
  * Class providing constants and routes for interacting with the Gotenberg service and related engines.
  */
 export class Chromiumly {
@@ -100,6 +107,12 @@ export class Chromiumly {
     public static readonly LIBRE_OFFICE_PATH = 'forms/libreoffice';
 
     /**
+     * The path for Templates-related operations.
+     * @type {string}
+     */
+    public static readonly TEMPLATES_PATH = 'templates';
+
+    /**
      * Routes for Chromium conversions.
      * @type {Object}
      */
@@ -130,6 +143,14 @@ export class Chromiumly {
      */
     public static readonly LIBRE_OFFICE_ROUTES = {
         convert: LibreOfficeRoute.CONVERT
+    };
+
+    /**
+     * Routes for Templates generation.
+     * @type {Object}
+     */
+    public static readonly TEMPLATES_ROUTES = {
+        generate: TemplatesRoute.GENERATE
     };
 
     /**

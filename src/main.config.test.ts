@@ -1,4 +1,5 @@
 import { Chromiumly } from './main.config';
+import { Gotenberg } from './gotenberg';
 
 type ChromiumlyWithPrivate = {
     gotenbergEndpoint: string | undefined;
@@ -16,6 +17,7 @@ describe('Chromiumly', () => {
             originalEndpoint;
         (Chromiumly as unknown as ChromiumlyWithPrivate).gotenbergApiKey =
             originalApiKey;
+        jest.restoreAllMocks();
     });
 
     describe('getGotenbergEndpoint', () => {
@@ -49,6 +51,21 @@ describe('Chromiumly', () => {
 
             expect(Chromiumly.getGotenbergEndpoint()).toBe(
                 'https://api.chromiumly.dev'
+            );
+        });
+
+        it('should set endpoint from Gotenberg.endpoint env var when gotenbergEndpoint is initially unset', () => {
+            (Chromiumly as unknown as ChromiumlyWithPrivate).gotenbergEndpoint =
+                undefined;
+            (Chromiumly as unknown as ChromiumlyWithPrivate).gotenbergApiKey =
+                undefined;
+
+            jest.spyOn(Gotenberg, 'endpoint', 'get').mockReturnValueOnce(
+                'http://env-endpoint:3000'
+            );
+
+            expect(Chromiumly.getGotenbergEndpoint()).toBe(
+                'http://env-endpoint:3000'
             );
         });
 
