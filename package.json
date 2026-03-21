@@ -13,7 +13,7 @@
   },
   "author": "Taha Cherfia <taha.cherfia@gmail.com>",
   "license": "MIT",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.13.0",
   "engines": {
     "node": ">=18.x"
   },
