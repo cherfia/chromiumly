@@ -1,4 +1,10 @@
-import { Metadata, PathLikeOrReadStream, PdfFormat } from '../../common';
+import {
+    Metadata,
+    PathLikeOrReadStream,
+    PdfFormat,
+    PdfEngineStamp,
+    PdfEngineWatermark
+} from '../../common';
 import { Split } from '../../common/types';
 import { ChromiumOptions, Cookie } from './common.types';
 
@@ -45,6 +51,10 @@ export type ConversionOptions = ChromiumOptions & {
     userPassword?: string; // Password for opening the resulting PDF(s)
     ownerPassword?: string; // Password for full access on the resulting PDF(s)
     embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
+    /** PDF-engine post-processing watermark (behind content) */
+    watermark?: PdfEngineWatermark;
+    /** PDF-engine post-processing stamp (on top of content) */
+    stamp?: PdfEngineStamp;
 };
 
 export type HtmlConversionOptions = ConversionOptions & {
