@@ -1,5 +1,48 @@
 # Changelog
 
+## [4.4.0](https://github.com/cherfia/chromiumly/compare/4.3.0...4.4.0) (2026-03-21)
+
+### Features
+
+- add routes for watermark and stamp ([936d41f](https://github.com/cherfia/chromiumly/commit/936d41ff0a38e2b9a910954ca3b2fc0ef7611038))
+- add utils and types for watermark and stamp functionality ([0a5c1bc](https://github.com/cherfia/chromiumly/commit/0a5c1bc5a667f3a25cef42233ecba43c10a2a8ba))
+- **chromium:** add watermark and stamp support ([90b941f](https://github.com/cherfia/chromiumly/commit/90b941f5f3d385e753e5ce8b8a66bcbc19a26bc1))
+- **libre-office:** add watermark and stamp support ([c8ecb49](https://github.com/cherfia/chromiumly/commit/c8ecb49f54c8568749ab6b5d7ac2a2e68bec8a48))
+- **pdf-engines:** add watermark and stamp support ([ab37bfb](https://github.com/cherfia/chromiumly/commit/ab37bfb4e293bb054d9c65f19265f343f77951b9))
+
+### Documentation
+
+- update README to include watermark and stamp ([456cc12](https://github.com/cherfia/chromiumly/commit/456cc12082825ae130bf57145a5985d104377f91))
+
+### Tests
+
+- **chromium:** add unit tests for watermark and stamp ([56ecbef](https://github.com/cherfia/chromiumly/commit/56ecbefe73d58a24ea1cbc70d1884fc7578706a7))
+- **libre-office:** add unit tests for watermark and stamp ([4af4c3e](https://github.com/cherfia/chromiumly/commit/4af4c3ea1eeb8eade6261ed9d6317431bd85b877))
+- **pdf-engines:** add unit tests for watermark and stamp ([c9d4e47](https://github.com/cherfia/chromiumly/commit/c9d4e47f05fa89d9732d56edc66bc4ec0b298b0b))
+
+### Chores
+
+- **deps:** update commitlint monorepo to v20.4.3 ([#771](https://github.com/cherfia/chromiumly/issues/771)) ([e58eb43](https://github.com/cherfia/chromiumly/commit/e58eb433f80a0bb4350895e2525716366045f75f))
+- **deps:** update commitlint monorepo to v20.4.4 ([#777](https://github.com/cherfia/chromiumly/issues/777)) ([1e73cbf](https://github.com/cherfia/chromiumly/commit/1e73cbff98de9e7018f39946992b76156793025a))
+- **deps:** update commitlint monorepo to v20.5.0 ([#780](https://github.com/cherfia/chromiumly/issues/780)) ([0f7344b](https://github.com/cherfia/chromiumly/commit/0f7344b90e23b22e7dba63fbd371a796767372fa))
+- **deps:** update dependency @release-it/conventional-changelog to v10.0.6 ([#778](https://github.com/cherfia/chromiumly/issues/778)) ([d322636](https://github.com/cherfia/chromiumly/commit/d3226366d96596e5242069611c3e70bff621c94a))
+- **deps:** update dependency @types/config to v4 ([f77d1e7](https://github.com/cherfia/chromiumly/commit/f77d1e713479f6c2cd9a8940c8718a5cc0b72556))
+- **deps:** update dependency @types/node to v24.12.0 ([#773](https://github.com/cherfia/chromiumly/issues/773)) ([f42a319](https://github.com/cherfia/chromiumly/commit/f42a31925af83bdc962b2d1feaba393a3c5df2c1))
+- **deps:** update dependency config to v4.4.0 ([#765](https://github.com/cherfia/chromiumly/issues/765)) ([ed2c4ab](https://github.com/cherfia/chromiumly/commit/ed2c4ab3a2a25bffef89d07d418d26b051fb5e85))
+- **deps:** update dependency config to v4.4.1 ([#766](https://github.com/cherfia/chromiumly/issues/766)) ([42f2306](https://github.com/cherfia/chromiumly/commit/42f230691432cb32547bc94f4fd544977502782c))
+- **deps:** update dependency conventional-changelog-conventionalcommits to v9.2.0 ([#768](https://github.com/cherfia/chromiumly/issues/768)) ([37d1a0e](https://github.com/cherfia/chromiumly/commit/37d1a0eef721734d5db54fd145358a2be6274ccf))
+- **deps:** update dependency conventional-changelog-conventionalcommits to v9.3.0 ([#772](https://github.com/cherfia/chromiumly/issues/772)) ([93f5422](https://github.com/cherfia/chromiumly/commit/93f5422e83fd387f4cd7b80cd6ad017a21db59a6))
+- **deps:** update dependency jest to v30.3.0 ([#776](https://github.com/cherfia/chromiumly/issues/776)) ([e01f0d8](https://github.com/cherfia/chromiumly/commit/e01f0d8e23d67d061e1087b7e4948252cfc88a3a))
+- **deps:** update dependency lint-staged to v16.3.1 ([#769](https://github.com/cherfia/chromiumly/issues/769)) ([1435869](https://github.com/cherfia/chromiumly/commit/14358697c02f3e65780f6cd3af77aaf09ac6b1c6))
+- **deps:** update dependency lint-staged to v16.3.2 ([#770](https://github.com/cherfia/chromiumly/issues/770)) ([80206c7](https://github.com/cherfia/chromiumly/commit/80206c70c345bff2eed3c1098fb5265f99a6726c))
+- **deps:** update dependency lint-staged to v16.3.3 ([#775](https://github.com/cherfia/chromiumly/issues/775)) ([4c67bf2](https://github.com/cherfia/chromiumly/commit/4c67bf2b13ac6ec2778969046eb08381ac282e42))
+- **deps:** update dependency lint-staged to v16.4.0 ([#779](https://github.com/cherfia/chromiumly/issues/779)) ([bcb718c](https://github.com/cherfia/chromiumly/commit/bcb718c84348a24bd68c49b8b2007c9ae4b9307c))
+- **deps:** update node.js to v24.14.0 ([#767](https://github.com/cherfia/chromiumly/issues/767)) ([7c52844](https://github.com/cherfia/chromiumly/commit/7c528449d39e4df3c2754a6dffc409329cd189f5))
+- **deps:** update typescript-eslint monorepo to v8.56.1 ([#764](https://github.com/cherfia/chromiumly/issues/764)) ([42d9f38](https://github.com/cherfia/chromiumly/commit/42d9f3877e668b14fa04b5eb963fb974d883e134))
+- **deps:** update typescript-eslint monorepo to v8.57.0 ([#774](https://github.com/cherfia/chromiumly/issues/774)) ([94d1f8e](https://github.com/cherfia/chromiumly/commit/94d1f8e21cd2f2c8f0d07a420be35d9d36efc7f3))
+- **deps:** update typescript-eslint monorepo to v8.57.1 ([#781](https://github.com/cherfia/chromiumly/issues/781)) ([1883c42](https://github.com/cherfia/chromiumly/commit/1883c427edceb6ccbe78ed828bf96fc8655d0e0c))
+- **deps:** update yarn to v4.13.0 ([#783](https://github.com/cherfia/chromiumly/issues/783)) ([a16db11](https://github.com/cherfia/chromiumly/commit/a16db118faba76edcd67ee4a2a44d0e58b8497c4))
+
 ## [4.3.0](https://github.com/cherfia/chromiumly/compare/4.2.4...4.3.0) (2026-02-23)
 
 ### Features
