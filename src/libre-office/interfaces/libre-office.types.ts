@@ -1,5 +1,10 @@
 import { ReadStream } from 'fs';
-import { Metadata, PdfFormat } from '../../common';
+import {
+    Metadata,
+    PdfFormat,
+    type PdfEngineStamp,
+    type PdfEngineWatermark
+} from '../../common';
 import { DownloadFrom, Split } from '../../common/types';
 
 type FileExtension =
@@ -178,4 +183,22 @@ export type ConversionOptions = {
     userPassword?: string; // Password for opening the resulting PDF(s)
     ownerPassword?: string; // Password for full access on the resulting PDF(s)
     embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
+    /** LibreOffice single-line text watermark during export */
+    nativeWatermarkText?: string;
+    /** Decimal RGB (e.g. 16711680 for red) */
+    nativeWatermarkColor?: number;
+    /** Font height in points; 0 = auto */
+    nativeWatermarkFontHeight?: number;
+    /** Rotation in tenths of a degree (e.g. 450 = 45°) */
+    nativeWatermarkRotateAngle?: number;
+    nativeWatermarkFontName?: string;
+    nativeTiledWatermarkText?: string;
+    /** PDF-engine post-processing watermark; `file` may be a LibreOffice PathLikeOrReadStream */
+    watermark?: Omit<PdfEngineWatermark, 'file'> & {
+        file?: PathLikeOrReadStream | Buffer;
+    };
+    /** PDF-engine post-processing stamp */
+    stamp?: Omit<PdfEngineStamp, 'file'> & {
+        file?: PathLikeOrReadStream | Buffer;
+    };
 };

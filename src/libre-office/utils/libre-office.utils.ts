@@ -2,7 +2,7 @@ import { constants, openAsBlob, promises, ReadStream } from 'fs';
 import path from 'path';
 import { blob } from 'node:stream/consumers';
 
-import { GotenbergUtils } from '../../common';
+import { GotenbergUtils, PdfEngineWatermarkStampUtils } from '../../common';
 import { LIBRE_OFFICE_EXTENSIONS } from './constants';
 import {
     ConversionOptions,
@@ -14,6 +14,17 @@ import {
  * Utility class for handling common tasks related to LibreOffice conversions.
  */
 export class LibreOfficeUtils {
+    private static isLibreFileInfo(
+        file: unknown
+    ): file is { data: Buffer | ReadStream; ext: string } {
+        return (
+            typeof file === 'object' &&
+            file !== null &&
+            'data' in file &&
+            'ext' in file
+        );
+    }
+
     private static async getFileInfo(file: PathLikeOrReadStream) {
         if (typeof file === 'string') {
             await promises.access(file, constants.R_OK);
@@ -330,6 +341,103 @@ export class LibreOfficeUtils {
                 data,
                 'embeds'
             );
+        }
+
+        if (options.nativeWatermarkText !== undefined) {
+            data.append('nativeWatermarkText', options.nativeWatermarkText);
+        }
+
+        if (options.nativeWatermarkColor !== undefined) {
+            data.append(
+                'nativeWatermarkColor',
+                String(options.nativeWatermarkColor)
+            );
+        }
+
+        if (options.nativeWatermarkFontHeight !== undefined) {
+            data.append(
+                'nativeWatermarkFontHeight',
+                String(options.nativeWatermarkFontHeight)
+            );
+        }
+
+        if (options.nativeWatermarkRotateAngle !== undefined) {
+            data.append(
+                'nativeWatermarkRotateAngle',
+                String(options.nativeWatermarkRotateAngle)
+            );
+        }
+
+        if (options.nativeWatermarkFontName !== undefined) {
+            data.append(
+                'nativeWatermarkFontName',
+                options.nativeWatermarkFontName
+            );
+        }
+
+        if (options.nativeTiledWatermarkText !== undefined) {
+            data.append(
+                'nativeTiledWatermarkText',
+                options.nativeTiledWatermarkText
+            );
+        }
+
+        if (options.watermark || options.stamp) {
+            const watermarkForUtils = options.watermark
+                ? (() => {
+                      const { file, ...rest } = options.watermark!;
+                      if (file === undefined) {
+                          return rest;
+                      }
+                      if (LibreOfficeUtils.isLibreFileInfo(file)) {
+                          return rest;
+                      }
+                      return { ...rest, file };
+                  })()
+                : undefined;
+
+            const stampForUtils = options.stamp
+                ? (() => {
+                      const { file, ...rest } = options.stamp!;
+                      if (file === undefined) {
+                          return rest;
+                      }
+                      if (LibreOfficeUtils.isLibreFileInfo(file)) {
+                          return rest;
+                      }
+                      return { ...rest, file };
+                  })()
+                : undefined;
+
+            await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
+                data,
+                {
+                    watermark: watermarkForUtils,
+                    stamp: stampForUtils
+                }
+            );
+
+            if (
+                options.watermark?.file !== undefined &&
+                LibreOfficeUtils.isLibreFileInfo(options.watermark.file)
+            ) {
+                await LibreOfficeUtils.addFilesWithFieldName(
+                    [options.watermark.file],
+                    data,
+                    'watermark'
+                );
+            }
+
+            if (
+                options.stamp?.file !== undefined &&
+                LibreOfficeUtils.isLibreFileInfo(options.stamp.file)
+            ) {
+                await LibreOfficeUtils.addFilesWithFieldName(
+                    [options.stamp.file],
+                    data,
+                    'stamp'
+                );
+            }
         }
     }
 }
