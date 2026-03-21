@@ -38,6 +38,7 @@ a variety of document formats to PDF files.
    - [PDF Flattening](#pdf-flattening)
    - [PDF Encryption](#pdf-encryption)
    - [Embedding Files](#embedding-files)
+   - [Watermark and stamp](#watermark-and-stamp)
 4. [Usage Example](#snippet)
 
 ## Getting Started
@@ -165,17 +166,17 @@ Chromiumly.configure({
 ## Core Features
 
 Chromiumly introduces different classes that serve as wrappers to
-Gotenberg's [routes](https://gotenberg.dev/docs/routes). These classes encompass methods featuring an
+Gotenberg's [documentation](https://gotenberg.dev/docs/getting-started/introduction). These classes encompass methods featuring an
 input file parameter, such as `html`, `header`, `footer`, and `markdown`, capable of accepting inputs in the form of a
 `string` (i.e. file path), `Buffer`, or `ReadStream`.
 
 ### Chromium
 
 There are three different classes that come with a single method (i.e.`convert`) which calls one of
-Chromium's [Conversion routes](https://gotenberg.dev/docs/routes#convert-with-chromium) to convert `html` and `markdown` files, or
+Chromium's [conversion routes](https://gotenberg.dev/docs/convert-with-chromium/convert-url-to-pdf) to convert `html` and `markdown` files, or
 a `url` to a `buffer` which contains the converted PDF file content.
 
-Similarly, a new set of classes have been added to harness the recently introduced Gotenberg [Screenshot routes](https://gotenberg.dev/docs/routes#screenshots-route). These classes include a single method called `capture`, which allows capturing full-page screenshots of `html`, `markdown`, and `url`.
+Similarly, a new set of classes have been added to harness the recently introduced Gotenberg [screenshot routes](https://gotenberg.dev/docs/convert-with-chromium/screenshot-url). These classes include a single method called `capture`, which allows capturing full-page screenshots of `html`, `markdown`, and `url`.
 
 #### URL
 
@@ -332,6 +333,28 @@ type ConversionOptions = {
   userPassword?: string; // Password for opening the resulting PDF(s).
   ownerPassword?: string; // Password for full access on the resulting PDF(s).
   embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
+  watermark?: PdfEngineWatermark; // Optional PDF-engine post-processing watermark (behind page content).
+  stamp?: PdfEngineStamp; // Optional PDF-engine post-processing stamp (on top of page content).
+};
+```
+
+Optional `watermark` and `stamp` use the same multipart field names as [Gotenberg’s PDF-engine watermark/stamp](https://gotenberg.dev/docs/manipulate-pdfs/watermark-pdfs): text, image, or PDF sources, with JSON `options` depending on your configured engine (e.g. pdfcpu). See [Watermark PDFs](https://gotenberg.dev/docs/manipulate-pdfs/watermark-pdfs) and [Stamp PDFs](https://gotenberg.dev/docs/manipulate-pdfs/stamp-pdfs) in the official docs.
+
+```typescript
+type PdfEngineWatermark = {
+  source?: "text" | "image" | "pdf";
+  expression?: string; // Text, or filename of the uploaded asset when source is image or pdf
+  pages?: string; // Page ranges (e.g. "1-3"); omit for all pages
+  options?: Record<string, unknown>; // Serialized as JSON (engine-specific)
+  file?: PathLikeOrReadStream | Buffer; // Required when source is image or pdf
+};
+
+type PdfEngineStamp = {
+  source?: "text" | "image" | "pdf";
+  expression?: string;
+  pages?: string;
+  options?: Record<string, unknown>;
+  file?: PathLikeOrReadStream | Buffer;
 };
 ```
 
@@ -380,8 +403,8 @@ type ScreenshotOptions = {
 
 ### LibreOffice
 
-The `LibreOffice` class comes with a single method `convert`. This method interacts with [LibreOffice](https://gotenberg.dev/docs/routes#convert-with-libreoffice) route to convert different documents to PDF files. You can find the file extensions
-accepted [here](https://gotenberg.dev/docs/routes#convert-with-libreoffice).
+The `LibreOffice` class comes with a single method `convert`. This method interacts with [LibreOffice](https://gotenberg.dev/docs/convert-with-libreoffice/convert-to-pdf) route to convert different documents to PDF files. You can find the file extensions
+accepted [here](https://gotenberg.dev/docs/convert-with-libreoffice/convert-to-pdf).
 
 ```typescript
 import { LibreOffice } from "chromiumly";
@@ -402,7 +425,7 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `pdfUA`: enables PDF for Universal Access for optimal accessibility.
 - `merge`: merges all the resulting files from the conversion into an individual PDF file.
 - `metadata`: writes metadata to the generated PDF file.
-- `lolosslessImageCompression`: allows turning lossless compression on or off to tweak image conversion performance.
+- `losslessImageCompression`: allows turning lossless compression on or off to tweak image conversion performance.
 - `reduceImageResolution`: allows turning on or off image resolution reduction to tweak image conversion performance.
 - `quality`: specifies the quality of the JPG export. The value ranges from 1 to 100, with higher values producing higher-quality images and larger file sizes.
 - `maxImageResolution`: specifies if all images will be reduced to the specified DPI value. Possible values are: `75`, `150`, `300`, `600`, and `1200`.
@@ -410,14 +433,16 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `userPassword`: password for opening the resulting PDF(s).
 - `ownerPassword`: password for full access on the resulting PDF(s).
 - `embeds`: files to embed in the generated PDF (repeatable). This feature enables the creation of PDFs compatible with standards like [ZUGFeRD / Factur-X](https://fnfe-mpe.org/factur-x/), which require embedding XML invoices and other files within the PDF.
+- **Native LibreOffice watermarks** (applied during export): `nativeWatermarkText`, `nativeWatermarkColor`, `nativeWatermarkFontHeight`, `nativeWatermarkRotateAngle`, `nativeWatermarkFontName`, `nativeTiledWatermarkText` — see [Convert to PDF](https://gotenberg.dev/docs/convert-with-libreoffice/convert-to-pdf).
+- **PDF-engine watermark/stamp** (post-processing after conversion): `watermark` and `stamp` — same shapes as in Chromium `ConversionOptions` (`PdfEngineWatermark` / `PdfEngineStamp`). For `{ data, ext }` file objects, use the same pattern as in `files`.
 
 ### PDF Engines
 
-The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) routes to manipulate PDF files.
+The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/pdfa-pdfua) routes to manipulate PDF files.
 
 #### Format Conversion
 
-This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#convert-into-pdfa--pdfua-route) convertion route to transform PDF files into the requested PDF/A format and/or PDF/UA.
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/pdfa-pdfua) convertion route to transform PDF files into the requested PDF/A format and/or PDF/UA.
 
 ```typescript
 import { PDFEngines } from "chromiumly";
@@ -431,7 +456,7 @@ const buffer = await PDFEngines.convert({
 
 #### Merging
 
-This method interacts with [PDF Engines](https://gotenberg.dev/docs/routes#merge-pdfs-route) merge route which gathers different
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/merge-pdfs) merge route which gathers different
 engines that can manipulate and merge PDF files such
 as: [PDFtk](https://gitlab.com/pdftk-java/pdftk), [PDFcpu](https://github.com/pdfcpu/pdfcpu), [QPDF](https://github.com/qpdf/qpdf),
 and [UNO](https://github.com/unoconv/unoconv).
@@ -443,6 +468,34 @@ const buffer = await PDFEngines.merge({
   files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
   pdfa: PdfFormat.A_2b,
   pdfUA: true,
+});
+```
+
+Optional `watermark` and `stamp` (`PdfEngineWatermark` / `PdfEngineStamp`) apply PDF-engine post-processing to the merged output, matching [Merge PDFs](https://gotenberg.dev/docs/manipulate-pdfs/merge-pdfs) in the Gotenberg docs.
+
+#### Watermark and stamp (dedicated routes)
+
+These methods call [`/forms/pdfengines/watermark`](https://gotenberg.dev/docs/manipulate-pdfs/watermark-pdfs) and [`/forms/pdfengines/stamp`](https://gotenberg.dev/docs/manipulate-pdfs/stamp-pdfs).
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const watermarked = await PDFEngines.watermark({
+  files: ["path/to/document.pdf"],
+  watermark: {
+    source: "text",
+    expression: "CONFIDENTIAL",
+    options: { opacity: 0.25, rotation: 45 },
+  },
+});
+
+const stamped = await PDFEngines.stamp({
+  files: ["path/to/document.pdf"],
+  stamp: {
+    source: "text",
+    expression: "APPROVED",
+    options: { opacity: 0.5, rotation: 0 },
+  },
 });
 ```
 
@@ -469,15 +522,12 @@ This method writes metadata to the provided PDF files.
 import { PDFEngines } from "chromiumly";
 
 const buffer = await PDFEngines.writeMetadata({
-  files: [
-  "path/to/file_1.pdf",
-  "path/to/file_2.pdf",
-  ],
+  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
   metadata: {
-    Author: 'Taha Cherfia',
-    Tite: 'Chromiumly'
-    Keywords: ['pdf', 'html', 'gotenberg'],
-  }
+    Author: "Taha Cherfia",
+    Title: "Chromiumly",
+    Keywords: ["pdf", "html", "gotenberg"],
+  },
 });
 ```
 
@@ -511,7 +561,7 @@ const buffer = await UrlConverter.convert({
 });
 ```
 
-On the other hand, PDFEngines' has a `split` method that interacts with [PDF Engines](https://gotenberg.dev/docs/routes#split-pdfs-route) split route which splits PDF files into multiple files.
+On the other hand, PDFEngines' has a `split` method that interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/split-pdfs) split route which splits PDF files into multiple files.
 
 ```typescript
 import { PDFEngines } from "chromiumly";
@@ -525,6 +575,8 @@ const buffer = await PDFEngines.split({
   },
 });
 ```
+
+`PDFEngines.split` also accepts optional `watermark` and `stamp` for the same PDF-engine post-processing as merge.
 
 > ⚠️ **Note**: Gotenberg does not currently validate the `span` value when `mode` is set to `pages`, as the validation depends on the chosen engine for the split feature. See [PDF Engines module configuration](https://gotenberg.dev/docs/configuration#pdf-engines) for more details.
 
@@ -575,6 +627,19 @@ const buffer = await htmlConverter.convert({
 ```
 
 All embedded files will be attached to the generated PDF and can be extracted using PDF readers that support file attachments.
+
+### Watermark and stamp
+
+Gotenberg can apply a **watermark** (behind content) and/or **stamp** (on top of content) using the configured PDF engine after the main conversion or PDF operation. Types `PdfEngineWatermark` and `PdfEngineStamp` are exported from `chromiumly` if you want them explicitly in your code. Chromiumly exposes this on:
+
+| API                                                                | What to pass                                                               |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `UrlConverter` / `HtmlConverter` / `MarkdownConverter` `convert()` | `watermark`, `stamp` on the options object (see `ConversionOptions` above) |
+| `LibreOffice.convert()`                                            | Native fields (`nativeWatermarkText`, …) and/or `watermark`, `stamp`       |
+| `PDFEngines.merge()` / `PDFEngines.split()`                        | Optional `watermark`, `stamp`                                              |
+| `PDFEngines.watermark()` / `PDFEngines.stamp()`                    | Dedicated endpoints; `watermark` or `stamp` config is required             |
+
+For image or PDF sources, set `source` to `image` or `pdf`, set `expression` to the **filename** of the uploaded asset, and pass the file in `file`. Chromium screenshot routes do not document these fields; use HTML/CSS overlays or convert-to-PDF flows instead.
 
 ## Snippet
 
