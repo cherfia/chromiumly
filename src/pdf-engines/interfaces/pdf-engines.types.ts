@@ -1,4 +1,9 @@
-import { Metadata, PdfFormat } from '../../common';
+import {
+    Metadata,
+    PdfFormat,
+    type PdfEngineStamp,
+    type PdfEngineWatermark
+} from '../../common';
 import { DownloadFrom } from '../../common/types';
 
 export type ConversionOptions = {
@@ -10,6 +15,8 @@ export type ConversionOptions = {
 export type MergeOptions = ConversionOptions & {
     metadata?: Metadata;
     flatten?: boolean;
+    watermark?: PdfEngineWatermark;
+    stamp?: PdfEngineStamp;
 };
 
 export type EncryptOptions = {
