@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.4.1](https://github.com/cherfia/chromiumly/compare/4.4.0...4.4.1) (2026-03-21)
+
+### Bug Fixes
+
+- pass watermark and stamp to converters ([fa3cac1](https://github.com/cherfia/chromiumly/commit/fa3cac147f759a3bb03676fada25886e21458fe0))
+
 ## [4.4.0](https://github.com/cherfia/chromiumly/compare/4.3.0...4.4.0) (2026-03-21)
 
 ### Features
