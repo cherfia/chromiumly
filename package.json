@@ -13,7 +13,7 @@
   },
   "author": "Taha Cherfia <taha.cherfia@gmail.com>",
   "license": "MIT",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.13.0",
   "engines": {
     "node": ">=18.x"
   },
@@ -50,19 +50,19 @@
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@commitlint/cz-commitlint": "^20.0.0",
-    "@release-it/conventional-changelog": "10.0.5",
-    "@types/config": "3.3.5",
+    "@release-it/conventional-changelog": "10.0.6",
+    "@types/config": "4.4.0",
     "@types/dotenv": "8.2.3",
     "@types/jest": "30.0.0",
-    "@types/node": "24.10.13",
-    "@typescript-eslint/eslint-plugin": "8.56.1",
-    "@typescript-eslint/parser": "8.56.1",
+    "@types/node": "24.12.0",
+    "@typescript-eslint/eslint-plugin": "8.57.1",
+    "@typescript-eslint/parser": "8.57.1",
     "commitizen": "4.3.1",
     "eslint": "8.57.0",
     "eslint-config-prettier": "^10.0.0",
     "husky": "^9.0.11",
     "inquirer": "9",
-    "jest": "30.2.0",
+    "jest": "30.3.0",
     "jest-junit": "16.0.0",
     "lint-staged": "^16.0.0",
     "prettier": "3.8.1",
@@ -77,7 +77,7 @@
     "dotenv": "17.x"
   },
   "resolutions": {
-    "conventional-changelog-conventionalcommits": "9.1.0"
+    "conventional-changelog-conventionalcommits": "9.3.0"
   },
   "lint-staged": {
     "**/*": "yarn prettier --write --ignore-unknown"

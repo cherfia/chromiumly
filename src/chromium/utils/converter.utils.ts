@@ -6,7 +6,11 @@ import {
     ConversionOptions,
     PageProperties
 } from '../interfaces/converter.types';
-import { GotenbergUtils, PathLikeOrReadStream } from '../../common';
+import {
+    GotenbergUtils,
+    PathLikeOrReadStream,
+    PdfEngineWatermarkStampUtils
+} from '../../common';
 
 /**
  * Utility class for handling common tasks related to conversion.
@@ -359,6 +363,16 @@ export class ConverterUtils {
                 options.embeds,
                 data,
                 'embeds'
+            );
+        }
+
+        if (options.watermark || options.stamp) {
+            await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
+                data,
+                {
+                    watermark: options.watermark,
+                    stamp: options.stamp
+                }
             );
         }
     }

@@ -1147,5 +1147,46 @@ describe('ConverterUtils', () => {
                 );
             });
         });
+
+        describe('when watermark and stamp options are passed', () => {
+            it('should append watermark and stamp form fields', async () => {
+                await ConverterUtils.customize(data, {
+                    watermark: {
+                        source: 'text',
+                        expression: 'CONFIDENTIAL',
+                        options: { opacity: 0.25, rotation: 45 }
+                    },
+                    stamp: {
+                        source: 'text',
+                        expression: 'APPROVED',
+                        pages: '1-2'
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkSource',
+                    'text'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkExpression',
+                    'CONFIDENTIAL'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkOptions',
+                    JSON.stringify({ opacity: 0.25, rotation: 45 })
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampSource',
+                    'text'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampExpression',
+                    'APPROVED'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampPages',
+                    '1-2'
+                );
+            });
+        });
     });
 });

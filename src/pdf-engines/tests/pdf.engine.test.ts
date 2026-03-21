@@ -79,6 +79,39 @@ describe('PDFEngines', () => {
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
         });
+
+        it('should append PDF-engine watermark and stamp fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.merge({
+                files: ['path/to/file.pdf'],
+                pdfa: PdfFormat.A_2b,
+                pdfUA: true,
+                watermark: {
+                    source: 'text',
+                    expression: 'WM'
+                },
+                stamp: {
+                    source: 'text',
+                    expression: 'ST'
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'watermarkSource',
+                'text'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'watermarkExpression',
+                'WM'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'stampSource',
+                'text'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'stampExpression',
+                'ST'
+            );
+        });
     });
 
     describe('readMetadata', () => {
@@ -171,6 +204,61 @@ describe('PDFEngines', () => {
                     }
                 })
             ).rejects.toThrow('split unify is only supported for pages mode');
+        });
+
+        it('should append watermark fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: {
+                    mode: 'intervals',
+                    span: '1'
+                },
+                watermark: {
+                    source: 'text',
+                    expression: 'WM'
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'watermarkSource',
+                'text'
+            );
+        });
+    });
+
+    describe('watermark', () => {
+        it('should POST to forms/pdfengines/watermark', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.watermark({
+                files: ['path/to/file.pdf'],
+                watermark: { source: 'text', expression: 'CONFIDENTIAL' }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/watermark',
+                expect.objectContaining({
+                    method: 'POST',
+                    body: expect.any(FormData)
+                })
+            );
+        });
+    });
+
+    describe('stamp', () => {
+        it('should POST to forms/pdfengines/stamp', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.stamp({
+                files: ['path/to/file.pdf'],
+                stamp: { source: 'text', expression: 'APPROVED' }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/stamp',
+                expect.objectContaining({
+                    method: 'POST',
+                    body: expect.any(FormData)
+                })
+            );
         });
     });
 

@@ -1,6 +1,7 @@
 export { Chromiumly } from './main.config';
 
 export { PdfFormat } from './common/constants';
+export type { PdfEngineStamp, PdfEngineWatermark } from './common';
 export {
     HtmlConverter,
     HtmlScreenshot,

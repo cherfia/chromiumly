@@ -6,7 +6,10 @@ import {
     GotenbergUtils,
     PathLikeOrReadStream,
     PdfFormat,
-    Metadata
+    Metadata,
+    PdfEngineStamp,
+    PdfEngineWatermark,
+    PdfEngineWatermarkStampUtils
 } from '../common';
 import { PDFEnginesUtils } from './utils/pdf-engines.utils';
 import { DownloadFrom, Split } from '../common/types';
@@ -35,7 +38,9 @@ export class PDFEngines {
         pdfUA,
         metadata,
         downloadFrom,
-        flatten
+        flatten,
+        watermark,
+        stamp
     }: {
         files: PathLikeOrReadStream[];
         pdfa?: PdfFormat;
@@ -43,6 +48,8 @@ export class PDFEngines {
         metadata?: Metadata;
         downloadFrom?: DownloadFrom;
         flatten?: boolean;
+        watermark?: PdfEngineWatermark;
+        stamp?: PdfEngineStamp;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -53,6 +60,12 @@ export class PDFEngines {
             downloadFrom,
             flatten
         });
+        if (watermark || stamp) {
+            await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
+                data,
+                { watermark, stamp }
+            );
+        }
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
         return GotenbergUtils.fetch(
             endpoint,
@@ -116,10 +129,14 @@ export class PDFEngines {
      */
     public static async split({
         files,
-        options
+        options,
+        watermark,
+        stamp
     }: {
         files: PathLikeOrReadStream[];
         options: Split;
+        watermark?: PdfEngineWatermark;
+        stamp?: PdfEngineStamp;
     }): Promise<Buffer> {
         const data = new FormData();
 
@@ -138,6 +155,13 @@ export class PDFEngines {
                 'split unify is only supported for pages mode'
             );
             data.append('splitUnify', String(options.unify));
+        }
+
+        if (watermark || stamp) {
+            await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
+                data,
+                { watermark, stamp }
+            );
         }
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.split}`;
@@ -276,6 +300,62 @@ export class PDFEngines {
      * @param {PathLikeOrReadStream[]} options.embeds - An array of PathLikes or ReadStreams to the files to embed in the PDF.
      * @returns {Promise<Buffer>} A Promise resolving to the PDF content with embedded files as a buffer
      */
+    /**
+     * Watermarks one or more PDF files using the configured PDF engine.
+     *
+     * @param options.files - PDF files to watermark
+     * @param options.watermark - Watermark configuration (source, expression, pages, options, file)
+     */
+    public static async watermark({
+        files,
+        watermark
+    }: {
+        files: PathLikeOrReadStream[];
+        watermark: PdfEngineWatermark;
+    }): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+        await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(data, {
+            watermark
+        });
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.watermark}`;
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
+        );
+    }
+
+    /**
+     * Stamps one or more PDF files using the configured PDF engine.
+     *
+     * @param options.files - PDF files to stamp
+     * @param options.stamp - Stamp configuration (source, expression, pages, options, file)
+     */
+    public static async stamp({
+        files,
+        stamp
+    }: {
+        files: PathLikeOrReadStream[];
+        stamp: PdfEngineStamp;
+    }): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+        await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(data, {
+            stamp
+        });
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.stamp}`;
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
+        );
+    }
+
     public static async embed({
         files,
         embeds

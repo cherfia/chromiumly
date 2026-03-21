@@ -654,5 +654,166 @@ describe('LibreOfficeUtils', () => {
                 );
             });
         });
+
+        describe('when native LibreOffice watermark fields are passed', () => {
+            it('should append native watermark fields', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    nativeWatermarkText: 'DRAFT',
+                    nativeWatermarkColor: 16711680,
+                    nativeWatermarkFontHeight: 48,
+                    nativeWatermarkRotateAngle: 450,
+                    nativeWatermarkFontName: 'Times New Roman',
+                    nativeTiledWatermarkText: 'COPY'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkText',
+                    'DRAFT'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkColor',
+                    '16711680'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkFontHeight',
+                    '48'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkRotateAngle',
+                    '450'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkFontName',
+                    'Times New Roman'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeTiledWatermarkText',
+                    'COPY'
+                );
+            });
+        });
+
+        describe('when PDF-engine watermark uses LibreOffice FileInfo', () => {
+            it('should append watermark fields and FileInfo blob', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    watermark: {
+                        source: 'image',
+                        expression: 'w.png',
+                        file: { data: Buffer.from('png-bytes'), ext: 'png' }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkSource',
+                    'image'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkExpression',
+                    'w.png'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermark',
+                    expect.any(Blob),
+                    'file1'
+                );
+            });
+        });
+
+        describe('when PDF-engine watermark has no file', () => {
+            it('should append only watermark scalar fields', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    watermark: {
+                        source: 'text',
+                        expression: 'DRAFT'
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkSource',
+                    'text'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkExpression',
+                    'DRAFT'
+                );
+            });
+        });
+
+        describe('when PDF-engine watermark file is a plain Buffer', () => {
+            it('should pass buffer through to shared utils', async () => {
+                const buf = Buffer.from('wm');
+                await LibreOfficeUtils.customize(data, {
+                    watermark: {
+                        source: 'image',
+                        expression: 'x.png',
+                        file: buf
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermark',
+                    new Blob([buf]),
+                    'watermark'
+                );
+            });
+        });
+
+        describe('when PDF-engine stamp has no file', () => {
+            it('should append only stamp scalar fields', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    stamp: {
+                        source: 'text',
+                        expression: 'OK'
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampSource',
+                    'text'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampExpression',
+                    'OK'
+                );
+            });
+        });
+
+        describe('when PDF-engine stamp file is a plain Buffer', () => {
+            it('should pass buffer through to shared utils', async () => {
+                const buf = Buffer.from('st');
+                await LibreOfficeUtils.customize(data, {
+                    stamp: {
+                        source: 'image',
+                        expression: 's.png',
+                        file: buf
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stamp',
+                    new Blob([buf]),
+                    'stamp'
+                );
+            });
+        });
+
+        describe('when PDF-engine stamp uses LibreOffice FileInfo', () => {
+            it('should append stamp fields and FileInfo blob', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    stamp: {
+                        source: 'pdf',
+                        expression: 's.pdf',
+                        file: { data: Buffer.from('pdf-bytes'), ext: 'pdf' }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampSource',
+                    'pdf'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampExpression',
+                    's.pdf'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stamp',
+                    expect.any(Blob),
+                    'file1'
+                );
+            });
+        });
     });
 });
