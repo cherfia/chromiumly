@@ -78,7 +78,9 @@ export class MarkdownConverter extends Converter {
         split,
         userPassword,
         ownerPassword,
-        embeds
+        embeds,
+        watermark,
+        stamp
     }: MarkdownConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -112,7 +114,9 @@ export class MarkdownConverter extends Converter {
             generateDocumentOutline,
             userPassword,
             ownerPassword,
-            embeds
+            embeds,
+            watermark,
+            stamp
         });
 
         return GotenbergUtils.fetch(

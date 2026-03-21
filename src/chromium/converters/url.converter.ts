@@ -78,7 +78,9 @@ export class UrlConverter extends Converter {
         split,
         userPassword,
         ownerPassword,
-        embeds
+        embeds,
+        watermark,
+        stamp
     }: UrlConversionOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -111,7 +113,9 @@ export class UrlConverter extends Converter {
             split,
             userPassword,
             ownerPassword,
-            embeds
+            embeds,
+            watermark,
+            stamp
         });
 
         return GotenbergUtils.fetch(

@@ -146,5 +146,44 @@ describe('LibreOffice', () => {
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
             });
         });
+
+        describe('when PDF-engine watermark and stamp are passed', () => {
+            it('should append watermark and stamp form fields', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    watermark: {
+                        source: 'text',
+                        expression: 'CONFIDENTIAL'
+                    },
+                    stamp: {
+                        source: 'text',
+                        expression: 'APPROVED',
+                        pages: '1'
+                    }
+                });
+                expect(buffer).toEqual(await getResponseBuffer());
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkSource',
+                    'text'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'watermarkExpression',
+                    'CONFIDENTIAL'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampSource',
+                    'text'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampExpression',
+                    'APPROVED'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stampPages',
+                    '1'
+                );
+            });
+        });
     });
 });
