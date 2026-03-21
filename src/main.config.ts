@@ -22,7 +22,9 @@ enum PdfEngineRoute {
     SPLIT = 'split',
     FLATTEN = 'flatten',
     ENCRYPT = 'encrypt',
-    EMBED = 'embed'
+    EMBED = 'embed',
+    WATERMARK = 'watermark',
+    STAMP = 'stamp'
 }
 
 /**
@@ -110,7 +112,9 @@ export class Chromiumly {
         split: PdfEngineRoute.SPLIT,
         flatten: PdfEngineRoute.FLATTEN,
         encrypt: PdfEngineRoute.ENCRYPT,
-        embed: PdfEngineRoute.EMBED
+        embed: PdfEngineRoute.EMBED,
+        watermark: PdfEngineRoute.WATERMARK,
+        stamp: PdfEngineRoute.STAMP
     };
 
     /**
