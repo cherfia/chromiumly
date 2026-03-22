@@ -5,7 +5,7 @@ import {
     type PdfEngineStamp,
     type PdfEngineWatermark
 } from '../../common';
-import { DownloadFrom, Split } from '../../common/types';
+import { DownloadFrom, PdfEngineRotate, Split } from '../../common/types';
 
 type FileExtension =
     | '123'
@@ -201,4 +201,6 @@ export type ConversionOptions = {
     stamp?: Omit<PdfEngineStamp, 'file'> & {
         file?: PathLikeOrReadStream | Buffer;
     };
+    /** PDF-engine post-process page rotation */
+    rotate?: PdfEngineRotate;
 };
