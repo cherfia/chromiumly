@@ -81,6 +81,7 @@ run();
    - [PDF Engines](#pdf-engines)
      - [Format Conversion](#format-conversion)
      - [Merging](#merging)
+     - [PDF Rotation](#pdf-rotation)
      - [Metadata Management](#metadata-management)
      - [File Generation](#file-generation)
    - [PDF Splitting](#pdf-splitting)
@@ -527,6 +528,22 @@ const buffer = await PDFEngines.merge({
 
 Optional `watermark` and `stamp` (`PdfEngineWatermark` / `PdfEngineStamp`) apply PDF-engine post-processing to the merged output, matching [Merge PDFs](https://gotenberg.dev/docs/manipulate-pdfs/merge-pdfs) in the Gotenberg docs.
 
+Optional `rotate` (`{ angle: 90 | 180 | 270; pages?: string }`) rotates pages after merge via the PDF engine; omit `pages` or leave it empty to rotate all pages.
+
+#### PDF Rotation
+
+`PDFEngines.rotate()` calls Gotenberg’s [rotate route](https://gotenberg.dev/docs/manipulate-pdfs/rotate-pdfs) to rotate existing PDFs. The same post-processing is available on `PDFEngines.merge()`, `PDFEngines.split()`, and on Chromium and LibreOffice `convert()` through the optional `rotate` property (Gotenberg generates the PDF, then rotates selected pages—an extra pass).
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const rotated = await PDFEngines.rotate({
+  files: ["path/to/document.pdf"],
+  angle: 90,
+  pages: "1-3", // optional; omit for all pages
+});
+```
+
 #### Watermark and stamp (dedicated routes)
 
 These methods call [`/forms/pdfengines/watermark`](https://gotenberg.dev/docs/manipulate-pdfs/watermark-pdfs) and [`/forms/pdfengines/stamp`](https://gotenberg.dev/docs/manipulate-pdfs/stamp-pdfs).
@@ -630,7 +647,7 @@ const buffer = await PDFEngines.split({
 });
 ```
 
-`PDFEngines.split` also accepts optional `watermark` and `stamp` for the same PDF-engine post-processing as merge.
+`PDFEngines.split` also accepts optional `watermark`, `stamp`, and `rotate` for the same PDF-engine post-processing as merge.
 
 > ⚠️ **Note**: Gotenberg does not currently validate the `span` value when `mode` is set to `pages`, as the validation depends on the chosen engine for the split feature. See [PDF Engines module configuration](https://gotenberg.dev/docs/configuration#pdf-engines) for more details.
 
@@ -800,12 +817,13 @@ The `currency` field accepts any [ISO 4217](https://en.wikipedia.org/wiki/ISO_42
 
 Gotenberg can apply a **watermark** (behind content) and/or **stamp** (on top of content) using the configured PDF engine after the main conversion or PDF operation. Types `PdfEngineWatermark` and `PdfEngineStamp` are exported from `chromiumly` if you want them explicitly in your code. Chromiumly exposes this on:
 
-| API                                                                | What to pass                                                               |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| `UrlConverter` / `HtmlConverter` / `MarkdownConverter` `convert()` | `watermark`, `stamp` on the options object (see `ConversionOptions` above) |
-| `LibreOffice.convert()`                                            | Native fields (`nativeWatermarkText`, …) and/or `watermark`, `stamp`       |
-| `PDFEngines.merge()` / `PDFEngines.split()`                        | Optional `watermark`, `stamp`                                              |
-| `PDFEngines.watermark()` / `PDFEngines.stamp()`                    | Dedicated endpoints; `watermark` or `stamp` config is required             |
+| API                                                                | What to pass                                                                         |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `UrlConverter` / `HtmlConverter` / `MarkdownConverter` `convert()` | `watermark`, `stamp`, `rotate` on the options object (see `ConversionOptions` above) |
+| `LibreOffice.convert()`                                            | Native fields (`nativeWatermarkText`, …) and/or `watermark`, `stamp`, `rotate`       |
+| `PDFEngines.merge()` / `PDFEngines.split()`                        | Optional `watermark`, `stamp`, `rotate`                                              |
+| `PDFEngines.rotate()`                                              | Dedicated endpoint; `files`, `angle` (`90` \| `180` \| `270`), optional `pages`      |
+| `PDFEngines.watermark()` / `PDFEngines.stamp()`                    | Dedicated endpoints; `watermark` or `stamp` config is required                       |
 
 For image or PDF sources, set `source` to `image` or `pdf`, set `expression` to the **filename** of the uploaded asset, and pass the file in `file`. Chromium screenshot routes do not document these fields; use HTML/CSS overlays or convert-to-PDF flows instead.
 

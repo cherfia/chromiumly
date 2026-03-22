@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.5.0](https://github.com/cherfia/chromiumly/compare/4.4.1...4.5.0) (2026-03-22)
+
+### Features
+
+- **chromium:** add rotate support ([7321f5a](https://github.com/cherfia/chromiumly/commit/7321f5acb748620bc4b08ae5690d4adad3d0621c))
+- **libre-office:** add rotate support ([187d569](https://github.com/cherfia/chromiumly/commit/187d5690bf195b0e4808c481a3b4030860fb6b3d))
+- **pdf-engines:** add rotate support ([526f941](https://github.com/cherfia/chromiumly/commit/526f941b8f29800a4a3f25f52872ad87d7a76705))
+
+### Documentation
+
+- update README to include PDF rotation feature ([094894c](https://github.com/cherfia/chromiumly/commit/094894c3351a17fc0e586bcd407ab8ed6570788b))
+
+### Tests
+
+- add unit tests for rotate ([377478a](https://github.com/cherfia/chromiumly/commit/377478ad2dc4fa0212716c712380581480ed0e3b))
+
 ## [4.4.1](https://github.com/cherfia/chromiumly/compare/4.4.0...4.4.1) (2026-03-21)
 
 ### Bug Fixes

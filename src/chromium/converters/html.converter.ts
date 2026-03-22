@@ -79,7 +79,8 @@ export class HtmlConverter extends Converter {
         ownerPassword,
         embeds,
         watermark,
-        stamp
+        stamp,
+        rotate
     }: HtmlConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -121,7 +122,8 @@ export class HtmlConverter extends Converter {
             ownerPassword,
             embeds,
             watermark,
-            stamp
+            stamp,
+            rotate
         });
 
         return GotenbergUtils.fetch(

@@ -3,6 +3,7 @@ import path from 'path';
 
 import { Chromiumly } from '../main.config';
 import {
+    appendPdfEngineRotate,
     GotenbergUtils,
     PathLikeOrReadStream,
     PdfFormat,
@@ -12,8 +13,12 @@ import {
     PdfEngineWatermarkStampUtils
 } from '../common';
 import { PDFEnginesUtils } from './utils/pdf-engines.utils';
-import { DownloadFrom, Split } from '../common/types';
-import { EncryptOptions } from './interfaces/pdf-engines.types';
+import { DownloadFrom } from '../common/types';
+import {
+    EncryptOptions,
+    MergeOptions,
+    SplitEngineOptions
+} from './interfaces/pdf-engines.types';
 
 /**
  * Class uses PDF engines for various operations such as merging and conversion.
@@ -40,17 +45,9 @@ export class PDFEngines {
         downloadFrom,
         flatten,
         watermark,
-        stamp
-    }: {
-        files: PathLikeOrReadStream[];
-        pdfa?: PdfFormat;
-        pdfUA?: boolean;
-        metadata?: Metadata;
-        downloadFrom?: DownloadFrom;
-        flatten?: boolean;
-        watermark?: PdfEngineWatermark;
-        stamp?: PdfEngineStamp;
-    }): Promise<Buffer> {
+        stamp,
+        rotate
+    }: MergeOptions & { files: PathLikeOrReadStream[] }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         await PDFEnginesUtils.customize(data, {
@@ -65,6 +62,9 @@ export class PDFEngines {
                 data,
                 { watermark, stamp }
             );
+        }
+        if (rotate) {
+            appendPdfEngineRotate(data, rotate);
         }
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.merge}`;
         return GotenbergUtils.fetch(
@@ -131,13 +131,9 @@ export class PDFEngines {
         files,
         options,
         watermark,
-        stamp
-    }: {
-        files: PathLikeOrReadStream[];
-        options: Split;
-        watermark?: PdfEngineWatermark;
-        stamp?: PdfEngineStamp;
-    }): Promise<Buffer> {
+        stamp,
+        rotate
+    }: SplitEngineOptions): Promise<Buffer> {
         const data = new FormData();
 
         await PDFEnginesUtils.addFiles(files, data);
@@ -162,6 +158,10 @@ export class PDFEngines {
                 data,
                 { watermark, stamp }
             );
+        }
+
+        if (rotate) {
+            appendPdfEngineRotate(data, rotate);
         }
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.split}`;
@@ -197,6 +197,35 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
             Chromiumly.getGotenbergApiKey()
+        );
+    }
+
+    /**
+     * Rotates pages of one or more PDF files using the configured PDF engine.
+     *
+     * @param options.files - PDF files to rotate
+     * @param options.angle - Rotation angle in degrees (90, 180, or 270)
+     * @param options.pages - Optional page ranges (e.g. '1-3', '5'); omit for all pages
+     */
+    public static async rotate({
+        files,
+        angle,
+        pages
+    }: {
+        files: PathLikeOrReadStream[];
+        angle: 90 | 180 | 270;
+        pages?: string;
+    }): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+        appendPdfEngineRotate(data, { angle, pages });
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.rotate}`;
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders()
         );
     }
 

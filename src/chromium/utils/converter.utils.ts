@@ -7,6 +7,7 @@ import {
     PageProperties
 } from '../interfaces/converter.types';
 import {
+    appendPdfEngineRotate,
     GotenbergUtils,
     PathLikeOrReadStream,
     PdfEngineWatermarkStampUtils
@@ -374,6 +375,10 @@ export class ConverterUtils {
                     stamp: options.stamp
                 }
             );
+        }
+
+        if (options.rotate) {
+            appendPdfEngineRotate(data, options.rotate);
         }
     }
 }

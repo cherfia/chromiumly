@@ -5,7 +5,7 @@ import {
     PdfEngineStamp,
     PdfEngineWatermark
 } from '../../common';
-import { Split } from '../../common/types';
+import { PdfEngineRotate, Split } from '../../common/types';
 import { ChromiumOptions, Cookie } from './common.types';
 
 type PageSize = {
@@ -55,6 +55,8 @@ export type ConversionOptions = ChromiumOptions & {
     watermark?: PdfEngineWatermark;
     /** PDF-engine post-processing stamp (on top of content) */
     stamp?: PdfEngineStamp;
+    /** PDF-engine post-process page rotation */
+    rotate?: PdfEngineRotate;
 };
 
 export type HtmlConversionOptions = ConversionOptions & {

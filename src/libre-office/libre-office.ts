@@ -26,6 +26,7 @@ export class LibreOffice {
      * @param {75 | 150 | 300 | 600 | 1200} [options.maxImageResolution] - Maximum image resolution for the converted PDF.
      * @param {Split} [options.split] - Split the PDF into multiple files.
      * @param {boolean} [options.flatten] - Flatten the PDF document.
+     * @param {import('../common/types').PdfEngineRotate} [options.rotate] - PDF-engine post-process page rotation.
      *
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a buffer
      */
@@ -46,7 +47,8 @@ export class LibreOffice {
         ownerPassword,
         embeds,
         watermark,
-        stamp
+        stamp,
+        rotate
     }: {
         files: PathLikeOrReadStream[];
     } & ConversionOptions): Promise<Buffer> {
@@ -69,7 +71,8 @@ export class LibreOffice {
             ownerPassword,
             embeds,
             watermark,
-            stamp
+            stamp,
+            rotate
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;

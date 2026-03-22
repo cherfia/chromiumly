@@ -2,7 +2,11 @@ import { constants, openAsBlob, promises, ReadStream } from 'fs';
 import path from 'path';
 import { blob } from 'node:stream/consumers';
 
-import { GotenbergUtils, PdfEngineWatermarkStampUtils } from '../../common';
+import {
+    appendPdfEngineRotate,
+    GotenbergUtils,
+    PdfEngineWatermarkStampUtils
+} from '../../common';
 import { LIBRE_OFFICE_EXTENSIONS } from './constants';
 import {
     ConversionOptions,
@@ -438,6 +442,10 @@ export class LibreOfficeUtils {
                     'stamp'
                 );
             }
+        }
+
+        if (options.rotate) {
+            appendPdfEngineRotate(data, options.rotate);
         }
     }
 }
