@@ -24,7 +24,8 @@ enum PdfEngineRoute {
     ENCRYPT = 'encrypt',
     EMBED = 'embed',
     WATERMARK = 'watermark',
-    STAMP = 'stamp'
+    STAMP = 'stamp',
+    ROTATE = 'rotate'
 }
 
 /**
@@ -114,7 +115,8 @@ export class Chromiumly {
         encrypt: PdfEngineRoute.ENCRYPT,
         embed: PdfEngineRoute.EMBED,
         watermark: PdfEngineRoute.WATERMARK,
-        stamp: PdfEngineRoute.STAMP
+        stamp: PdfEngineRoute.STAMP,
+        rotate: PdfEngineRoute.ROTATE
     };
 
     /**

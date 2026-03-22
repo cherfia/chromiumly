@@ -17,3 +17,10 @@ export type Split = {
     unify?: boolean;
     flatten?: boolean;
 };
+
+/** PDF-engine post-process rotation (maps to `rotateAngle` / `rotatePages`). */
+export type PdfEngineRotate = {
+    angle: 90 | 180 | 270;
+    /** Page ranges (e.g. `1-3`, `5`). Omit or empty = all pages. */
+    pages?: string;
+};
