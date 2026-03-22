@@ -126,7 +126,8 @@ export class MarkdownConverter extends Converter {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 }

@@ -16,3 +16,13 @@ export {
 } from './chromium';
 export { PDFEngines } from './pdf-engines';
 export { LibreOffice } from './libre-office';
+export {
+    Templates,
+    type TemplateType,
+    type Currency,
+    type InvoiceSaasTemplateData,
+    type InvoiceClassicTemplateData,
+    type InvoiceItem,
+    type TemplateParty,
+    type TemplateRequest
+} from './templates';

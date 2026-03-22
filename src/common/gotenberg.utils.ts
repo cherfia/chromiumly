@@ -27,11 +27,11 @@ export class GotenbergUtils {
      * Performs a POST request to the specified Gotenberg endpoint with the provided FormData.
      *
      * @param {string} endpoint - The Gotenberg endpoint URL.
-     * @param {string} username - The username for basic authentication.
-     * @param {string} password - The password for basic authentication.
-     * @param {Record<string, string>} [customHttpHeaders] - Custom HTTP headers to be sent with the request.
      * @param {FormData} data - The FormData object to be sent in the POST request.
-     * @param {Record<string, string>} customHeaders - List of custom headers to include in the fetch
+     * @param {string} [username] - The username for basic authentication.
+     * @param {string} [password] - The password for basic authentication.
+     * @param {Record<string, string>} [customHttpHeaders] - Custom HTTP headers to be sent with the request.
+     * @param {string} [apiKey] - The API key for X-Api-Key authentication. When set, takes precedence over basic auth.
      * @returns {Promise<Buffer>} A Promise that resolves to the response body as a buffer.
      * @throws {Error} Throws an error if the HTTP response status is not OK.
      */
@@ -40,13 +40,16 @@ export class GotenbergUtils {
         data: FormData,
         username?: string,
         password?: string,
-        customHttpHeaders?: Record<string, string>
+        customHttpHeaders?: Record<string, string>,
+        apiKey?: string
     ): Promise<Buffer> {
         const headers: Record<string, string> = {
             ...customHttpHeaders
         };
 
-        if (username && password) {
+        if (apiKey) {
+            headers['X-Api-Key'] = apiKey;
+        } else if (username && password) {
             const authHeader =
                 'Basic ' +
                 Buffer.from(username + ':' + password).toString('base64');

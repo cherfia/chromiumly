@@ -10,19 +10,68 @@
 [![downloads](https://img.shields.io/npm/dt/chromiumly.svg?color=brightgreen&style=flat-square)](https://npm-stat.com/charts.html?package=chromiumly)
 ![licence](https://img.shields.io/github/license/cherfia/chromiumly?style=flat-square)
 
-A lightweight Typescript library that interacts with [Gotenberg](https://gotenberg.dev/)'s different routes to convert
-a variety of document formats to PDF files.
+A lightweight TypeScript client for [Gotenberg](https://gotenberg.dev/)’s HTTP API. Use it against your own Gotenberg container or against the **Chromiumly hosted API**—same client, different backend.
+
+|                           | Self‑hosted [Gotenberg](https://github.com/gotenberg/gotenberg)     | [Chromiumly hosted API](https://chromiumly.dev)                                                    |
+| :------------------------ | :------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------- |
+| **What it is**            | Official open‑source PDF stack (Docker image)                       | Managed service at `https://api.chromiumly.dev`                                                    |
+| **What Chromiumly calls** | Documented Gotenberg routes (Chromium, LibreOffice, PDF engines, …) | Those same routes, **plus** [Templates](#templates-hosted-api-only) (not in open‑source Gotenberg) |
+| **Configuration**         | `GOTENBERG_ENDPOINT`                                                | `CHROMIUMLY_API_KEY` (no endpoint)                                                                 |
+
+Everything in this README that maps to [gotenberg.dev](https://gotenberg.dev/) applies to **both** backends unless a section says otherwise. **[Templates](#templates-hosted-api-only) are Chromiumly hosted API only**—they are not a Gotenberg feature and do not work with a self‑hosted instance.
+
+## API Key Authentication (Hosted API)
+
+Chromiumly provides a managed API at `https://api.chromiumly.dev`. Hosted API support was introduced in `chromiumly@5.0.0` and is available only in Chromiumly `5.0.0+`. If you prefer not to run Gotenberg yourself, you avoid Docker and server ops. Sign up at `https://chromiumly.dev`, get an API key, and call the same conversion routes as with self‑hosting. The hosted API also exposes **[Templates](#templates-hosted-api-only)** (invoice PDFs from structured data), which are **not** available on self‑hosted Gotenberg.
+
+When using the hosted API, **you do not need to set `GOTENBERG_ENDPOINT`**. Just provide your API key:
+
+```bash
+CHROMIUMLY_API_KEY=your-api-key
+```
+
+Once the environment variable is set, Chromiumly will automatically send all requests to the hosted API using your key.
+
+You can also configure the hosted API programmatically without an endpoint:
+
+```typescript
+import { Chromiumly } from "chromiumly";
+
+Chromiumly.configure({
+  apiKey: "your-api-key",
+});
+```
+
+### Minimal usage example (hosted API)
+
+```typescript
+import { UrlConverter } from "chromiumly";
+
+async function run() {
+  const urlConverter = new UrlConverter();
+
+  const buffer = await urlConverter.convert({
+    url: "https://www.example.com/",
+  });
+
+  // Write the buffer to disk, send it over HTTP, etc.
+}
+
+run();
+```
 
 # Table of Contents
 
-1. [Getting Started](#getting-started)
+1. [API Key Authentication (Hosted API)](#api-key-authentication-hosted-api)
+2. [Getting Started](#getting-started)
    - [Installation](#installation)
    - [Prerequisites](#prerequisites)
    - [Configuration](#configuration)
-2. [Authentication](#authentication)
+3. [Authentication](#authentication)
    - [Basic Authentication](#basic-authentication)
+   - [API Key Authentication](#api-key-authentication)
    - [Advanced Authentication](#advanced-authentication)
-3. [Core Features](#core-features)
+4. [Core Features](#core-features)
    - [Chromium](#chromium)
      - [URL](#url)
      - [HTML](#html)
@@ -39,8 +88,9 @@ a variety of document formats to PDF files.
    - [PDF Flattening](#pdf-flattening)
    - [PDF Encryption](#pdf-encryption)
    - [Embedding Files](#embedding-files)
+   - [Templates (hosted API only)](#templates-hosted-api-only)
    - [Watermark and stamp](#watermark-and-stamp)
-4. [Usage Example](#snippet)
+5. [Usage Example](#snippet)
 
 ## Getting Started
 
@@ -60,8 +110,9 @@ yarn add chromiumly
 
 ### Prerequisites
 
-Before attempting to use Chromiumly, be sure you install [Docker](https://www.docker.com/) if you have not already done
-so.
+If you are using the hosted API key option at `https://api.chromiumly.dev`, you **do not need Docker** or a local Gotenberg instance — the service is fully managed for you.
+
+If you prefer to self‑host Gotenberg, be sure you install [Docker](https://www.docker.com/) if you have not already done so.
 
 After that, you can start a default Docker container of [Gotenberg](https://gotenberg.dev/) as follows:
 
@@ -72,7 +123,7 @@ docker run --rm -p 3000:3000 gotenberg/gotenberg:8
 ### Configuration
 
 Chromiumly supports configurations via both [dotenv](https://www.npmjs.com/package/dotenv)
-and [config](https://www.npmjs.com/package/config) configuration libraries or directly via code to add Gotenberg endpoint to your project.
+and [config](https://www.npmjs.com/package/config) configuration libraries or directly via code to add a Gotenberg endpoint to your project when you are **self‑hosting**.
 
 #### dotenv
 
@@ -146,6 +197,10 @@ Chromiumly.configure({
 });
 ```
 
+### API Key Authentication
+
+API key authentication is primarily intended for the **hosted Chromiumly API** at `https://api.chromiumly.dev`. For setup and examples, see [API Key Authentication (Hosted API)](#api-key-authentication-hosted-api). When both API key and basic auth are configured, the API key takes precedence.
+
 ### Advanced Authentication
 
 To implement advanced authentication or add custom HTTP headers to your requests, you can use the `customHttpHeaders` option within the `configure` method. This allows you to pass additional headers, such as authentication tokens or custom metadata, with each API call.
@@ -166,10 +221,9 @@ Chromiumly.configure({
 
 ## Core Features
 
-Chromiumly introduces different classes that serve as wrappers to
-Gotenberg's [documentation](https://gotenberg.dev/docs/getting-started/introduction). These classes encompass methods featuring an
-input file parameter, such as `html`, `header`, `footer`, and `markdown`, capable of accepting inputs in the form of a
-`string` (i.e. file path), `Buffer`, or `ReadStream`.
+Chromiumly wraps Gotenberg’s HTTP API: classes mirror the routes described in [Gotenberg’s docs](https://gotenberg.dev/docs/getting-started/introduction). Methods that take files accept a path `string`, `Buffer`, or `ReadStream` (e.g. `html`, `header`, `footer`, `markdown`).
+
+The **`Templates`** class is the exception—it talks only to the Chromiumly hosted API and is documented [below](#templates-hosted-api-only).
 
 ### Chromium
 
@@ -644,6 +698,120 @@ const buffer = await htmlConverter.convert({
 ```
 
 All embedded files will be attached to the generated PDF and can be extracted using PDF readers that support file attachments.
+
+### Templates (hosted API only)
+
+The `Templates` class is **not** part of open‑source Gotenberg. It generates PDFs from structured payloads on the Chromiumly hosted API and **requires `CHROMIUMLY_API_KEY`**. Hosted API features (including `Templates`) were introduced in `chromiumly@5.0.0` and require Chromiumly `5.0.0+`—pointing Chromiumly at `GOTENBERG_ENDPOINT` (self‑hosted Gotenberg) will not enable this feature.
+
+The following template types are currently available:
+
+| Type                 | Description        |
+| -------------------- | ------------------ |
+| `invoice_saas`       | SaaS-style invoice |
+| `invoice_freelancer` | Freelancer invoice |
+| `invoice_classic`    | Classic invoice    |
+| `invoice_minimal`    | Minimal invoice    |
+| `invoice_modern`     | Modern invoice     |
+
+#### Basic Usage
+
+```typescript
+import { Templates } from "chromiumly";
+
+const templates = new Templates();
+const buffer = await templates.generate({
+  type: "invoice_saas",
+  data: {
+    invoiceNumber: "INV-319",
+    createdDate: "2026-03-19",
+    dueDate: "2026-04-02",
+    companyLogo: "https://cdn.acmecloud.com/assets/logo-mark.png",
+    sender: {
+      name: "Acme Cloud LLC",
+      addressLine1: "450 Madison Ave",
+      addressLine2: "New York, NY 10022",
+    },
+    receiver: {
+      name: "Northwind Health Inc.",
+      addressLine1: "221 Harbor Blvd",
+      addressLine2: "San Diego, CA 92101",
+    },
+    items: [
+      {
+        description: "Platform Subscription (Annual)",
+        qty: 1,
+        unitPrice: "1500.00",
+        amount: "1500.00",
+      },
+      {
+        description: "Onboarding",
+        qty: 1,
+        unitPrice: "300.00",
+        amount: "300.00",
+      },
+    ],
+    currency: "USD",
+    subTotal: "1800.00",
+    taxRate: 8.25,
+    taxAmount: "148.50",
+    total: "1948.50",
+    footerNote: "Payment due in 14 days.",
+    footerDisclaimer: "Late fees may apply.",
+  },
+});
+```
+
+#### Payload Validation
+
+Pass `{ validate: true }` to run runtime validation on the data before sending the request. An error is thrown if the payload does not match the expected structure for the given template type.
+
+```typescript
+const buffer = await templates.generate(request, { validate: true });
+```
+
+#### Payload Shape
+
+```typescript
+type TemplateRequest<TType extends TemplateType> = {
+  type: TType;
+  data: TemplateDataByType[TType];
+};
+
+interface InvoiceSaasTemplateData {
+  invoiceNumber: string;
+  createdDate: string;
+  dueDate: string;
+  companyLogo: string;
+  sender: TemplateParty;
+  receiver: TemplateParty;
+  items: InvoiceItem[];
+  currency: Currency;
+  subTotal: string;
+  taxRate: number;
+  taxAmount: string;
+  total: string;
+  footerNote: string;
+  footerDisclaimer: string;
+}
+
+interface TemplateParty {
+  name: string;
+  addressLine1: string;
+  addressLine2: string;
+  tax?: string;
+  iban?: string;
+  bic?: string;
+}
+
+interface InvoiceItem {
+  description: string;
+  qty: number;
+  unitPrice: string;
+  amount: string;
+}
+```
+
+The `currency` field accepts any [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code exported as the `Currency` type (e.g. `"USD"`, `"EUR"`, `"GBP"`).
 
 ### Watermark and stamp
 

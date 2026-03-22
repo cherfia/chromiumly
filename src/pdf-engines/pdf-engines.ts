@@ -72,7 +72,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
@@ -113,7 +114,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
@@ -169,7 +171,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
@@ -192,7 +195,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
@@ -245,7 +249,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
@@ -275,7 +280,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
@@ -310,7 +316,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
@@ -396,7 +403,8 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey()
         );
     }
 
