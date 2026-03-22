@@ -80,7 +80,8 @@ export class MarkdownConverter extends Converter {
         ownerPassword,
         embeds,
         watermark,
-        stamp
+        stamp,
+        rotate
     }: MarkdownConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -116,7 +117,8 @@ export class MarkdownConverter extends Converter {
             ownerPassword,
             embeds,
             watermark,
-            stamp
+            stamp,
+            rotate
         });
 
         return GotenbergUtils.fetch(

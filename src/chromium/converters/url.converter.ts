@@ -80,7 +80,8 @@ export class UrlConverter extends Converter {
         ownerPassword,
         embeds,
         watermark,
-        stamp
+        stamp,
+        rotate
     }: UrlConversionOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -115,7 +116,8 @@ export class UrlConverter extends Converter {
             ownerPassword,
             embeds,
             watermark,
-            stamp
+            stamp,
+            rotate
         });
 
         return GotenbergUtils.fetch(
