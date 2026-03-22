@@ -112,6 +112,21 @@ describe('PDFEngines', () => {
                 'ST'
             );
         });
+
+        it('should append rotate fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.merge({
+                files: ['path/to/file.pdf'],
+                pdfa: PdfFormat.A_2b,
+                pdfUA: true,
+                rotate: { angle: 90, pages: '1' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'rotateAngle',
+                '90'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith('rotatePages', '1');
+        });
     });
 
     describe('readMetadata', () => {
@@ -222,6 +237,49 @@ describe('PDFEngines', () => {
             expect(mockFormDataAppend).toHaveBeenCalledWith(
                 'watermarkSource',
                 'text'
+            );
+        });
+
+        it('should append rotate fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: {
+                    mode: 'pages',
+                    span: '1-2'
+                },
+                rotate: { angle: 180 }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'rotateAngle',
+                '180'
+            );
+        });
+    });
+
+    describe('rotate', () => {
+        it('should POST to forms/pdfengines/rotate', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.rotate({
+                files: ['path/to/file.pdf'],
+                angle: 90,
+                pages: '1-3'
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/rotate',
+                expect.objectContaining({
+                    method: 'POST',
+                    body: expect.any(FormData)
+                })
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'rotateAngle',
+                '90'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'rotatePages',
+                '1-3'
             );
         });
     });

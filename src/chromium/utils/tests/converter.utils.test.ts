@@ -1188,5 +1188,21 @@ describe('ConverterUtils', () => {
                 );
             });
         });
+
+        describe('when rotate option is passed', () => {
+            it('should append rotateAngle and rotatePages', async () => {
+                await ConverterUtils.customize(data, {
+                    rotate: { angle: 90, pages: '1-2' }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'rotateAngle',
+                    '90'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'rotatePages',
+                    '1-2'
+                );
+            });
+        });
     });
 });

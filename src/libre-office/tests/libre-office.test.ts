@@ -147,6 +147,24 @@ describe('LibreOffice', () => {
             });
         });
 
+        describe('when rotate is passed', () => {
+            it('should append rotateAngle and rotatePages', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    rotate: { angle: 270, pages: '2' }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'rotateAngle',
+                    '270'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'rotatePages',
+                    '2'
+                );
+            });
+        });
+
         describe('when PDF-engine watermark and stamp are passed', () => {
             it('should append watermark and stamp form fields', async () => {
                 mockPromisesAccess.mockResolvedValue();
