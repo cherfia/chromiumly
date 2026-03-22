@@ -22,7 +22,7 @@ Everything in this README that maps to [gotenberg.dev](https://gotenberg.dev/) a
 
 ## API Key Authentication (Hosted API)
 
-Chromiumly provides a managed API at `https://api.chromiumly.dev`. If you prefer not to run Gotenberg yourself, you avoid Docker and server ops. Sign up at `https://chromiumly.dev`, get an API key, and call the same conversion routes as with self‑hosting. The hosted API also exposes **[Templates](#templates-hosted-api-only)** (invoice PDFs from structured data), which are **not** available on self‑hosted Gotenberg.
+Chromiumly provides a managed API at `https://api.chromiumly.dev`. Hosted API support was introduced in `chromiumly@5.0.0` and is available only in Chromiumly `5.0.0+`. If you prefer not to run Gotenberg yourself, you avoid Docker and server ops. Sign up at `https://chromiumly.dev`, get an API key, and call the same conversion routes as with self‑hosting. The hosted API also exposes **[Templates](#templates-hosted-api-only)** (invoice PDFs from structured data), which are **not** available on self‑hosted Gotenberg.
 
 When using the hosted API, **you do not need to set `GOTENBERG_ENDPOINT`**. Just provide your API key:
 
@@ -701,7 +701,7 @@ All embedded files will be attached to the generated PDF and can be extracted us
 
 ### Templates (hosted API only)
 
-The `Templates` class is **not** part of open‑source Gotenberg. It generates PDFs from structured payloads on the Chromiumly hosted API and **requires `CHROMIUMLY_API_KEY`**—pointing Chromiumly at `GOTENBERG_ENDPOINT` (self‑hosted Gotenberg) will not enable this feature.
+The `Templates` class is **not** part of open‑source Gotenberg. It generates PDFs from structured payloads on the Chromiumly hosted API and **requires `CHROMIUMLY_API_KEY`**. Hosted API features (including `Templates`) were introduced in `chromiumly@5.0.0` and require Chromiumly `5.0.0+`—pointing Chromiumly at `GOTENBERG_ENDPOINT` (self‑hosted Gotenberg) will not enable this feature.
 
 The following template types are currently available:
 
