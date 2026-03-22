@@ -1,5 +1,24 @@
 # Changelog
 
+## [5.0.0](https://github.com/cherfia/chromiumly/compare/4.5.0...5.0.0) (2026-03-22)
+
+### Features
+
+- add api key support for authentication ([f880e90](https://github.com/cherfia/chromiumly/commit/f880e9052674c6f533cd6f1b7d642dc62f6e673e))
+- **templates:** implement template generation ([a22adcc](https://github.com/cherfia/chromiumly/commit/a22adcc86ec3df9d7557c542474d09a277ab4560))
+
+### Documentation
+
+- update README.md with api key authentication details for hosted API ([99603a2](https://github.com/cherfia/chromiumly/commit/99603a2cb5f9ceb6fa032b7d57c17196ad1e6df3))
+
+### Continuous Integration
+
+- update release-it command to specify version 5.0.0 ([c9d642b](https://github.com/cherfia/chromiumly/commit/c9d642b23057d488168e1303e504a57d65cab351))
+
+### Chores
+
+- release v5.0.0 with hosted API support ([1155480](https://github.com/cherfia/chromiumly/commit/11554808780645648e52ecb4a2dc3b017698e246))
+
 ## [4.5.0](https://github.com/cherfia/chromiumly/compare/4.4.1...4.5.0) (2026-03-22)
 
 ### Features
