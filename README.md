@@ -14,7 +14,7 @@ A lightweight TypeScript client for [Gotenberg](https://gotenberg.dev/)’s HTTP
 
 |                           | Self‑hosted [Gotenberg](https://github.com/gotenberg/gotenberg)     | [Chromiumly hosted API](https://chromiumly.dev)                                                    |
 | :------------------------ | :------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------- |
-| **What it is**            | Official open‑source PDF stack (Docker image)                       | Managed service at `https://api.chromiumly.dev`                                                    |
+| **What it is**            | Official open‑source PDF stack (Docker image)                       | Managed service at [https://api.chromiumly.dev](https://api.chromiumly.dev)                        |
 | **What Chromiumly calls** | Documented Gotenberg routes (Chromium, LibreOffice, PDF engines, …) | Those same routes, **plus** [Templates](#templates-hosted-api-only) (not in open‑source Gotenberg) |
 | **Configuration**         | `GOTENBERG_ENDPOINT`                                                | `CHROMIUMLY_API_KEY` (no endpoint)                                                                 |
 
@@ -22,7 +22,7 @@ Everything in this README that maps to [gotenberg.dev](https://gotenberg.dev/) a
 
 ## API Key Authentication (Hosted API)
 
-Chromiumly provides a managed API at `https://api.chromiumly.dev`. Hosted API support was introduced in `chromiumly@5.0.0` and is available only in Chromiumly `5.0.0+`. If you prefer not to run Gotenberg yourself, you avoid Docker and server ops. Sign up at `https://chromiumly.dev`, get an API key, and call the same conversion routes as with self‑hosting. The hosted API also exposes **[Templates](#templates-hosted-api-only)** (invoice PDFs from structured data), which are **not** available on self‑hosted Gotenberg.
+Chromiumly provides a managed API at [https://api.chromiumly.dev](https://api.chromiumly.dev). Hosted API support was introduced in `chromiumly@5.0.0` and is available only in Chromiumly `5.0.0+`. If you prefer not to run Gotenberg yourself, you avoid Docker and server ops. Sign up at [https://chromiumly.dev](https://chromiumly.dev), get an API key, and call the same conversion routes as with self‑hosting. The hosted API also exposes **[Templates](#templates-hosted-api-only)** (invoice PDFs from structured data), which are **not** available on self‑hosted Gotenberg.
 
 When using the hosted API, **you do not need to set `GOTENBERG_ENDPOINT`**. Just provide your API key:
 
@@ -110,7 +110,7 @@ yarn add chromiumly
 
 ### Prerequisites
 
-If you are using the hosted API key option at `https://api.chromiumly.dev`, you **do not need Docker** or a local Gotenberg instance — the service is fully managed for you.
+If you are using the hosted API key option at [https://api.chromiumly.dev](https://api.chromiumly.dev), you **do not need Docker** or a local Gotenberg instance — the service is fully managed for you.
 
 If you prefer to self‑host Gotenberg, be sure you install [Docker](https://www.docker.com/) if you have not already done so.
 
@@ -199,7 +199,7 @@ Chromiumly.configure({
 
 ### API Key Authentication
 
-API key authentication is primarily intended for the **hosted Chromiumly API** at `https://api.chromiumly.dev`. For setup and examples, see [API Key Authentication (Hosted API)](#api-key-authentication-hosted-api). When both API key and basic auth are configured, the API key takes precedence.
+API key authentication is primarily intended for the **hosted Chromiumly API** at [https://api.chromiumly.dev](https://api.chromiumly.dev). For setup and examples, see [API Key Authentication (Hosted API)](#api-key-authentication-hosted-api). When both API key and basic auth are configured, the API key takes precedence.
 
 ### Advanced Authentication
 
