@@ -319,6 +319,14 @@ export class ConverterUtils {
                 String(options.skipNetworkIdleEvent)
             );
         }
+
+        if (options.skipNetworkAlmostIdleEvent === false) {
+            data.append(
+                'skipNetworkAlmostIdleEvent',
+                String(options.skipNetworkAlmostIdleEvent)
+            );
+        }
+
         if (options.metadata) {
             data.append('metadata', JSON.stringify(options.metadata));
         }

@@ -259,6 +259,19 @@ describe('ScreenshotUtils', () => {
             });
         });
 
+        describe('when skipNetworkAlmostIdleEvent parameter is passed', () => {
+            it('should append skipNetworkAlmostIdleEvent', async () => {
+                await ScreenshotUtils.customize(data, {
+                    skipNetworkAlmostIdleEvent: false
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'skipNetworkAlmostIdleEvent',
+                    'false'
+                );
+            });
+        });
+
         describe('when optimizeForSpeed parameter is passed', () => {
             it('should append optimizeForSpeed', async () => {
                 await ScreenshotUtils.customize(data, {
@@ -390,6 +403,7 @@ describe('ScreenshotUtils', () => {
                     ],
                     failOnResourceLoadingFailed: true,
                     skipNetworkIdleEvent: false,
+                    skipNetworkAlmostIdleEvent: false,
                     failOnConsoleExceptions: true,
                     generateDocumentOutline: true,
                     properties: {
@@ -408,7 +422,7 @@ describe('ScreenshotUtils', () => {
                     userPassword: 'my_user_password',
                     ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(18);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(19);
                 expect(data.append).toHaveBeenNthCalledWith(
                     1,
                     'emulatedMediaType',
@@ -473,11 +487,16 @@ describe('ScreenshotUtils', () => {
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
                     14,
+                    'skipNetworkAlmostIdleEvent',
+                    'false'
+                );
+                expect(data.append).toHaveBeenNthCalledWith(
+                    15,
                     'optimizeForSpeed',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    15,
+                    16,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',
@@ -485,17 +504,17 @@ describe('ScreenshotUtils', () => {
                     })
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    16,
+                    17,
                     'generateDocumentOutline',
                     'true'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    17,
+                    18,
                     'userPassword',
                     'my_user_password'
                 );
                 expect(data.append).toHaveBeenNthCalledWith(
-                    18,
+                    19,
                     'ownerPassword',
                     'my_owner_password'
                 );

@@ -998,6 +998,7 @@ describe('ConverterUtils', () => {
                     ],
                     failOnResourceLoadingFailed: true,
                     skipNetworkIdleEvent: false,
+                    skipNetworkAlmostIdleEvent: false,
                     failOnConsoleExceptions: true,
                     metadata: { Author: 'John Doe' },
                     downloadFrom: {
@@ -1009,7 +1010,7 @@ describe('ConverterUtils', () => {
                     userPassword: 'my_user_password',
                     ownerPassword: 'my_owner_password'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(26);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(27);
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     1,
                     'pdfa',
@@ -1104,11 +1105,16 @@ describe('ConverterUtils', () => {
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     19,
+                    'skipNetworkAlmostIdleEvent',
+                    'false'
+                );
+                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
+                    20,
                     'metadata',
                     JSON.stringify({ Author: 'John Doe' })
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    20,
+                    21,
                     'downloadFrom',
                     JSON.stringify({
                         url: 'http://example.com',
@@ -1116,32 +1122,32 @@ describe('ConverterUtils', () => {
                     })
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    21,
+                    22,
                     'generateDocumentOutline',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    22,
+                    23,
                     'splitMode',
                     'pages'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    23,
+                    24,
                     'splitSpan',
                     '1-10'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    24,
+                    25,
                     'splitUnify',
                     'true'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    25,
+                    26,
                     'userPassword',
                     'my_user_password'
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    26,
+                    27,
                     'ownerPassword',
                     'my_owner_password'
                 );

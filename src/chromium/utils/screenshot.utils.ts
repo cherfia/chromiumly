@@ -178,6 +178,13 @@ export class ScreenshotUtils {
             );
         }
 
+        if (options.skipNetworkAlmostIdleEvent === false) {
+            data.append(
+                'skipNetworkAlmostIdleEvent',
+                String(options.skipNetworkAlmostIdleEvent)
+            );
+        }
+
         if (options.optimizeForSpeed) {
             data.append('optimizeForSpeed', String(options.optimizeForSpeed));
         }
