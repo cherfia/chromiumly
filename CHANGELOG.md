@@ -1,5 +1,33 @@
 # Changelog
 
+## [5.1.0](https://github.com/cherfia/chromiumly/compare/4.5.0...5.1.0) (2026-03-30)
+
+### Features
+
+- add api key support for authentication ([f880e90](https://github.com/cherfia/chromiumly/commit/f880e9052674c6f533cd6f1b7d642dc62f6e673e))
+- **chromium:** add skipNetworkAlmostIdleEvent support ([f8a9790](https://github.com/cherfia/chromiumly/commit/f8a97900da9d16e751f336f7adc2e106b4dc296c))
+- **libre-office:** add pdf viewer preferences support ([41c8c03](https://github.com/cherfia/chromiumly/commit/41c8c035ef8273632bbaa56e396e011193083c06))
+- **templates:** implement template generation ([a22adcc](https://github.com/cherfia/chromiumly/commit/a22adcc86ec3df9d7557c542474d09a277ab4560))
+
+### Documentation
+
+- update README.md ([cd8575f](https://github.com/cherfia/chromiumly/commit/cd8575f53f00a278aae1f61320e3b69a75acc33f))
+- update README.md ([ff1c62c](https://github.com/cherfia/chromiumly/commit/ff1c62c2713e76060c1ea9236fa201626d929e54))
+- update README.md with api key authentication details for hosted API ([99603a2](https://github.com/cherfia/chromiumly/commit/99603a2cb5f9ceb6fa032b7d57c17196ad1e6df3))
+
+### Continuous Integration
+
+- update release-it command to specify version 5.0.0 ([c9d642b](https://github.com/cherfia/chromiumly/commit/c9d642b23057d488168e1303e504a57d65cab351))
+
+### Chores
+
+- **deps:** update codecov/codecov-action action to v6 ([0ea7147](https://github.com/cherfia/chromiumly/commit/0ea71479652bc260793117f064127842f70b1de1))
+- **deps:** update dependency typescript to v6 ([7697c21](https://github.com/cherfia/chromiumly/commit/7697c21b91822f6a7ea21b245b7dff7e3b265a81))
+- **deps:** update node.js to v24.14.1 ([#787](https://github.com/cherfia/chromiumly/issues/787)) ([e6b000c](https://github.com/cherfia/chromiumly/commit/e6b000c25491839f58902fe1164c2b5abafe458c))
+- **deps:** update typescript-eslint monorepo to v8.57.2 ([#786](https://github.com/cherfia/chromiumly/issues/786)) ([8ff6443](https://github.com/cherfia/chromiumly/commit/8ff6443656b517510b111dd803ada8ba314ccf48))
+- release v5.0.0 ([19c267f](https://github.com/cherfia/chromiumly/commit/19c267fab0ea992daaa1413b4851e47a11a9520d))
+- release v5.0.0 with hosted API support ([1155480](https://github.com/cherfia/chromiumly/commit/11554808780645648e52ecb4a2dc3b017698e246))
+
 ## [5.0.0](https://github.com/cherfia/chromiumly/compare/4.5.0...5.0.0) (2026-03-22)
 
 ### Features
