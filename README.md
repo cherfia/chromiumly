@@ -381,6 +381,7 @@ type ConversionOptions = {
   ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
   failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
+  skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
   metadata?: Metadata; // Metadata to be written.
   cookies?: Cookie[]; // Cookies to be written.
   downloadFrom?: DownloadFrom; //Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
@@ -447,6 +448,7 @@ type ScreenshotOptions = {
   ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
   failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
   skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
+  skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
   optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
   cookies?: Cookie[]; // Cookies to be written.
   downloadFrom?: DownloadFrom; // Download the file from a specific URL. It must return a Content-Disposition header with a filename parameter.
@@ -484,6 +486,21 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `reduceImageResolution`: allows turning on or off image resolution reduction to tweak image conversion performance.
 - `quality`: specifies the quality of the JPG export. The value ranges from 1 to 100, with higher values producing higher-quality images and larger file sizes.
 - `maxImageResolution`: specifies if all images will be reduced to the specified DPI value. Possible values are: `75`, `150`, `300`, `600`, and `1200`.
+- `initialView`: initial PDF view mode (`0`: none, `1`: outline, `2`: thumbnails).
+- `initialPage`: page number opened by default.
+- `magnification`: initial magnification mode (`0`: default, `1`: fit page, `2`: fit width, `3`: fit visible, `4`: explicit zoom).
+- `zoom`: initial zoom percentage when `magnification` is `4`.
+- `pageLayout`: initial layout (`0`: default, `1`: single page, `2`: one column, `3`: two columns).
+- `firstPageOnLeft`: place first page on the left when using two-column layout.
+- `resizeWindowToInitialPage`: resize the viewer window to the first page dimensions.
+- `centerWindow`: center the PDF viewer window on screen.
+- `openInFullScreenMode`: open the PDF in full-screen mode.
+- `displayPDFDocumentTitle`: display PDF title in viewer title bar instead of filename.
+- `hideViewerMenubar`: hide the viewer menu bar.
+- `hideViewerToolbar`: hide the viewer toolbar.
+- `hideViewerWindowControls`: hide viewer window controls.
+- `useTransitionEffects`: use transition effects for Impress slides.
+- `openBookmarkLevels`: number of bookmark levels opened on load (`-1` opens all levels).
 - `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
 - `userPassword`: password for opening the resulting PDF(s).
 - `ownerPassword`: password for full access on the resulting PDF(s).
@@ -853,6 +870,7 @@ async function run() {
     failOnHttpStatusCodes: [404],
     failOnConsoleExceptions: true,
     skipNetworkIdleEvent: false,
+    skipNetworkAlmostIdleEvent: false,
     optimizeForSpeed: true,
     split: {
       mode: "pages",
