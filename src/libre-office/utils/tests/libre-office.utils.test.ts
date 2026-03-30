@@ -479,6 +479,74 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
+        describe('when PDF viewer preference fields are passed', () => {
+            it('should append all PDF viewer preference fields', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    initialView: 2,
+                    initialPage: 3,
+                    magnification: 4,
+                    zoom: 125,
+                    pageLayout: 3,
+                    firstPageOnLeft: true,
+                    resizeWindowToInitialPage: true,
+                    centerWindow: true,
+                    openInFullScreenMode: true,
+                    displayPDFDocumentTitle: false,
+                    hideViewerMenubar: true,
+                    hideViewerToolbar: true,
+                    hideViewerWindowControls: true,
+                    useTransitionEffects: false,
+                    openBookmarkLevels: -1
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(15);
+                expect(data.append).toHaveBeenCalledWith('initialView', '2');
+                expect(data.append).toHaveBeenCalledWith('initialPage', '3');
+                expect(data.append).toHaveBeenCalledWith('magnification', '4');
+                expect(data.append).toHaveBeenCalledWith('zoom', '125');
+                expect(data.append).toHaveBeenCalledWith('pageLayout', '3');
+                expect(data.append).toHaveBeenCalledWith(
+                    'firstPageOnLeft',
+                    'true'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'resizeWindowToInitialPage',
+                    'true'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'centerWindow',
+                    'true'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'openInFullScreenMode',
+                    'true'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'displayPDFDocumentTitle',
+                    'false'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'hideViewerMenubar',
+                    'true'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'hideViewerToolbar',
+                    'true'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'hideViewerWindowControls',
+                    'true'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'useTransitionEffects',
+                    'false'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'openBookmarkLevels',
+                    '-1'
+                );
+            });
+        });
+
         describe('when downloadFrom parameter is passed', () => {
             it('should append downloadFrom', async () => {
                 await LibreOfficeUtils.customize(data, {

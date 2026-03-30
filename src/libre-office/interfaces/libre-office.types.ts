@@ -177,6 +177,21 @@ export type ConversionOptions = {
     reduceImageResolution?: boolean; // Allow turning on or off image resolution reduction (default to false).
     quality?: number; // Specify the quality of the JPG export. A higher value produces a higher-quality image and a larger file. Between 1 and 100.
     maxImageResolution?: 75 | 150 | 300 | 600 | 1200; // Specify if all images will be reduced to the given value in DPI
+    initialView?: number; // Initial PDF view mode (default 0)
+    initialPage?: number; // Initial page to open (default 1)
+    magnification?: number; // Initial magnification mode (default 0)
+    zoom?: number; // Initial zoom percentage when magnification is 4 (default 100)
+    pageLayout?: number; // Initial page layout mode (default 0)
+    firstPageOnLeft?: boolean; // Place first page on the left for two-column layout (default false)
+    resizeWindowToInitialPage?: boolean; // Resize viewer window to first page size (default false)
+    centerWindow?: boolean; // Center viewer window on screen (default false)
+    openInFullScreenMode?: boolean; // Open in full screen mode (default false)
+    displayPDFDocumentTitle?: boolean; // Display document title in viewer title bar (default true)
+    hideViewerMenubar?: boolean; // Hide viewer menubar (default false)
+    hideViewerToolbar?: boolean; // Hide viewer toolbar (default false)
+    hideViewerWindowControls?: boolean; // Hide viewer window controls (default false)
+    useTransitionEffects?: boolean; // Use transition effects for Impress slides (default true)
+    openBookmarkLevels?: number; // Number of open bookmark levels on open (-1 for all, default -1)
     downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
     split?: Split; // Split the PDF into multiple files.
     flatten?: boolean; // Flatten the PDF document.

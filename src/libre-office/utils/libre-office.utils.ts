@@ -305,6 +305,84 @@ export class LibreOfficeUtils {
             data.append('maxImageResolution', options.maxImageResolution);
         }
 
+        if (options.initialView !== undefined) {
+            data.append('initialView', String(options.initialView));
+        }
+
+        if (options.initialPage !== undefined) {
+            data.append('initialPage', String(options.initialPage));
+        }
+
+        if (options.magnification !== undefined) {
+            data.append('magnification', String(options.magnification));
+        }
+
+        if (options.zoom !== undefined) {
+            data.append('zoom', String(options.zoom));
+        }
+
+        if (options.pageLayout !== undefined) {
+            data.append('pageLayout', String(options.pageLayout));
+        }
+
+        if (options.firstPageOnLeft) {
+            data.append('firstPageOnLeft', String(options.firstPageOnLeft));
+        }
+
+        if (options.resizeWindowToInitialPage) {
+            data.append(
+                'resizeWindowToInitialPage',
+                String(options.resizeWindowToInitialPage)
+            );
+        }
+
+        if (options.centerWindow) {
+            data.append('centerWindow', String(options.centerWindow));
+        }
+
+        if (options.openInFullScreenMode) {
+            data.append(
+                'openInFullScreenMode',
+                String(options.openInFullScreenMode)
+            );
+        }
+
+        if (options.displayPDFDocumentTitle === false) {
+            data.append(
+                'displayPDFDocumentTitle',
+                String(options.displayPDFDocumentTitle)
+            );
+        }
+
+        if (options.hideViewerMenubar) {
+            data.append('hideViewerMenubar', String(options.hideViewerMenubar));
+        }
+
+        if (options.hideViewerToolbar) {
+            data.append('hideViewerToolbar', String(options.hideViewerToolbar));
+        }
+
+        if (options.hideViewerWindowControls) {
+            data.append(
+                'hideViewerWindowControls',
+                String(options.hideViewerWindowControls)
+            );
+        }
+
+        if (options.useTransitionEffects === false) {
+            data.append(
+                'useTransitionEffects',
+                String(options.useTransitionEffects)
+            );
+        }
+
+        if (options.openBookmarkLevels !== undefined) {
+            data.append(
+                'openBookmarkLevels',
+                String(options.openBookmarkLevels)
+            );
+        }
+
         if (options.downloadFrom) {
             data.append('downloadFrom', JSON.stringify(options.downloadFrom));
         }
