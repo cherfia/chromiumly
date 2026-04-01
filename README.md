@@ -83,7 +83,9 @@ run();
      - [Merging](#merging)
      - [PDF Rotation](#pdf-rotation)
      - [Metadata Management](#metadata-management)
+     - [Bookmarks Management](#bookmarks-management)
      - [File Generation](#file-generation)
+   - [System](#system)
    - [PDF Splitting](#pdf-splitting)
    - [PDF Flattening](#pdf-flattening)
    - [PDF Encryption](#pdf-encryption)
@@ -384,13 +386,34 @@ type ConversionOptions = {
   skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
   metadata?: Metadata; // Metadata to be written.
   cookies?: Cookie[]; // Cookies to be written.
-  downloadFrom?: DownloadFrom; //Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+  downloadFrom?: DownloadFrom; // Download a file from one or multiple URLs. Each URL must return a Content-Disposition header with a filename parameter.
+  webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
   split?: SplitOptions; // Split the PDF file into multiple files.
   userPassword?: string; // Password for opening the resulting PDF(s).
   ownerPassword?: string; // Password for full access on the resulting PDF(s).
   embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
   watermark?: PdfEngineWatermark; // Optional PDF-engine post-processing watermark (behind page content).
   stamp?: PdfEngineStamp; // Optional PDF-engine post-processing stamp (on top of page content).
+};
+```
+
+```typescript
+type DownloadFromEntry = {
+  url: string;
+  extraHttpHeaders?: Record<string, string>;
+  embedded?: boolean; // Legacy flag, prefer field
+  field?: "embedded" | "watermark" | "stamp" | "";
+};
+
+type DownloadFrom = DownloadFromEntry | DownloadFromEntry[];
+
+type WebhookOptions = {
+  webhookUrl: string;
+  webhookErrorUrl: string;
+  webhookMethod?: "POST" | "PUT" | "PATCH";
+  webhookErrorMethod?: "POST" | "PUT" | "PATCH";
+  webhookExtraHttpHeaders?: Record<string, string>;
+  webhookEventsUrl?: string;
 };
 ```
 
@@ -451,7 +474,8 @@ type ScreenshotOptions = {
   skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
   optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
   cookies?: Cookie[]; // Cookies to be written.
-  downloadFrom?: DownloadFrom; // Download the file from a specific URL. It must return a Content-Disposition header with a filename parameter.
+  downloadFrom?: DownloadFrom; // Download files from one or multiple URLs.
+  webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
   userPassword?: string; // Password for opening the resulting PDF(s).
   ownerPassword?: string; // Password for full access on the resulting PDF(s).
   embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
@@ -501,10 +525,12 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `hideViewerWindowControls`: hide viewer window controls.
 - `useTransitionEffects`: use transition effects for Impress slides.
 - `openBookmarkLevels`: number of bookmark levels opened on load (`-1` opens all levels).
+- `downloadFrom`: download files remotely (`DownloadFromEntry` or `DownloadFromEntry[]`).
 - `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
 - `userPassword`: password for opening the resulting PDF(s).
 - `ownerPassword`: password for full access on the resulting PDF(s).
 - `embeds`: files to embed in the generated PDF (repeatable). This feature enables the creation of PDFs compatible with standards like [ZUGFeRD / Factur-X](https://fnfe-mpe.org/factur-x/), which require embedding XML invoices and other files within the PDF.
+- `webhook`: request-level webhook headers for async callbacks.
 - **Native LibreOffice watermarks** (applied during export): `nativeWatermarkText`, `nativeWatermarkColor`, `nativeWatermarkFontHeight`, `nativeWatermarkRotateAngle`, `nativeWatermarkFontName`, `nativeTiledWatermarkText` — see [Convert to PDF](https://gotenberg.dev/docs/convert-with-libreoffice/convert-to-pdf).
 - **PDF-engine watermark/stamp** (post-processing after conversion): `watermark` and `stamp` — same shapes as in Chromium `ConversionOptions` (`PdfEngineWatermark` / `PdfEngineStamp`). For `{ data, ext }` file objects, use the same pattern as in `files`.
 
@@ -621,6 +647,40 @@ const buffer = await PDFEngines.writeMetadata({
 
 Please consider referring to [ExifTool](https://exiftool.org/TagNames/XMP.html#pdf) for a comprehensive list of accessible metadata options.
 
+#### Bookmarks Management
+
+##### readBookmarks
+
+This method reads bookmarks (outline / table of contents) from the provided PDF files.
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const bookmarks = await PDFEngines.readBookmarks([
+  "path/to/file_1.pdf",
+  "path/to/file_2.pdf",
+]);
+```
+
+##### writeBookmarks
+
+This method writes bookmarks to the provided PDF files.
+
+```typescript
+import { PDFEngines } from "chromiumly";
+
+const updated = await PDFEngines.writeBookmarks({
+  files: ["path/to/file_1.pdf"],
+  bookmarks: [
+    {
+      title: "Chapter 1",
+      page: 1,
+      children: [],
+    },
+  ],
+});
+```
+
 #### File Generation
 
 It is just a generic complementary method that takes the `buffer` returned by the `convert` method, and a
@@ -675,9 +735,10 @@ PDF flattening converts interactive elements like forms and annotations into a s
 ```typescript
 import { PDFEngines } from "chromiumly";
 
-const buffer = await PDFEngines.flatten({
-  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
-});
+const buffer = await PDFEngines.flatten([
+  "path/to/file_1.pdf",
+  "path/to/file_2.pdf",
+]);
 ```
 
 ### PDF Encryption
@@ -843,6 +904,20 @@ Gotenberg can apply a **watermark** (behind content) and/or **stamp** (on top of
 | `PDFEngines.watermark()` / `PDFEngines.stamp()`                    | Dedicated endpoints; `watermark` or `stamp` config is required                       |
 
 For image or PDF sources, set `source` to `image` or `pdf`, set `expression` to the **filename** of the uploaded asset, and pass the file in `file`. Chromium screenshot routes do not document these fields; use HTML/CSS overlays or convert-to-PDF flows instead.
+
+### System
+
+The `System` class exposes Gotenberg system endpoints:
+
+```typescript
+import { System } from "chromiumly";
+
+const health = await System.getHealth(); // GET /health
+const heartbeat = await System.headHealth(); // HEAD /health
+const version = await System.getVersion(); // GET /version
+const debug = await System.getDebug(); // GET /debug
+const metrics = await System.getPrometheusMetrics(); // GET /prometheus/metrics
+```
 
 ## Snippet
 
