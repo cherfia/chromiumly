@@ -16,6 +16,7 @@ export {
 } from './chromium';
 export { PDFEngines } from './pdf-engines';
 export { LibreOffice } from './libre-office';
+export { System } from './system';
 export {
     Templates,
     type TemplateType,
