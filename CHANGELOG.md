@@ -1,5 +1,26 @@
 # Changelog
 
+## [5.2.0](https://github.com/cherfia/chromiumly/compare/5.1.0...5.2.0) (2026-04-01)
+
+### Features
+
+- **chromium:** add webhook support ([f105e81](https://github.com/cherfia/chromiumly/commit/f105e81741c6da2def2219a544f77752f553dd79))
+- **libre-office:** add webhook support ([17e9682](https://github.com/cherfia/chromiumly/commit/17e96829f1350f72a4cc04296f6729ffc8d1cb8e))
+- **pdf-engines:** add read and write bookmarks routes support ([8fe612b](https://github.com/cherfia/chromiumly/commit/8fe612bd2f532c06283c0e3437ef4115ab39fccc))
+- **system:** add system routes support ([150242b](https://github.com/cherfia/chromiumly/commit/150242bb66785be2bba5f3478b7da1e5303c0b20))
+
+### Documentation
+
+- update README.md ([ae272ee](https://github.com/cherfia/chromiumly/commit/ae272ee4b1b31110b56aae7804d64269f76c5767))
+
+### Tests
+
+- update unit tests ([a0c17fe](https://github.com/cherfia/chromiumly/commit/a0c17fea2b0f18993df8f61140b232b02162d280))
+
+### Chores
+
+- **deps:** update dependency conventional-changelog-conventionalcommits to v9.3.1 ([#789](https://github.com/cherfia/chromiumly/issues/789)) ([aff1301](https://github.com/cherfia/chromiumly/commit/aff1301c1323b44a2160eb5c955645f0e27322de))
+
 ## [5.1.0](https://github.com/cherfia/chromiumly/compare/4.5.0...5.1.0) (2026-03-30)
 
 ### Features
