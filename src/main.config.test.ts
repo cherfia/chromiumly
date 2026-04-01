@@ -90,4 +90,24 @@ describe('Chromiumly', () => {
             expect(Chromiumly.getGotenbergApiKey()).toBe('my-secret-key');
         });
     });
+
+    describe('routes', () => {
+        it('should expose pdf engine bookmark routes', () => {
+            expect(Chromiumly.PDF_ENGINE_ROUTES.readBookmarks).toBe(
+                'bookmarks/read'
+            );
+            expect(Chromiumly.PDF_ENGINE_ROUTES.writeBookmarks).toBe(
+                'bookmarks/write'
+            );
+        });
+
+        it('should expose system routes', () => {
+            expect(Chromiumly.SYSTEM_ROUTES.health).toBe('health');
+            expect(Chromiumly.SYSTEM_ROUTES.version).toBe('version');
+            expect(Chromiumly.SYSTEM_ROUTES.debug).toBe('debug');
+            expect(Chromiumly.SYSTEM_ROUTES.prometheusMetrics).toBe(
+                'prometheus/metrics'
+            );
+        });
+    });
 });

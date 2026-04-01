@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { PdfFormat } from '../../common';
 import { PDFEngines } from '../pdf-engines';
+import { Chromiumly } from '../../main.config';
 
 jest.mock('fs', () => ({
     ...jest.requireActual('fs'),
@@ -62,6 +63,44 @@ describe('PDFEngines', () => {
                 });
                 expect(buffer).toEqual(await getResponseBuffer());
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
+            });
+
+            it('should append webhook headers when webhook is passed', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await PDFEngines.convert({
+                    files: ['path/to/file_1.pdf'],
+                    pdfa: PdfFormat.A_2b,
+                    webhook: {
+                        webhookUrl: 'https://example.com/success',
+                        webhookErrorUrl: 'https://example.com/error',
+                        webhookMethod: 'PATCH',
+                        webhookErrorMethod: 'PUT',
+                        webhookExtraHttpHeaders: {
+                            Authorization: 'Bearer test'
+                        },
+                        webhookEventsUrl: 'https://example.com/events'
+                    }
+                });
+
+                expect(mockFetch).toHaveBeenCalledWith(
+                    'http://localhost:3000/forms/pdfengines/convert',
+                    expect.objectContaining({
+                        headers: expect.objectContaining({
+                            'Gotenberg-Webhook-Url':
+                                'https://example.com/success',
+                            'Gotenberg-Webhook-Error-Url':
+                                'https://example.com/error',
+                            'Gotenberg-Webhook-Method': 'PATCH',
+                            'Gotenberg-Webhook-Error-Method': 'PUT',
+                            'Gotenberg-Webhook-Extra-Http-Headers':
+                                JSON.stringify({
+                                    Authorization: 'Bearer test'
+                                }),
+                            'Gotenberg-Webhook-Events-Url':
+                                'https://example.com/events'
+                        })
+                    })
+                );
             });
         });
     });
@@ -160,6 +199,53 @@ describe('PDFEngines', () => {
             });
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    describe('bookmarks', () => {
+        it('should read bookmarks', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.readBookmarks(['path/to/file.pdf']);
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/bookmarks/read',
+                expect.objectContaining({
+                    method: 'POST',
+                    body: expect.any(FormData)
+                })
+            );
+        });
+
+        it('should write bookmarks', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.writeBookmarks({
+                files: ['path/to/file.pdf'],
+                bookmarks: [
+                    {
+                        title: 'Chapter 1',
+                        page: 1,
+                        children: []
+                    }
+                ]
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'bookmarks',
+                JSON.stringify([
+                    {
+                        title: 'Chapter 1',
+                        page: 1,
+                        children: []
+                    }
+                ])
+            );
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/bookmarks/write',
+                expect.objectContaining({
+                    method: 'POST',
+                    body: expect.any(FormData)
+                })
+            );
         });
     });
 
@@ -280,6 +366,27 @@ describe('PDFEngines', () => {
             expect(mockFormDataAppend).toHaveBeenCalledWith(
                 'rotatePages',
                 '1-3'
+            );
+        });
+
+        it('should use X-Api-Key when configured', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            jest.spyOn(Chromiumly, 'getGotenbergApiKey').mockReturnValue(
+                'my-key'
+            );
+
+            await PDFEngines.rotate({
+                files: ['path/to/file.pdf'],
+                angle: 90
+            });
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/rotate',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'X-Api-Key': 'my-key'
+                    })
+                })
             );
         });
     });

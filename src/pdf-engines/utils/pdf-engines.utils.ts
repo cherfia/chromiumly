@@ -109,7 +109,12 @@ export class PDFEnginesUtils {
         }
 
         if (options.downloadFrom) {
-            data.append('downloadFrom', JSON.stringify(options.downloadFrom));
+            data.append(
+                'downloadFrom',
+                JSON.stringify(
+                    GotenbergUtils.normalizeDownloadFrom(options.downloadFrom)
+                )
+            );
         }
 
         if ('flatten' in options && options.flatten) {

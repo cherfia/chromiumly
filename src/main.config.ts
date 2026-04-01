@@ -19,6 +19,8 @@ enum PdfEngineRoute {
     MERGE = 'merge',
     READ_METADATA = 'metadata/read',
     WRITE_METADATA = 'metadata/write',
+    READ_BOOKMARKS = 'bookmarks/read',
+    WRITE_BOOKMARKS = 'bookmarks/write',
     SPLIT = 'split',
     FLATTEN = 'flatten',
     ENCRYPT = 'encrypt',
@@ -34,6 +36,13 @@ enum PdfEngineRoute {
  */
 enum LibreOfficeRoute {
     CONVERT = 'convert'
+}
+
+enum SystemRoute {
+    HEALTH = 'health',
+    VERSION = 'version',
+    DEBUG = 'debug',
+    PROMETHEUS_METRICS = 'prometheus/metrics'
 }
 
 /**
@@ -134,6 +143,8 @@ export class Chromiumly {
         merge: PdfEngineRoute.MERGE,
         readMetadata: PdfEngineRoute.READ_METADATA,
         writeMetadata: PdfEngineRoute.WRITE_METADATA,
+        readBookmarks: PdfEngineRoute.READ_BOOKMARKS,
+        writeBookmarks: PdfEngineRoute.WRITE_BOOKMARKS,
         split: PdfEngineRoute.SPLIT,
         flatten: PdfEngineRoute.FLATTEN,
         encrypt: PdfEngineRoute.ENCRYPT,
@@ -149,6 +160,17 @@ export class Chromiumly {
      */
     public static readonly LIBRE_OFFICE_ROUTES = {
         convert: LibreOfficeRoute.CONVERT
+    };
+
+    /**
+     * Routes for system endpoints.
+     * @type {Object}
+     */
+    public static readonly SYSTEM_ROUTES = {
+        health: SystemRoute.HEALTH,
+        version: SystemRoute.VERSION,
+        debug: SystemRoute.DEBUG,
+        prometheusMetrics: SystemRoute.PROMETHEUS_METRICS
     };
 
     /**

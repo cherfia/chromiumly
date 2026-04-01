@@ -13,9 +13,10 @@ import {
     PdfEngineWatermarkStampUtils
 } from '../common';
 import { PDFEnginesUtils } from './utils/pdf-engines.utils';
-import { DownloadFrom } from '../common/types';
+import { DownloadFrom, WebhookOptions } from '../common/types';
 import {
     EncryptOptions,
+    Bookmarks,
     MergeOptions,
     SplitEngineOptions
 } from './interfaces/pdf-engines.types';
@@ -43,6 +44,7 @@ export class PDFEngines {
         pdfUA,
         metadata,
         downloadFrom,
+        webhook,
         flatten,
         watermark,
         stamp,
@@ -55,6 +57,7 @@ export class PDFEngines {
             pdfUA,
             metadata,
             downloadFrom,
+            webhook,
             flatten
         });
         if (watermark || stamp) {
@@ -73,7 +76,8 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -91,12 +95,14 @@ export class PDFEngines {
         files,
         pdfa,
         pdfUA,
-        downloadFrom
+        downloadFrom,
+        webhook
     }: {
         files: PathLikeOrReadStream[];
         pdfa?: PdfFormat;
         pdfUA?: boolean;
         downloadFrom?: DownloadFrom;
+        webhook?: WebhookOptions;
     }): Promise<Buffer> {
         const data = new FormData();
 
@@ -104,7 +110,8 @@ export class PDFEngines {
         await PDFEnginesUtils.customize(data, {
             pdfa,
             pdfUA,
-            downloadFrom
+            downloadFrom,
+            webhook
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.convert}`;
@@ -115,7 +122,8 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -130,6 +138,7 @@ export class PDFEngines {
     public static async split({
         files,
         options,
+        webhook,
         watermark,
         stamp,
         rotate
@@ -172,7 +181,8 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -183,7 +193,8 @@ export class PDFEngines {
      * @returns {Promise<Buffer>} A Promise resolving to the flattened PDF content as a buffer
      */
     public static async flatten(
-        files: PathLikeOrReadStream[]
+        files: PathLikeOrReadStream[],
+        webhook?: WebhookOptions
     ): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -196,7 +207,8 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -210,11 +222,13 @@ export class PDFEngines {
     public static async rotate({
         files,
         angle,
-        pages
+        pages,
+        webhook
     }: {
         files: PathLikeOrReadStream[];
         angle: 90 | 180 | 270;
         pages?: string;
+        webhook?: WebhookOptions;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -225,7 +239,9 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -236,7 +252,8 @@ export class PDFEngines {
      * @returns {Promise<Buffer>} A Promise resolving to the metadata buffer.
      */
     public static async readMetadata(
-        files: PathLikeOrReadStream[]
+        files: PathLikeOrReadStream[],
+        webhook?: WebhookOptions
     ): Promise<Buffer> {
         const data = new FormData();
 
@@ -250,7 +267,8 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -263,10 +281,12 @@ export class PDFEngines {
      */
     public static async writeMetadata({
         files,
-        metadata
+        metadata,
+        webhook
     }: {
         files: PathLikeOrReadStream[];
         metadata: Metadata;
+        webhook?: WebhookOptions;
     }): Promise<Buffer> {
         const data = new FormData();
         data.append('metadata', JSON.stringify(metadata));
@@ -281,7 +301,54 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
+        );
+    }
+
+    public static async readBookmarks(
+        files: PathLikeOrReadStream[],
+        webhook?: WebhookOptions
+    ): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readBookmarks}`;
+
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
+        );
+    }
+
+    public static async writeBookmarks({
+        files,
+        bookmarks,
+        webhook
+    }: {
+        files: PathLikeOrReadStream[];
+        bookmarks: Bookmarks;
+        webhook?: WebhookOptions;
+    }): Promise<Buffer> {
+        const data = new FormData();
+        data.append('bookmarks', JSON.stringify(bookmarks));
+        await PDFEnginesUtils.addFiles(files, data);
+
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeBookmarks}`;
+
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -295,10 +362,12 @@ export class PDFEngines {
      */
     public static async encrypt({
         files,
-        options
+        options,
+        webhook
     }: {
         files: PathLikeOrReadStream[];
         options: EncryptOptions;
+        webhook?: WebhookOptions;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -317,7 +386,8 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -337,10 +407,12 @@ export class PDFEngines {
      */
     public static async watermark({
         files,
-        watermark
+        watermark,
+        webhook
     }: {
         files: PathLikeOrReadStream[];
         watermark: PdfEngineWatermark;
+        webhook?: WebhookOptions;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -353,7 +425,9 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
@@ -365,10 +439,12 @@ export class PDFEngines {
      */
     public static async stamp({
         files,
-        stamp
+        stamp,
+        webhook
     }: {
         files: PathLikeOrReadStream[];
         stamp: PdfEngineStamp;
+        webhook?: WebhookOptions;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -381,16 +457,20 @@ export class PDFEngines {
             data,
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
-            Chromiumly.getCustomHttpHeaders()
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
     public static async embed({
         files,
-        embeds
+        embeds,
+        webhook
     }: {
         files: PathLikeOrReadStream[];
         embeds: PathLikeOrReadStream[];
+        webhook?: WebhookOptions;
     }): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -404,7 +484,8 @@ export class PDFEngines {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 
