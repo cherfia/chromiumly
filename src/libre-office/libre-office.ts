@@ -56,11 +56,19 @@ export class LibreOffice {
         hideViewerWindowControls,
         useTransitionEffects,
         openBookmarkLevels,
+        downloadFrom,
         split,
         flatten,
         userPassword,
         ownerPassword,
         embeds,
+        nativeWatermarkText,
+        nativeWatermarkColor,
+        nativeWatermarkFontHeight,
+        nativeWatermarkRotateAngle,
+        nativeWatermarkFontName,
+        nativeTiledWatermarkText,
+        webhook,
         watermark,
         stamp,
         rotate
@@ -95,11 +103,18 @@ export class LibreOffice {
             hideViewerWindowControls,
             useTransitionEffects,
             openBookmarkLevels,
+            downloadFrom,
             split,
             flatten,
             userPassword,
             ownerPassword,
             embeds,
+            nativeWatermarkText,
+            nativeWatermarkColor,
+            nativeWatermarkFontHeight,
+            nativeWatermarkRotateAngle,
+            nativeWatermarkFontName,
+            nativeTiledWatermarkText,
             watermark,
             stamp,
             rotate
@@ -113,7 +128,8 @@ export class LibreOffice {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 }

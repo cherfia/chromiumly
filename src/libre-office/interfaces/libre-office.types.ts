@@ -5,7 +5,12 @@ import {
     type PdfEngineStamp,
     type PdfEngineWatermark
 } from '../../common';
-import { DownloadFrom, PdfEngineRotate, Split } from '../../common/types';
+import {
+    DownloadFrom,
+    PdfEngineRotate,
+    Split,
+    WebhookOptions
+} from '../../common/types';
 
 type FileExtension =
     | '123'
@@ -193,6 +198,7 @@ export type ConversionOptions = {
     useTransitionEffects?: boolean; // Use transition effects for Impress slides (default true)
     openBookmarkLevels?: number; // Number of open bookmark levels on open (-1 for all, default -1)
     downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+    webhook?: WebhookOptions;
     split?: Split; // Split the PDF into multiple files.
     flatten?: boolean; // Flatten the PDF document.
     userPassword?: string; // Password for opening the resulting PDF(s)

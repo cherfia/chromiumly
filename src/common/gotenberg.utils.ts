@@ -1,12 +1,81 @@
 import { constants, ReadStream, promises, openAsBlob } from 'fs';
 import { blob } from 'node:stream/consumers';
 
-import { PathLikeOrReadStream } from './types';
+import {
+    DownloadFrom,
+    DownloadFromEntry,
+    PathLikeOrReadStream,
+    WebhookOptions
+} from './types';
 
 /**
  * Utility class for common tasks related to the Gotenberg service.
  */
 export class GotenbergUtils {
+    public static normalizeDownloadFrom(
+        downloadFrom: DownloadFrom
+    ): DownloadFromEntry[] {
+        return Array.isArray(downloadFrom) ? downloadFrom : [downloadFrom];
+    }
+
+    public static buildWebhookHeaders(
+        options?: WebhookOptions
+    ): Record<string, string> | undefined {
+        if (!options) {
+            return undefined;
+        }
+
+        const headers: Record<string, string> = {
+            'Gotenberg-Webhook-Url': options.webhookUrl,
+            'Gotenberg-Webhook-Error-Url': options.webhookErrorUrl
+        };
+
+        if (options.webhookMethod) {
+            headers['Gotenberg-Webhook-Method'] = options.webhookMethod;
+        }
+
+        if (options.webhookErrorMethod) {
+            headers['Gotenberg-Webhook-Error-Method'] =
+                options.webhookErrorMethod;
+        }
+
+        if (options.webhookExtraHttpHeaders) {
+            headers['Gotenberg-Webhook-Extra-Http-Headers'] = JSON.stringify(
+                options.webhookExtraHttpHeaders
+            );
+        }
+
+        if (options.webhookEventsUrl) {
+            headers['Gotenberg-Webhook-Events-Url'] = options.webhookEventsUrl;
+        }
+
+        return headers;
+    }
+
+    private static buildRequestHeaders(
+        username?: string,
+        password?: string,
+        customHttpHeaders?: Record<string, string>,
+        apiKey?: string,
+        requestHttpHeaders?: Record<string, string>
+    ): Record<string, string> {
+        const headers: Record<string, string> = {
+            ...customHttpHeaders,
+            ...requestHttpHeaders
+        };
+
+        if (apiKey) {
+            headers['X-Api-Key'] = apiKey;
+        } else if (username && password) {
+            const authHeader =
+                'Basic ' +
+                Buffer.from(username + ':' + password).toString('base64');
+            headers['Authorization'] = authHeader;
+        }
+
+        return headers;
+    }
+
     /**
      * Asserts that a condition is true; otherwise, throws an error with the specified message.
      *
@@ -41,20 +110,16 @@ export class GotenbergUtils {
         username?: string,
         password?: string,
         customHttpHeaders?: Record<string, string>,
-        apiKey?: string
+        apiKey?: string,
+        requestHttpHeaders?: Record<string, string>
     ): Promise<Buffer> {
-        const headers: Record<string, string> = {
-            ...customHttpHeaders
-        };
-
-        if (apiKey) {
-            headers['X-Api-Key'] = apiKey;
-        } else if (username && password) {
-            const authHeader =
-                'Basic ' +
-                Buffer.from(username + ':' + password).toString('base64');
-            headers['Authorization'] = authHeader;
-        }
+        const headers = this.buildRequestHeaders(
+            username,
+            password,
+            customHttpHeaders,
+            apiKey,
+            requestHttpHeaders
+        );
 
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -73,6 +138,47 @@ export class GotenbergUtils {
                     `Trace: ${trace || 'No trace'}\n` +
                     `Body: ${body}`
             );
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        return Buffer.from(arrayBuffer);
+    }
+
+    public static async fetchWithoutBody(
+        endpoint: string,
+        method: 'GET' | 'HEAD',
+        username?: string,
+        password?: string,
+        customHttpHeaders?: Record<string, string>,
+        apiKey?: string
+    ): Promise<Buffer> {
+        const headers = this.buildRequestHeaders(
+            username,
+            password,
+            customHttpHeaders,
+            apiKey
+        );
+
+        const response = await fetch(endpoint, {
+            method,
+            headers
+        });
+
+        if (!response.ok) {
+            const body = method === 'HEAD' ? '' : await response.text();
+            const trace = response.headers.get('gotenberg-trace');
+
+            throw new Error(
+                `Gotenberg API Error:\n` +
+                    `Endpoint: ${endpoint}\n` +
+                    `Status: ${response.status} ${response.statusText}\n` +
+                    `Trace: ${trace || 'No trace'}\n` +
+                    `Body: ${body}`
+            );
+        }
+
+        if (method === 'HEAD') {
+            return Buffer.alloc(0);
         }
 
         const arrayBuffer = await response.arrayBuffer();
