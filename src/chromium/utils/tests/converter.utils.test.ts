@@ -863,10 +863,14 @@ describe('ConverterUtils', () => {
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                 expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'downloadFrom',
-                    JSON.stringify({
-                        url: 'http://example.com',
-                        extraHttpHeaders: { 'Content-Type': 'application/json' }
-                    })
+                    JSON.stringify([
+                        {
+                            url: 'http://example.com',
+                            extraHttpHeaders: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    ])
                 );
             });
         });
@@ -1116,10 +1120,14 @@ describe('ConverterUtils', () => {
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     21,
                     'downloadFrom',
-                    JSON.stringify({
-                        url: 'http://example.com',
-                        extraHttpHeaders: { 'Content-Type': 'application/json' }
-                    })
+                    JSON.stringify([
+                        {
+                            url: 'http://example.com',
+                            extraHttpHeaders: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    ])
                 );
                 expect(mockFormDataAppend).toHaveBeenNthCalledWith(
                     22,

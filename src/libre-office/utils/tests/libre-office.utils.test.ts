@@ -558,10 +558,14 @@ describe('LibreOfficeUtils', () => {
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                 expect(data.append).toHaveBeenCalledWith(
                     'downloadFrom',
-                    JSON.stringify({
-                        url: 'http://example.com',
-                        extraHttpHeaders: { 'Content-Type': 'application/json' }
-                    })
+                    JSON.stringify([
+                        {
+                            url: 'http://example.com',
+                            extraHttpHeaders: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    ])
                 );
             });
         });

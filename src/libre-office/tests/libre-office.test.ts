@@ -73,7 +73,7 @@ describe('LibreOffice', () => {
                     ownerPassword: 'my_owner_password'
                 });
                 expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(18);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(19);
                 expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'userPassword',
                     'my_user_password'
@@ -81,6 +81,56 @@ describe('LibreOffice', () => {
                 expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'ownerPassword',
                     'my_owner_password'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'downloadFrom',
+                    JSON.stringify([
+                        {
+                            url: 'http://example.com',
+                            extraHttpHeaders: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    ])
+                );
+            });
+        });
+
+        describe('when native watermark options are passed', () => {
+            it('should append native watermark fields', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    nativeWatermarkText: 'DRAFT',
+                    nativeWatermarkColor: 16711680,
+                    nativeWatermarkFontHeight: 0,
+                    nativeWatermarkRotateAngle: 450,
+                    nativeWatermarkFontName: 'Arial',
+                    nativeTiledWatermarkText: 'TILED'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkText',
+                    'DRAFT'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkColor',
+                    '16711680'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkFontHeight',
+                    '0'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkRotateAngle',
+                    '450'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeWatermarkFontName',
+                    'Arial'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeTiledWatermarkText',
+                    'TILED'
                 );
             });
         });
