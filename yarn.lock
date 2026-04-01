@@ -1073,8 +1073,8 @@ __metadata:
   linkType: hard
 
 "@commitlint/cz-commitlint@npm:^20.0.0":
-  version: 20.5.0
-  resolution: "@commitlint/cz-commitlint@npm:20.5.0"
+  version: 20.5.1
+  resolution: "@commitlint/cz-commitlint@npm:20.5.1"
   dependencies:
     "@commitlint/ensure": "npm:^20.5.0"
     "@commitlint/load": "npm:^20.5.0"
@@ -1085,7 +1085,7 @@ __metadata:
   peerDependencies:
     commitizen: ^4.0.3
     inquirer: ^9.0.0
-  checksum: 10c0/a22fa1e9488c1199fa38cc7648b87f53bfb2d132d34278de535bf330fcaecf34c528eee48c34434dd16bda9f0e34cefbab16cfbbb951bf8e36a0d7de2915c362
+  checksum: 10c0/9d89b9e1b02e11aa7ca1dae964e7785cad2e34b237f77b9dc6fdd0959a7b7d434617af441b39488bbab0556733e006eeeae4747d8724b29f7369662cba4af16e
   languageName: node
   linkType: hard
 
