@@ -70,10 +70,12 @@ export class HtmlConverter extends Converter {
         ignoreResourceHttpStatusDomains,
         failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
+        skipNetworkAlmostIdleEvent,
         generateDocumentOutline,
         metadata,
         cookies,
         downloadFrom,
+        webhook,
         split,
         userPassword,
         ownerPassword,
@@ -113,10 +115,12 @@ export class HtmlConverter extends Converter {
             ignoreResourceHttpStatusDomains,
             failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
+            skipNetworkAlmostIdleEvent,
             generateDocumentOutline,
             metadata,
             cookies,
             downloadFrom,
+            webhook,
             split,
             userPassword,
             ownerPassword,
@@ -132,7 +136,8 @@ export class HtmlConverter extends Converter {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 }

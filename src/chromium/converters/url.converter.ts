@@ -71,9 +71,11 @@ export class UrlConverter extends Converter {
         failOnResourceLoadingFailed,
         failOnConsoleExceptions,
         skipNetworkIdleEvent,
+        skipNetworkAlmostIdleEvent,
         metadata,
         cookies,
         downloadFrom,
+        webhook,
         generateDocumentOutline,
         split,
         userPassword,
@@ -104,9 +106,11 @@ export class UrlConverter extends Converter {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             skipNetworkIdleEvent,
+            skipNetworkAlmostIdleEvent,
             metadata,
             cookies,
             downloadFrom,
+            webhook,
             failOnResourceHttpStatusCodes,
             ignoreResourceHttpStatusDomains,
             failOnResourceLoadingFailed,
@@ -126,7 +130,8 @@ export class UrlConverter extends Converter {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 }

@@ -57,8 +57,10 @@ export class HtmlScreenshot extends Screenshot {
         ignoreResourceHttpStatusDomains,
         failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
+        skipNetworkAlmostIdleEvent,
         optimizeForSpeed,
         downloadFrom,
+        webhook,
         generateDocumentOutline,
         userPassword,
         ownerPassword,
@@ -82,8 +84,10 @@ export class HtmlScreenshot extends Screenshot {
             ignoreResourceHttpStatusDomains,
             failOnResourceLoadingFailed,
             skipNetworkIdleEvent,
+            skipNetworkAlmostIdleEvent,
             optimizeForSpeed,
             downloadFrom,
+            webhook,
             generateDocumentOutline,
             userPassword,
             ownerPassword,
@@ -96,7 +100,8 @@ export class HtmlScreenshot extends Screenshot {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 }

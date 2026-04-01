@@ -336,7 +336,12 @@ export class ConverterUtils {
         }
 
         if (options.downloadFrom) {
-            data.append('downloadFrom', JSON.stringify(options.downloadFrom));
+            data.append(
+                'downloadFrom',
+                JSON.stringify(
+                    GotenbergUtils.normalizeDownloadFrom(options.downloadFrom)
+                )
+            );
         }
 
         if (options.generateDocumentOutline) {

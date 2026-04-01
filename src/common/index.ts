@@ -1,7 +1,14 @@
 export { PdfFormat } from './constants';
 export { GotenbergUtils } from './gotenberg.utils';
 export { PdfEngineWatermarkStampUtils } from './pdf-engine-watermark-stamp.utils';
-export type { PathLikeOrReadStream, Metadata } from './types';
+export type {
+    PathLikeOrReadStream,
+    Metadata,
+    DownloadFrom,
+    DownloadFromEntry,
+    DownloadFromField,
+    WebhookOptions
+} from './types';
 export type { PdfEngineRotate } from './types';
 export { appendPdfEngineRotate } from './pdf-engine-rotate.utils';
 export type {

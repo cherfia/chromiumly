@@ -6,9 +6,24 @@ export type Metadata = {
     [key: string]: boolean | number | string | string[];
 };
 
-export type DownloadFrom = {
+export type DownloadFromField = 'embedded' | 'watermark' | 'stamp' | '';
+
+export type DownloadFromEntry = {
     url: string;
     extraHttpHeaders?: Record<string, string>;
+    embedded?: boolean;
+    field?: DownloadFromField;
+};
+
+export type DownloadFrom = DownloadFromEntry | DownloadFromEntry[];
+
+export type WebhookOptions = {
+    webhookUrl: string;
+    webhookErrorUrl: string;
+    webhookMethod?: 'POST' | 'PUT' | 'PATCH';
+    webhookErrorMethod?: 'POST' | 'PUT' | 'PATCH';
+    webhookExtraHttpHeaders?: Record<string, string>;
+    webhookEventsUrl?: string;
 };
 
 export type Split = {

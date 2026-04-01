@@ -1,5 +1,5 @@
 import { PathLikeOrReadStream } from '../../common';
-import { DownloadFrom } from '../../common/types';
+import { DownloadFrom, WebhookOptions } from '../../common/types';
 
 export type EmulatedMediaType = 'screen' | 'print';
 
@@ -34,4 +34,5 @@ export type ChromiumOptions = {
     generateDocumentOutline?: boolean; // Generate a document outline (default false)
     cookies?: Cookie[]; // Cookies to be written.
     downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
+    webhook?: WebhookOptions;
 };

@@ -71,10 +71,12 @@ export class MarkdownConverter extends Converter {
         ignoreResourceHttpStatusDomains,
         failOnResourceLoadingFailed,
         skipNetworkIdleEvent,
+        skipNetworkAlmostIdleEvent,
         generateDocumentOutline,
         metadata,
         cookies,
         downloadFrom,
+        webhook,
         split,
         userPassword,
         ownerPassword,
@@ -105,9 +107,11 @@ export class MarkdownConverter extends Converter {
             failOnHttpStatusCodes,
             failOnConsoleExceptions,
             skipNetworkIdleEvent,
+            skipNetworkAlmostIdleEvent,
             metadata,
             cookies,
             downloadFrom,
+            webhook,
             split,
             failOnResourceHttpStatusCodes,
             ignoreResourceHttpStatusDomains,
@@ -127,7 +131,8 @@ export class MarkdownConverter extends Converter {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildWebhookHeaders(webhook)
         );
     }
 }
