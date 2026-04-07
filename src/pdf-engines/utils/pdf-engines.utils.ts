@@ -91,17 +91,12 @@ export class PDFEnginesUtils {
         data: FormData,
         options: ConversionOptions | MergeOptions
     ): Promise<void> {
-        GotenbergUtils.assert(
-            !!options.pdfa || !!options.pdfUA,
-            'At least one of pdfa or pdfUA must be provided'
-        );
-
         if (options.pdfa) {
             data.append('pdfa', options.pdfa);
         }
 
         if (options.pdfUA) {
-            data.append('pdfUA', String(options.pdfUA));
+            data.append('pdfua', String(options.pdfUA));
         }
 
         if ('metadata' in options && options.metadata) {

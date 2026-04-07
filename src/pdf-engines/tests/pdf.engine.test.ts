@@ -106,6 +106,15 @@ describe('PDFEngines', () => {
     });
 
     describe('merge', () => {
+        it('should return a buffer when only files are provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.merge({
+                files: ['path/to/file.pdf', 'path/to/another-file.pdf']
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        });
+
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
             const buffer = await PDFEngines.merge({

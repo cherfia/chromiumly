@@ -100,17 +100,21 @@ describe('PDFEnginesUtils', () => {
 
     describe('customize', () => {
         describe('when no pdfa or pdfUA is provided', () => {
-            it('should throw an error', async () => {
-                await expect(
-                    PDFEnginesUtils.customize(data, {})
-                ).rejects.toThrow(
-                    'At least one of pdfa or pdfUA must be provided'
+            it('should not append pdfa or pdfua fields', async () => {
+                await PDFEnginesUtils.customize(data, {});
+                expect(mockFormDataAppend).not.toHaveBeenCalledWith(
+                    'pdfa',
+                    expect.anything()
+                );
+                expect(mockFormDataAppend).not.toHaveBeenCalledWith(
+                    'pdfua',
+                    expect.anything()
                 );
             });
         });
 
         describe('when only pdfa is provided', () => {
-            it('should append pdfa and not pdfUA', async () => {
+            it('should append pdfa and not pdfua', async () => {
                 const options: ConversionOptions = { pdfa: PdfFormat.A_2b };
                 await PDFEnginesUtils.customize(data, options);
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
@@ -119,18 +123,18 @@ describe('PDFEnginesUtils', () => {
                     PdfFormat.A_2b
                 );
                 expect(data.append).not.toHaveBeenCalledWith(
-                    'pdfUA',
+                    'pdfua',
                     expect.any(String)
                 );
             });
         });
 
         describe('when only pdfUA is provided', () => {
-            it('should append pdfUA and not pdfa', async () => {
+            it('should append pdfua field and not pdfa', async () => {
                 const options: ConversionOptions = { pdfUA: true };
                 await PDFEnginesUtils.customize(data, options);
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('pdfUA', 'true');
+                expect(data.append).toHaveBeenCalledWith('pdfua', 'true');
                 expect(data.append).not.toHaveBeenCalledWith(
                     'pdfa',
                     expect.any(String)
@@ -149,7 +153,7 @@ describe('PDFEnginesUtils', () => {
                     'pdfa',
                     PdfFormat.A_2b
                 );
-                expect(data.append).toHaveBeenCalledWith('pdfUA', 'true');
+                expect(data.append).toHaveBeenCalledWith('pdfua', 'true');
             });
         });
     });

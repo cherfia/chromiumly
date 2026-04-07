@@ -104,6 +104,11 @@ export class PDFEngines {
         downloadFrom?: DownloadFrom;
         webhook?: WebhookOptions;
     }): Promise<Buffer> {
+        GotenbergUtils.assert(
+            !!pdfa || !!pdfUA,
+            'At least one of pdfa or pdfUA must be provided'
+        );
+
         const data = new FormData();
 
         await PDFEnginesUtils.addFiles(files, data);
@@ -392,14 +397,6 @@ export class PDFEngines {
     }
 
     /**
-     * Embeds files into PDF files.
-     *
-     * @param {Object} options - Options for the embed operation.
-     * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files to embed files into.
-     * @param {PathLikeOrReadStream[]} options.embeds - An array of PathLikes or ReadStreams to the files to embed in the PDF.
-     * @returns {Promise<Buffer>} A Promise resolving to the PDF content with embedded files as a buffer
-     */
-    /**
      * Watermarks one or more PDF files using the configured PDF engine.
      *
      * @param options.files - PDF files to watermark
@@ -463,6 +460,15 @@ export class PDFEngines {
         );
     }
 
+    /**
+     * Embeds attachment files into the given PDFs.
+     *
+     * @param {Object} options - Options for the embed operation.
+     * @param {PathLikeOrReadStream[]} options.files - PDFs to embed into.
+     * @param {PathLikeOrReadStream[]} options.embeds - Files to attach inside the PDF.
+     * @param {WebhookOptions} [options.webhook] - Optional webhook delivery.
+     * @returns {Promise<Buffer>} PDF bytes with embedded files.
+     */
     public static async embed({
         files,
         embeds,
