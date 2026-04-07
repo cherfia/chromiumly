@@ -1,5 +1,20 @@
 # Changelog
 
+## [5.2.1](https://github.com/cherfia/chromiumly/compare/5.2.0...5.2.1) (2026-04-07)
+
+### Bug Fixes
+
+- **pdf-engines:** append pdfua instead of pdfUA ([a3a1a13](https://github.com/cherfia/chromiumly/commit/a3a1a13f6bdde614caf4e0c28b214d6987de1037))
+
+### Chores
+
+- **deps:** update dependency @commitlint/cz-commitlint to v20.5.1 ([#790](https://github.com/cherfia/chromiumly/issues/790)) ([499d2bb](https://github.com/cherfia/chromiumly/commit/499d2bb4dae7fbcb1c0c1ef10cac33edaef979ce))
+- **deps:** update dependency @types/node to v24.12.2 ([#794](https://github.com/cherfia/chromiumly/issues/794)) ([8de9546](https://github.com/cherfia/chromiumly/commit/8de9546d4c6d0e8eca24ac8d06b32c46561ad661))
+- **deps:** update dependency dotenv to v17.4.0 ([#793](https://github.com/cherfia/chromiumly/issues/793)) ([1896509](https://github.com/cherfia/chromiumly/commit/1896509180fe22c709d972679d12a44af34fda44))
+- **deps:** update dependency dotenv to v17.4.1 ([#795](https://github.com/cherfia/chromiumly/issues/795)) ([1d50b9f](https://github.com/cherfia/chromiumly/commit/1d50b9f577df35615598c1d71e344060869560c3))
+- **deps:** update dependency ts-jest to v29.4.9 ([#792](https://github.com/cherfia/chromiumly/issues/792)) ([af4e13f](https://github.com/cherfia/chromiumly/commit/af4e13ffc439fb56069331d0e7210480fa610da6))
+- **deps:** update typescript-eslint monorepo to v8.58.0 ([#791](https://github.com/cherfia/chromiumly/issues/791)) ([e604c92](https://github.com/cherfia/chromiumly/commit/e604c92afe8ede21c6e98795b862fbadf352ba92))
+
 ## [5.2.0](https://github.com/cherfia/chromiumly/compare/5.1.0...5.2.0) (2026-04-01)
 
 ### Features
