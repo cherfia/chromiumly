@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises, ReadStream } from 'fs';
 import { blob } from 'node:stream/consumers';
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { promises } from 'fs';
 
 import { LibreOffice } from '../libre-office';
