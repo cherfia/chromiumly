@@ -1,10 +1,10 @@
-import { Chromiumly } from "./src/main.config";
+import { Chromiumly } from './src/main.config';
 
 Chromiumly.configure({
-  endpoint: "http://localhost:3000",
-  username: "user",
-  password: "pass",
-  customHttpHeaders: {
-    "X-Custom-Header": "test",
-  },
+    endpoint: 'http://localhost:3000',
+    username: 'user',
+    password: 'pass',
+    customHttpHeaders: {
+        'X-Custom-Header': 'test'
+    }
 });

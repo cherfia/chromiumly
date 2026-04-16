@@ -35,26 +35,26 @@ Once the environment variable is set, Chromiumly will automatically send all req
 You can also configure the hosted API programmatically without an endpoint:
 
 ```typescript
-import { Chromiumly } from "chromiumly";
+import { Chromiumly } from 'chromiumly';
 
 Chromiumly.configure({
-  apiKey: "your-api-key",
+    apiKey: 'your-api-key'
 });
 ```
 
 ### Minimal usage example (hosted API)
 
 ```typescript
-import { UrlConverter } from "chromiumly";
+import { UrlConverter } from 'chromiumly';
 
 async function run() {
-  const urlConverter = new UrlConverter();
+    const urlConverter = new UrlConverter();
 
-  const buffer = await urlConverter.convert({
-    url: "https://www.example.com/",
-  });
+    const buffer = await urlConverter.convert({
+        url: 'https://www.example.com/'
+    });
 
-  // Write the buffer to disk, send it over HTTP, etc.
+    // Write the buffer to disk, send it over HTTP, etc.
 }
 
 run();
@@ -64,34 +64,34 @@ run();
 
 1. [API Key Authentication (Hosted API)](#api-key-authentication-hosted-api)
 2. [Getting Started](#getting-started)
-   - [Installation](#installation)
-   - [Prerequisites](#prerequisites)
-   - [Configuration](#configuration)
+    - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Configuration](#configuration)
 3. [Authentication](#authentication)
-   - [Basic Authentication](#basic-authentication)
-   - [API Key Authentication](#api-key-authentication)
-   - [Advanced Authentication](#advanced-authentication)
+    - [Basic Authentication](#basic-authentication)
+    - [API Key Authentication](#api-key-authentication)
+    - [Advanced Authentication](#advanced-authentication)
 4. [Core Features](#core-features)
-   - [Chromium](#chromium)
-     - [URL](#url)
-     - [HTML](#html)
-     - [Markdown](#markdown)
-     - [Screenshot](#screenshot)
-   - [LibreOffice](#libreoffice)
-   - [PDF Engines](#pdf-engines)
-     - [Format Conversion](#format-conversion)
-     - [Merging](#merging)
-     - [PDF Rotation](#pdf-rotation)
-     - [Metadata Management](#metadata-management)
-     - [Bookmarks Management](#bookmarks-management)
-     - [File Generation](#file-generation)
-   - [System](#system)
-   - [PDF Splitting](#pdf-splitting)
-   - [PDF Flattening](#pdf-flattening)
-   - [PDF Encryption](#pdf-encryption)
-   - [Embedding Files](#embedding-files)
-   - [Templates (hosted API only)](#templates-hosted-api-only)
-   - [Watermark and stamp](#watermark-and-stamp)
+    - [Chromium](#chromium)
+        - [URL](#url)
+        - [HTML](#html)
+        - [Markdown](#markdown)
+        - [Screenshot](#screenshot)
+    - [LibreOffice](#libreoffice)
+    - [PDF Engines](#pdf-engines)
+        - [Format Conversion](#format-conversion)
+        - [Merging](#merging)
+        - [PDF Rotation](#pdf-rotation)
+        - [Metadata Management](#metadata-management)
+        - [Bookmarks Management](#bookmarks-management)
+        - [File Generation](#file-generation)
+    - [System](#system)
+    - [PDF Splitting](#pdf-splitting)
+    - [PDF Flattening](#pdf-flattening)
+    - [PDF Encryption](#pdf-encryption)
+    - [Embedding Files](#embedding-files)
+    - [Templates (hosted API only)](#templates-hosted-api-only)
+    - [Watermark and stamp](#watermark-and-stamp)
 5. [Usage Example](#snippet)
 
 ## Getting Started
@@ -137,18 +137,18 @@ GOTENBERG_ENDPOINT=http://localhost:3000
 
 ```json
 {
-  "gotenberg": {
-    "endpoint": "http://localhost:3000"
-  }
+    "gotenberg": {
+        "endpoint": "http://localhost:3000"
+    }
 }
 ```
 
 #### code
 
 ```typescript
-import { Chromiumly } from "chromiumly";
+import { Chromiumly } from 'chromiumly';
 
-Chromiumly.configure({ endpoint: "http://localhost:3000" });
+Chromiumly.configure({ endpoint: 'http://localhost:3000' });
 ```
 
 ## Authentication
@@ -177,15 +177,15 @@ Or
 
 ```json
 {
-  "gotenberg": {
-    "endpoint": "http://localhost:3000",
-    "api": {
-      "basicAuth": {
-        "username": "user",
-        "password": "pass"
-      }
+    "gotenberg": {
+        "endpoint": "http://localhost:3000",
+        "api": {
+            "basicAuth": {
+                "username": "user",
+                "password": "pass"
+            }
+        }
     }
-  }
 }
 ```
 
@@ -193,9 +193,9 @@ Or
 
 ```typescript
 Chromiumly.configure({
-  endpoint: "http://localhost:3000",
-  username: "user",
-  password: "pass",
+    endpoint: 'http://localhost:3000',
+    username: 'user',
+    password: 'pass'
 });
 ```
 
@@ -213,11 +213,11 @@ For example, you can include a Bearer token for authentication along with a cust
 const token = await generateToken();
 
 Chromiumly.configure({
-  endpoint: "http://localhost:3000",
-  customHttpHeaders: {
-    Authorization: `Bearer ${token}`,
-    "X-Custom-Header": "value",
-  },
+    endpoint: 'http://localhost:3000',
+    customHttpHeaders: {
+        Authorization: `Bearer ${token}`,
+        'X-Custom-Header': 'value'
+    }
 });
 ```
 
@@ -238,20 +238,20 @@ Similarly, a new set of classes have been added to harness the recently introduc
 #### URL
 
 ```typescript
-import { UrlConverter } from "chromiumly";
+import { UrlConverter } from 'chromiumly';
 
 const urlConverter = new UrlConverter();
 const buffer = await urlConverter.convert({
-  url: "https://www.example.com/",
+    url: 'https://www.example.com/'
 });
 ```
 
 ```typescript
-import { UrlScreenshot } from "chromiumly";
+import { UrlScreenshot } from 'chromiumly';
 
 const screenshot = new UrlScreenshot();
 const buffer = await screenshot.capture({
-  url: "https://www.example.com/",
+    url: 'https://www.example.com/'
 });
 ```
 
@@ -260,20 +260,20 @@ const buffer = await screenshot.capture({
 The only requirement is that the file name should be `index.html`.
 
 ```typescript
-import { HtmlConverter } from "chromiumly";
+import { HtmlConverter } from 'chromiumly';
 
 const htmlConverter = new HtmlConverter();
 const buffer = await htmlConverter.convert({
-  html: "path/to/index.html",
+    html: 'path/to/index.html'
 });
 ```
 
 ```typescript
-import { HtmlScreenshot } from "chromiumly";
+import { HtmlScreenshot } from 'chromiumly';
 
 const screenshot = new HtmlScreenshot();
 const buffer = await screenshot.capture({
-  html: "path/to/index.html",
+    html: 'path/to/index.html'
 });
 ```
 
@@ -282,22 +282,22 @@ const buffer = await screenshot.capture({
 This route accepts an `index.html` file plus a markdown file.
 
 ```typescript
-import { MarkdownConverter } from "chromiumly";
+import { MarkdownConverter } from 'chromiumly';
 
 const markdownConverter = new MarkdownConverter();
 const buffer = await markdownConverter.convert({
-  html: "path/to/index.html",
-  markdown: "path/to/file.md",
+    html: 'path/to/index.html',
+    markdown: 'path/to/file.md'
 });
 ```
 
 ```typescript
-import { MarkdownScreenshot } from "chromiumly";
+import { MarkdownScreenshot } from 'chromiumly';
 
 const screenshot = new MarkdownScreenshot();
 const buffer = await screenshot.capture({
-  html: "path/to/index.html",
-  markdown: "path/to/file.md",
+    html: 'path/to/index.html',
+    markdown: 'path/to/file.md'
 });
 ```
 
@@ -306,23 +306,23 @@ file will look like.
 
 ```typescript
 type PageProperties = {
-  singlePage?: boolean; // Print the entire content in one single page (default false)
-  size?: {
-    width: number | string; // Paper width (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 8.5)
-    height: number | string; // Paper height (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 11)
-  };
-  margins?: {
-    top: number | string; // Top margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
-    bottom: number | string; // Bottom margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
-    left: number | string; // Left margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
-    right: number | string; // Right margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
-  };
-  preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
-  printBackground?: boolean; // Print the background graphics (default false)
-  omitBackground?: boolean; // Hide the default white background and allow generating PDFs with transparency (default false)
-  landscape?: boolean; // Set the paper orientation to landscape (default false)
-  scale?: number; // The scale of the page rendering (default 1.0)
-  nativePageRanges?: { from: number; to: number }; // Page ranges to print
+    singlePage?: boolean; // Print the entire content in one single page (default false)
+    size?: {
+        width: number | string; // Paper width (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 8.5)
+        height: number | string; // Paper height (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 11)
+    };
+    margins?: {
+        top: number | string; // Top margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+        bottom: number | string; // Bottom margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+        left: number | string; // Left margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+        right: number | string; // Right margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+    };
+    preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
+    printBackground?: boolean; // Print the background graphics (default false)
+    omitBackground?: boolean; // Hide the default white background and allow generating PDFs with transparency (default false)
+    landscape?: boolean; // Set the paper orientation to landscape (default false)
+    scale?: number; // The scale of the page rendering (default 1.0)
+    nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
 ```
 
@@ -332,12 +332,12 @@ Both `size` and `margins` properties support two formats:
 
 1. **Numeric values** (in inches): For backward compatibility, you can continue using numbers which represent inches.
 2. **String values with units**: You can now specify explicit units using the following formats:
-   - `pt` (points): e.g., `"72pt"`
-   - `px` (pixels): e.g., `"96px"`
-   - `in` (inches): e.g., `"1in"`
-   - `mm` (millimeters): e.g., `"25.4mm"`
-   - `cm` (centimeters): e.g., `"2.54cm"`
-   - `pc` (picas): e.g., `"6pc"`
+    - `pt` (points): e.g., `"72pt"`
+    - `px` (pixels): e.g., `"96px"`
+    - `in` (inches): e.g., `"1in"`
+    - `mm` (millimeters): e.g., `"25.4mm"`
+    - `cm` (centimeters): e.g., `"2.54cm"`
+    - `pc` (picas): e.g., `"6pc"`
 
 **Examples:**
 
@@ -365,55 +365,55 @@ In addition to the `PageProperties` customization options, the `convert()` metho
 
 ```typescript
 type ConversionOptions = {
-  properties?: PageProperties; // Customize the appearance of the generated PDF
-  pdfFormat?: PdfFormat; // Define the PDF format for the conversion
-  pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
-  userAgent?: string; // Customize the user agent string sent during conversion
-  header?: PathLikeOrReadStream; // Specify a custom header for the PDF
-  footer?: PathLikeOrReadStream; // Specify a custom footer for the PDF
-  emulatedMediaType?: EmulatedMediaType; // Specify the emulated media type for conversion
-  emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g., prefers-color-scheme). Default: None.
-  waitDelay?: string; // Duration (e.g., '5s') to wait when loading an HTML document before conversion
-  waitForExpression?: string; // JavaScript expression to wait before converting an HTML document into PDF
-  waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node
-  extraHttpHeaders?: Record<string, string>; // Include additional HTTP headers in the request
-  failOnHttpStatusCodes?: number[]; // List of HTTP status codes triggering a 409 Conflict response (default [499, 599])
-  failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
-  failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
-  ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
-  failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
-  skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
-  skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
-  metadata?: Metadata; // Metadata to be written.
-  cookies?: Cookie[]; // Cookies to be written.
-  downloadFrom?: DownloadFrom; // Download a file from one or multiple URLs. Each URL must return a Content-Disposition header with a filename parameter.
-  webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
-  split?: SplitOptions; // Split the PDF file into multiple files.
-  userPassword?: string; // Password for opening the resulting PDF(s).
-  ownerPassword?: string; // Password for full access on the resulting PDF(s).
-  embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
-  watermark?: PdfEngineWatermark; // Optional PDF-engine post-processing watermark (behind page content).
-  stamp?: PdfEngineStamp; // Optional PDF-engine post-processing stamp (on top of page content).
+    properties?: PageProperties; // Customize the appearance of the generated PDF
+    pdfFormat?: PdfFormat; // Define the PDF format for the conversion
+    pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
+    userAgent?: string; // Customize the user agent string sent during conversion
+    header?: PathLikeOrReadStream; // Specify a custom header for the PDF
+    footer?: PathLikeOrReadStream; // Specify a custom footer for the PDF
+    emulatedMediaType?: EmulatedMediaType; // Specify the emulated media type for conversion
+    emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g., prefers-color-scheme). Default: None.
+    waitDelay?: string; // Duration (e.g., '5s') to wait when loading an HTML document before conversion
+    waitForExpression?: string; // JavaScript expression to wait before converting an HTML document into PDF
+    waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node
+    extraHttpHeaders?: Record<string, string>; // Include additional HTTP headers in the request
+    failOnHttpStatusCodes?: number[]; // List of HTTP status codes triggering a 409 Conflict response (default [499, 599])
+    failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
+    failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
+    ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
+    failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
+    skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
+    skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
+    metadata?: Metadata; // Metadata to be written.
+    cookies?: Cookie[]; // Cookies to be written.
+    downloadFrom?: DownloadFrom; // Download a file from one or multiple URLs. Each URL must return a Content-Disposition header with a filename parameter.
+    webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
+    split?: SplitOptions; // Split the PDF file into multiple files.
+    userPassword?: string; // Password for opening the resulting PDF(s).
+    ownerPassword?: string; // Password for full access on the resulting PDF(s).
+    embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
+    watermark?: PdfEngineWatermark; // Optional PDF-engine post-processing watermark (behind page content).
+    stamp?: PdfEngineStamp; // Optional PDF-engine post-processing stamp (on top of page content).
 };
 ```
 
 ```typescript
 type DownloadFromEntry = {
-  url: string;
-  extraHttpHeaders?: Record<string, string>;
-  embedded?: boolean; // Legacy flag, prefer field
-  field?: "embedded" | "watermark" | "stamp" | "";
+    url: string;
+    extraHttpHeaders?: Record<string, string>;
+    embedded?: boolean; // Legacy flag, prefer field
+    field?: 'embedded' | 'watermark' | 'stamp' | '';
 };
 
 type DownloadFrom = DownloadFromEntry | DownloadFromEntry[];
 
 type WebhookOptions = {
-  webhookUrl: string;
-  webhookErrorUrl: string;
-  webhookMethod?: "POST" | "PUT" | "PATCH";
-  webhookErrorMethod?: "POST" | "PUT" | "PATCH";
-  webhookExtraHttpHeaders?: Record<string, string>;
-  webhookEventsUrl?: string;
+    webhookUrl: string;
+    webhookErrorUrl: string;
+    webhookMethod?: 'POST' | 'PUT' | 'PATCH';
+    webhookErrorMethod?: 'POST' | 'PUT' | 'PATCH';
+    webhookExtraHttpHeaders?: Record<string, string>;
+    webhookEventsUrl?: string;
 };
 ```
 
@@ -421,19 +421,19 @@ Optional `watermark` and `stamp` use the same multipart field names as [Gotenber
 
 ```typescript
 type PdfEngineWatermark = {
-  source?: "text" | "image" | "pdf";
-  expression?: string; // Text, or filename of the uploaded asset when source is image or pdf
-  pages?: string; // Page ranges (e.g. "1-3"); omit for all pages
-  options?: Record<string, unknown>; // Serialized as JSON (engine-specific)
-  file?: PathLikeOrReadStream | Buffer; // Required when source is image or pdf
+    source?: 'text' | 'image' | 'pdf';
+    expression?: string; // Text, or filename of the uploaded asset when source is image or pdf
+    pages?: string; // Page ranges (e.g. "1-3"); omit for all pages
+    options?: Record<string, unknown>; // Serialized as JSON (engine-specific)
+    file?: PathLikeOrReadStream | Buffer; // Required when source is image or pdf
 };
 
 type PdfEngineStamp = {
-  source?: "text" | "image" | "pdf";
-  expression?: string;
-  pages?: string;
-  options?: Record<string, unknown>;
-  file?: PathLikeOrReadStream | Buffer;
+    source?: 'text' | 'image' | 'pdf';
+    expression?: string;
+    pages?: string;
+    options?: Record<string, unknown>;
+    file?: PathLikeOrReadStream | Buffer;
 };
 ```
 
@@ -443,12 +443,12 @@ Similarly, the `capture()` method takes an optional `properties` parameter of th
 
 ```typescript
 type ImageProperties = {
-  format: "png" | "jpeg" | "webp"; //The image compression format, either "png", "jpeg" or "webp".
-  quality?: number; // The compression quality from range 0 to 100 (jpeg only).
-  omitBackground?: boolean; // Hide the default white background and allow generating screenshots with transparency.
-  width?: number; // The device screen width in pixels (default 800).
-  height?: number; // The device screen height in pixels (default 600).
-  clip?: boolean; // Define whether to clip the screenshot according to the device dimensions (default false).
+    format: 'png' | 'jpeg' | 'webp'; //The image compression format, either "png", "jpeg" or "webp".
+    quality?: number; // The compression quality from range 0 to 100 (jpeg only).
+    omitBackground?: boolean; // Hide the default white background and allow generating screenshots with transparency.
+    width?: number; // The device screen width in pixels (default 800).
+    height?: number; // The device screen height in pixels (default 600).
+    clip?: boolean; // Define whether to clip the screenshot according to the device dimensions (default false).
 };
 ```
 
@@ -456,29 +456,29 @@ Furthermore, alongside the customization options offered by `ImageProperties`, t
 
 ```typescript
 type ScreenshotOptions = {
-  properties?: ImageProperties;
-  header?: PathLikeOrReadStream;
-  footer?: PathLikeOrReadStream;
-  emulatedMediaType?: EmulatedMediaType;
-  emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g., prefers-color-scheme). Default: None.
-  waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before convertion.
-  waitForExpression?: string; // JavaScript's expression to wait before converting an HTML document into PDF until it returns true.
-  waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node.
-  extraHttpHeaders?: Record<string, string>;
-  failOnHttpStatusCodes?: number[]; // Return a 409 Conflict response if the HTTP status code is in the list (default [499,599])
-  failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
-  failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
-  ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
-  failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
-  skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
-  skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
-  optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
-  cookies?: Cookie[]; // Cookies to be written.
-  downloadFrom?: DownloadFrom; // Download files from one or multiple URLs.
-  webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
-  userPassword?: string; // Password for opening the resulting PDF(s).
-  ownerPassword?: string; // Password for full access on the resulting PDF(s).
-  embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
+    properties?: ImageProperties;
+    header?: PathLikeOrReadStream;
+    footer?: PathLikeOrReadStream;
+    emulatedMediaType?: EmulatedMediaType;
+    emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g., prefers-color-scheme). Default: None.
+    waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before convertion.
+    waitForExpression?: string; // JavaScript's expression to wait before converting an HTML document into PDF until it returns true.
+    waitForSelector?: string; // CSS selector to wait for before converting an HTML document into PDF until it matches a node.
+    extraHttpHeaders?: Record<string, string>;
+    failOnHttpStatusCodes?: number[]; // Return a 409 Conflict response if the HTTP status code is in the list (default [499,599])
+    failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
+    failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
+    ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
+    failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
+    skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
+    skipNetworkAlmostIdleEvent?: boolean; // Do not wait for Chromium network to be almost idle (default true)
+    optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
+    cookies?: Cookie[]; // Cookies to be written.
+    downloadFrom?: DownloadFrom; // Download files from one or multiple URLs.
+    webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
+    userPassword?: string; // Password for opening the resulting PDF(s).
+    ownerPassword?: string; // Password for full access on the resulting PDF(s).
+    embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
 };
 ```
 
@@ -488,14 +488,14 @@ The `LibreOffice` class comes with a single method `convert`. This method intera
 accepted [here](https://gotenberg.dev/docs/convert-with-libreoffice/convert-to-pdf).
 
 ```typescript
-import { LibreOffice } from "chromiumly";
+import { LibreOffice } from 'chromiumly';
 
 const buffer = await LibreOffice.convert({
-  files: [
-    "path/to/file.docx",
-    "path/to/file.png",
-    { data: xlsxFileBuffer, ext: "xlsx" },
-  ],
+    files: [
+        'path/to/file.docx',
+        'path/to/file.png',
+        { data: xlsxFileBuffer, ext: 'xlsx' }
+    ]
 });
 ```
 
@@ -543,12 +543,12 @@ The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenber
 This method interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/pdfa-pdfua) convertion route to transform PDF files into the requested PDF/A format and/or PDF/UA.
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const buffer = await PDFEngines.convert({
-  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
-  pdfa: PdfFormat.A_2b,
-  pdfUA: true,
+    files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
+    pdfa: PdfFormat.A_2b,
+    pdfUA: true
 });
 ```
 
@@ -560,12 +560,12 @@ as: [PDFtk](https://gitlab.com/pdftk-java/pdftk), [PDFcpu](https://github.com/pd
 and [UNO](https://github.com/unoconv/unoconv).
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const buffer = await PDFEngines.merge({
-  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
-  pdfa: PdfFormat.A_2b,
-  pdfUA: true,
+    files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
+    pdfa: PdfFormat.A_2b,
+    pdfUA: true
 });
 ```
 
@@ -578,12 +578,12 @@ Optional `rotate` (`{ angle: 90 | 180 | 270; pages?: string }`) rotates pages af
 `PDFEngines.rotate()` calls Gotenberg’s [rotate route](https://gotenberg.dev/docs/manipulate-pdfs/rotate-pdfs) to rotate existing PDFs. The same post-processing is available on `PDFEngines.merge()`, `PDFEngines.split()`, and on Chromium and LibreOffice `convert()` through the optional `rotate` property (Gotenberg generates the PDF, then rotates selected pages—an extra pass).
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const rotated = await PDFEngines.rotate({
-  files: ["path/to/document.pdf"],
-  angle: 90,
-  pages: "1-3", // optional; omit for all pages
+    files: ['path/to/document.pdf'],
+    angle: 90,
+    pages: '1-3' // optional; omit for all pages
 });
 ```
 
@@ -592,24 +592,24 @@ const rotated = await PDFEngines.rotate({
 These methods call [`/forms/pdfengines/watermark`](https://gotenberg.dev/docs/manipulate-pdfs/watermark-pdfs) and [`/forms/pdfengines/stamp`](https://gotenberg.dev/docs/manipulate-pdfs/stamp-pdfs).
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const watermarked = await PDFEngines.watermark({
-  files: ["path/to/document.pdf"],
-  watermark: {
-    source: "text",
-    expression: "CONFIDENTIAL",
-    options: { opacity: 0.25, rotation: 45 },
-  },
+    files: ['path/to/document.pdf'],
+    watermark: {
+        source: 'text',
+        expression: 'CONFIDENTIAL',
+        options: { opacity: 0.25, rotation: 45 }
+    }
 });
 
 const stamped = await PDFEngines.stamp({
-  files: ["path/to/document.pdf"],
-  stamp: {
-    source: "text",
-    expression: "APPROVED",
-    options: { opacity: 0.5, rotation: 0 },
-  },
+    files: ['path/to/document.pdf'],
+    stamp: {
+        source: 'text',
+        expression: 'APPROVED',
+        options: { opacity: 0.5, rotation: 0 }
+    }
 });
 ```
 
@@ -620,11 +620,11 @@ const stamped = await PDFEngines.stamp({
 This method reads metadata from the provided PDF files.
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const metadataBuffer = await PDFEngines.readMetadata([
-  "path/to/file_1.pdf",
-  "path/to/file_2.pdf",
+    'path/to/file_1.pdf',
+    'path/to/file_2.pdf'
 ]);
 ```
 
@@ -633,15 +633,15 @@ const metadataBuffer = await PDFEngines.readMetadata([
 This method writes metadata to the provided PDF files.
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const buffer = await PDFEngines.writeMetadata({
-  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
-  metadata: {
-    Author: "Taha Cherfia",
-    Title: "Chromiumly",
-    Keywords: ["pdf", "html", "gotenberg"],
-  },
+    files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
+    metadata: {
+        Author: 'Taha Cherfia',
+        Title: 'Chromiumly',
+        Keywords: ['pdf', 'html', 'gotenberg']
+    }
 });
 ```
 
@@ -654,11 +654,11 @@ Please consider referring to [ExifTool](https://exiftool.org/TagNames/XMP.html#p
 This method reads bookmarks (outline / table of contents) from the provided PDF files.
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const bookmarks = await PDFEngines.readBookmarks([
-  "path/to/file_1.pdf",
-  "path/to/file_2.pdf",
+    'path/to/file_1.pdf',
+    'path/to/file_2.pdf'
 ]);
 ```
 
@@ -667,17 +667,17 @@ const bookmarks = await PDFEngines.readBookmarks([
 This method writes bookmarks to the provided PDF files.
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const updated = await PDFEngines.writeBookmarks({
-  files: ["path/to/file_1.pdf"],
-  bookmarks: [
-    {
-      title: "Chapter 1",
-      page: 1,
-      children: [],
-    },
-  ],
+    files: ['path/to/file_1.pdf'],
+    bookmarks: [
+        {
+            title: 'Chapter 1',
+            page: 1,
+            children: []
+        }
+    ]
 });
 ```
 
@@ -698,29 +698,29 @@ Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route has a `split` p
 - `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
 
 ```typescript
-import { UrlConverter } from "chromiumly";
+import { UrlConverter } from 'chromiumly';
 const buffer = await UrlConverter.convert({
-  url: "https://www.example.com/",
-  split: {
-    mode: "pages",
-    span: "1-2",
-    unify: true,
-  },
+    url: 'https://www.example.com/',
+    split: {
+        mode: 'pages',
+        span: '1-2',
+        unify: true
+    }
 });
 ```
 
 On the other hand, PDFEngines' has a `split` method that interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/split-pdfs) split route which splits PDF files into multiple files.
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const buffer = await PDFEngines.split({
-  files: ["path/to/file_1.pdf", "path/to/file_2.pdf"],
-  options: {
-    mode: "pages",
-    span: "1-2",
-    unify: true,
-  },
+    files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
+    options: {
+        mode: 'pages',
+        span: '1-2',
+        unify: true
+    }
 });
 ```
 
@@ -733,11 +733,11 @@ const buffer = await PDFEngines.split({
 PDF flattening converts interactive elements like forms and annotations into a static PDF. This ensures the document looks the same everywhere and prevents further edits.
 
 ```typescript
-import { PDFEngines } from "chromiumly";
+import { PDFEngines } from 'chromiumly';
 
 const buffer = await PDFEngines.flatten([
-  "path/to/file_1.pdf",
-  "path/to/file_2.pdf",
+    'path/to/file_1.pdf',
+    'path/to/file_2.pdf'
 ]);
 ```
 
@@ -746,12 +746,12 @@ const buffer = await PDFEngines.flatten([
 Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route supports PDF encryption through the `userPassword` and `ownerPassword` parameters. The `userPassword` is required to open the PDF, while the `ownerPassword` provides full access permissions.
 
 ```typescript
-import { UrlConverter } from "chromiumly";
+import { UrlConverter } from 'chromiumly';
 
 const buffer = await UrlConverter.convert({
-  url: "https://www.example.com/",
-  userPassword: "my_user_password",
-  ownerPassword: "my_owner_password",
+    url: 'https://www.example.com/',
+    userPassword: 'my_user_password',
+    ownerPassword: 'my_owner_password'
 });
 ```
 
@@ -762,16 +762,16 @@ Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route supports embedd
 You can embed multiple files by passing an array of file paths, buffers, or read streams:
 
 ```typescript
-import { HtmlConverter } from "chromiumly";
+import { HtmlConverter } from 'chromiumly';
 
 const htmlConverter = new HtmlConverter();
 const buffer = await htmlConverter.convert({
-  html: "path/to/index.html",
-  embeds: [
-    "path/to/invoice.xml",
-    "path/to/logo.png",
-    Buffer.from("additional data"),
-  ],
+    html: 'path/to/index.html',
+    embeds: [
+        'path/to/invoice.xml',
+        'path/to/logo.png',
+        Buffer.from('additional data')
+    ]
 });
 ```
 
@@ -794,48 +794,48 @@ The following template types are currently available:
 #### Basic Usage
 
 ```typescript
-import { Templates } from "chromiumly";
+import { Templates } from 'chromiumly';
 
 const templates = new Templates();
 const buffer = await templates.generate({
-  type: "invoice_saas",
-  data: {
-    invoiceNumber: "INV-319",
-    createdDate: "2026-03-19",
-    dueDate: "2026-04-02",
-    companyLogo: "https://cdn.acmecloud.com/assets/logo-mark.png",
-    sender: {
-      name: "Acme Cloud LLC",
-      addressLine1: "450 Madison Ave",
-      addressLine2: "New York, NY 10022",
-    },
-    receiver: {
-      name: "Northwind Health Inc.",
-      addressLine1: "221 Harbor Blvd",
-      addressLine2: "San Diego, CA 92101",
-    },
-    items: [
-      {
-        description: "Platform Subscription (Annual)",
-        qty: 1,
-        unitPrice: "1500.00",
-        amount: "1500.00",
-      },
-      {
-        description: "Onboarding",
-        qty: 1,
-        unitPrice: "300.00",
-        amount: "300.00",
-      },
-    ],
-    currency: "USD",
-    subTotal: "1800.00",
-    taxRate: 8.25,
-    taxAmount: "148.50",
-    total: "1948.50",
-    footerNote: "Payment due in 14 days.",
-    footerDisclaimer: "Late fees may apply.",
-  },
+    type: 'invoice_saas',
+    data: {
+        invoiceNumber: 'INV-319',
+        createdDate: '2026-03-19',
+        dueDate: '2026-04-02',
+        companyLogo: 'https://cdn.acmecloud.com/assets/logo-mark.png',
+        sender: {
+            name: 'Acme Cloud LLC',
+            addressLine1: '450 Madison Ave',
+            addressLine2: 'New York, NY 10022'
+        },
+        receiver: {
+            name: 'Northwind Health Inc.',
+            addressLine1: '221 Harbor Blvd',
+            addressLine2: 'San Diego, CA 92101'
+        },
+        items: [
+            {
+                description: 'Platform Subscription (Annual)',
+                qty: 1,
+                unitPrice: '1500.00',
+                amount: '1500.00'
+            },
+            {
+                description: 'Onboarding',
+                qty: 1,
+                unitPrice: '300.00',
+                amount: '300.00'
+            }
+        ],
+        currency: 'USD',
+        subTotal: '1800.00',
+        taxRate: 8.25,
+        taxAmount: '148.50',
+        total: '1948.50',
+        footerNote: 'Payment due in 14 days.',
+        footerDisclaimer: 'Late fees may apply.'
+    }
 });
 ```
 
@@ -851,41 +851,41 @@ const buffer = await templates.generate(request, { validate: true });
 
 ```typescript
 type TemplateRequest<TType extends TemplateType> = {
-  type: TType;
-  data: TemplateDataByType[TType];
+    type: TType;
+    data: TemplateDataByType[TType];
 };
 
 interface InvoiceSaasTemplateData {
-  invoiceNumber: string;
-  createdDate: string;
-  dueDate: string;
-  companyLogo: string;
-  sender: TemplateParty;
-  receiver: TemplateParty;
-  items: InvoiceItem[];
-  currency: Currency;
-  subTotal: string;
-  taxRate: number;
-  taxAmount: string;
-  total: string;
-  footerNote: string;
-  footerDisclaimer: string;
+    invoiceNumber: string;
+    createdDate: string;
+    dueDate: string;
+    companyLogo: string;
+    sender: TemplateParty;
+    receiver: TemplateParty;
+    items: InvoiceItem[];
+    currency: Currency;
+    subTotal: string;
+    taxRate: number;
+    taxAmount: string;
+    total: string;
+    footerNote: string;
+    footerDisclaimer: string;
 }
 
 interface TemplateParty {
-  name: string;
-  addressLine1: string;
-  addressLine2: string;
-  tax?: string;
-  iban?: string;
-  bic?: string;
+    name: string;
+    addressLine1: string;
+    addressLine2: string;
+    tax?: string;
+    iban?: string;
+    bic?: string;
 }
 
 interface InvoiceItem {
-  description: string;
-  qty: number;
-  unitPrice: string;
-  amount: string;
+    description: string;
+    qty: number;
+    unitPrice: string;
+    amount: string;
 }
 ```
 
@@ -910,7 +910,7 @@ For image or PDF sources, set `source` to `image` or `pdf`, set `expression` to 
 The `System` class exposes Gotenberg system endpoints:
 
 ```typescript
-import { System } from "chromiumly";
+import { System } from 'chromiumly';
 
 const health = await System.getHealth(); // GET /health
 const heartbeat = await System.headHealth(); // HEAD /health
@@ -924,37 +924,37 @@ const metrics = await System.getPrometheusMetrics(); // GET /prometheus/metrics
 The following is a short snippet of how to use the library.
 
 ```typescript
-import { PDFEngines, UrlConverter } from "chromiumly";
+import { PDFEngines, UrlConverter } from 'chromiumly';
 
 async function run() {
-  const urlConverter = new UrlConverter();
-  const buffer = await urlConverter.convert({
-    url: "https://gotenberg.dev/",
-    properties: {
-      singlePage: true,
-      size: {
-        width: 8.5,
-        height: 11,
-      },
-    },
-    emulatedMediaType: "screen",
-    emulatedMediaFeatures: [
-      { name: "prefers-color-scheme", value: "dark" },
-      { name: "prefers-reduced-motion", value: "reduce" },
-    ],
-    failOnHttpStatusCodes: [404],
-    failOnConsoleExceptions: true,
-    skipNetworkIdleEvent: false,
-    skipNetworkAlmostIdleEvent: false,
-    optimizeForSpeed: true,
-    split: {
-      mode: "pages",
-      span: "1-2",
-      unify: true,
-    },
-  });
+    const urlConverter = new UrlConverter();
+    const buffer = await urlConverter.convert({
+        url: 'https://gotenberg.dev/',
+        properties: {
+            singlePage: true,
+            size: {
+                width: 8.5,
+                height: 11
+            }
+        },
+        emulatedMediaType: 'screen',
+        emulatedMediaFeatures: [
+            { name: 'prefers-color-scheme', value: 'dark' },
+            { name: 'prefers-reduced-motion', value: 'reduce' }
+        ],
+        failOnHttpStatusCodes: [404],
+        failOnConsoleExceptions: true,
+        skipNetworkIdleEvent: false,
+        skipNetworkAlmostIdleEvent: false,
+        optimizeForSpeed: true,
+        split: {
+            mode: 'pages',
+            span: '1-2',
+            unify: true
+        }
+    });
 
-  await PDFEngines.generate("gotenberg.pdf", buffer);
+    await PDFEngines.generate('gotenberg.pdf', buffer);
 }
 
 run();

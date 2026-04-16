@@ -1,85 +1,85 @@
 {
-  "name": "chromiumly",
-  "version": "5.2.1",
-  "description": "A lightweight Typescript library that interacts with Gotenberg's different modules to convert a variety of document formats to PDF files.",
-  "main": "dist/main.js",
-  "types": "dist/main.d.ts",
-  "files": [
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cherfia/chromiumly.git"
-  },
-  "author": "Taha Cherfia <taha.cherfia@gmail.com>",
-  "license": "MIT",
-  "packageManager": "yarn@4.13.0",
-  "engines": {
-    "node": ">=18.x"
-  },
-  "keywords": [
-    "gotenberg",
-    "chromium",
-    "LibreOffice",
-    "screenshots",
-    "html",
-    "markdown",
-    "pdf",
-    "docx",
-    "pptx",
-    "xlsx"
-  ],
-  "scripts": {
-    "clean": "rm -rf dist build",
-    "lint": "eslint src/ --ext .js,.ts",
-    "build": "yarn clean && tsc -p tsconfig.json",
-    "test": "jest --runInBand --ci --coverage --reporters=default --reporters=jest-junit",
-    "commit": "git-cz",
-    "format": "yarn prettier . -w",
-    "release": "release-it",
-    "prepare": "husky"
-  },
-  "config": {
-    "commitizen": {
-      "path": "@commitlint/cz-commitlint"
+    "name": "chromiumly",
+    "version": "5.2.1",
+    "description": "A lightweight Typescript library that interacts with Gotenberg's different modules to convert a variety of document formats to PDF files.",
+    "main": "dist/main.js",
+    "types": "dist/main.d.ts",
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cherfia/chromiumly.git"
+    },
+    "author": "Taha Cherfia <taha.cherfia@gmail.com>",
+    "license": "MIT",
+    "packageManager": "yarn@4.13.0",
+    "engines": {
+        "node": ">=18.x"
+    },
+    "keywords": [
+        "gotenberg",
+        "chromium",
+        "LibreOffice",
+        "screenshots",
+        "html",
+        "markdown",
+        "pdf",
+        "docx",
+        "pptx",
+        "xlsx"
+    ],
+    "scripts": {
+        "clean": "rm -rf dist build",
+        "lint": "eslint src/ --ext .js,.ts",
+        "build": "yarn clean && tsc -p tsconfig.json",
+        "test": "jest --runInBand --ci --coverage --reporters=default --reporters=jest-junit",
+        "commit": "git-cz",
+        "format": "yarn prettier . -w",
+        "release": "release-it",
+        "prepare": "husky"
+    },
+    "config": {
+        "commitizen": {
+            "path": "@commitlint/cz-commitlint"
+        }
+    },
+    "devDependencies": {
+        "@babel/core": "7.29.0",
+        "@babel/preset-typescript": "7.28.5",
+        "@commitlint/cli": "^20.0.0",
+        "@commitlint/config-conventional": "^20.0.0",
+        "@commitlint/cz-commitlint": "^20.0.0",
+        "@release-it/conventional-changelog": "10.0.6",
+        "@types/config": "4.4.0",
+        "@types/dotenv": "8.2.3",
+        "@types/jest": "30.0.0",
+        "@types/node": "24.12.2",
+        "@typescript-eslint/eslint-plugin": "8.58.2",
+        "@typescript-eslint/parser": "8.58.2",
+        "commitizen": "4.3.1",
+        "eslint": "8.57.0",
+        "eslint-config-prettier": "^10.0.0",
+        "husky": "^9.0.11",
+        "inquirer": "9",
+        "jest": "30.3.0",
+        "jest-junit": "16.0.0",
+        "lint-staged": "^16.0.0",
+        "prettier": "3.8.2",
+        "release-it": "19.2.4",
+        "ts-jest": "29.4.9",
+        "ts-node": "10.9.2",
+        "tslib": "2.8.1",
+        "typescript": "6.0.2"
+    },
+    "optionalDependencies": {
+        "config": "4.x",
+        "dotenv": "17.x"
+    },
+    "resolutions": {
+        "conventional-changelog-conventionalcommits": "9.3.1"
+    },
+    "lint-staged": {
+        "**/*": "yarn prettier --write --ignore-unknown"
     }
-  },
-  "devDependencies": {
-    "@babel/core": "7.29.0",
-    "@babel/preset-typescript": "7.28.5",
-    "@commitlint/cli": "^20.0.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "@commitlint/cz-commitlint": "^20.0.0",
-    "@release-it/conventional-changelog": "10.0.6",
-    "@types/config": "4.4.0",
-    "@types/dotenv": "8.2.3",
-    "@types/jest": "30.0.0",
-    "@types/node": "24.12.2",
-    "@typescript-eslint/eslint-plugin": "8.58.2",
-    "@typescript-eslint/parser": "8.58.2",
-    "commitizen": "4.3.1",
-    "eslint": "8.57.0",
-    "eslint-config-prettier": "^10.0.0",
-    "husky": "^9.0.11",
-    "inquirer": "9",
-    "jest": "30.3.0",
-    "jest-junit": "16.0.0",
-    "lint-staged": "^16.0.0",
-    "prettier": "3.8.2",
-    "release-it": "19.2.4",
-    "ts-jest": "29.4.9",
-    "ts-node": "10.9.2",
-    "tslib": "2.8.1",
-    "typescript": "6.0.2"
-  },
-  "optionalDependencies": {
-    "config": "4.x",
-    "dotenv": "17.x"
-  },
-  "resolutions": {
-    "conventional-changelog-conventionalcommits": "9.3.1"
-  },
-  "lint-staged": {
-    "**/*": "yarn prettier --write --ignore-unknown"
-  }
 }

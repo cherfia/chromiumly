@@ -1,45 +1,45 @@
 plugins:
-  "@release-it/conventional-changelog":
-    infile: "CHANGELOG.md"
-    preset:
-      name: conventionalcommits
-      types:
-        - type: "feat"
-          section: "Features"
-        - type: "fix"
-          section: "Bug Fixes"
-        - type: "docs"
-          section: "Documentation"
-        - type: "style"
-          section: "Styles"
-        - type: "refactor"
-          section: "Code Refactoring"
-        - type: "perf"
-          section: "Performance Improvements"
-        - type: "test"
-          section: "Tests"
-        - type: "build"
-          section: "Build System"
-        - type: "ci"
-          section: "Continuous Integration"
-        - type: "chore"
-          section: "Chores"
-        - type: "revert"
-          section: "Reverts"
+    '@release-it/conventional-changelog':
+        infile: 'CHANGELOG.md'
+        preset:
+            name: conventionalcommits
+            types:
+                - type: 'feat'
+                  section: 'Features'
+                - type: 'fix'
+                  section: 'Bug Fixes'
+                - type: 'docs'
+                  section: 'Documentation'
+                - type: 'style'
+                  section: 'Styles'
+                - type: 'refactor'
+                  section: 'Code Refactoring'
+                - type: 'perf'
+                  section: 'Performance Improvements'
+                - type: 'test'
+                  section: 'Tests'
+                - type: 'build'
+                  section: 'Build System'
+                - type: 'ci'
+                  section: 'Continuous Integration'
+                - type: 'chore'
+                  section: 'Chores'
+                - type: 'revert'
+                  section: 'Reverts'
 git:
-  requireBranch: main
-  commitMessage: "chore: release v${version}"
+    requireBranch: main
+    commitMessage: 'chore: release v${version}'
 
 hooks:
-  before:init: ["git pull", "yarn", "yarn lint", "yarn build", "yarn test"]
-  after:bump: "git add CHANGELOG.md"
-  after:release:
-    - "echo Successfully released ${name} v${version} to ${repo.repository}."
+    before:init: ['git pull', 'yarn', 'yarn lint', 'yarn build', 'yarn test']
+    after:bump: 'git add CHANGELOG.md'
+    after:release:
+        - 'echo Successfully released ${name} v${version} to ${repo.repository}.'
 
 github:
-  release: true
+    release: true
 npm:
-  publish: true
-  skipChecks: true
-  publishConfig:
-    registry: "https://registry.npmjs.org"
+    publish: true
+    skipChecks: true
+    publishConfig:
+        registry: 'https://registry.npmjs.org'

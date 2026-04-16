@@ -1,47 +1,47 @@
 name: Build
 on:
-  push:
-    branches: [main, "release/*", develop]
-  pull_request:
-    branches: [main, "release/*", develop]
+    push:
+        branches: [main, 'release/*', develop]
+    pull_request:
+        branches: [main, 'release/*', develop]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          registry-url: "https://registry.npmjs.org"
-      - name: Enable Corepack
-        run: corepack enable
-      - name: Install commitlint
-        run: yarn add conventional-changelog-conventionalcommits commitlint@latest
-      - name: Validate commits
-        if: github.event_name == 'push'
-        run: npx commitlint --from $(git rev-parse HEAD^1) --to $(git rev-parse HEAD) --verbose
-      - name: Validate pull requests
-        if: github.event_name == 'pull_request'
-        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}^${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
-      - name: Install Dependencies
-        run: yarn install
-      - name: Lint Code
-        run: yarn lint
-      - name: Build Code
-        run: yarn build
-      - name: Run Tests
-        run: yarn test
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          flags: unittests
-          name: codecov-chromiumly
-          fail_ci_if_error: true
-          verbose: true
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: read
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: '24'
+                  registry-url: 'https://registry.npmjs.org'
+            - name: Enable Corepack
+              run: corepack enable
+            - name: Install commitlint
+              run: yarn add conventional-changelog-conventionalcommits commitlint@latest
+            - name: Validate commits
+              if: github.event_name == 'push'
+              run: npx commitlint --from $(git rev-parse HEAD^1) --to $(git rev-parse HEAD) --verbose
+            - name: Validate pull requests
+              if: github.event_name == 'pull_request'
+              run: npx commitlint --from ${{ github.event.pull_request.head.sha }}^${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+            - name: Install Dependencies
+              run: yarn install
+            - name: Lint Code
+              run: yarn lint
+            - name: Build Code
+              run: yarn build
+            - name: Run Tests
+              run: yarn test
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v6
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+              with:
+                  flags: unittests
+                  name: codecov-chromiumly
+                  fail_ci_if_error: true
+                  verbose: true

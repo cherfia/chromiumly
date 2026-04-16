@@ -1,23 +1,23 @@
 {
-  "compilerOptions": {
-    "target": "es2022",
-    "module": "Node16",
-    "moduleResolution": "node16",
-    "declaration": true,
-    "strict": true,
-    "isolatedModules": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "types": ["node", "jest"],
-    "lib": ["ES2022"]
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.test.ts", "assets"]
+    "compilerOptions": {
+        "target": "es2022",
+        "module": "Node16",
+        "moduleResolution": "node16",
+        "declaration": true,
+        "strict": true,
+        "isolatedModules": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "types": ["node", "jest"],
+        "lib": ["ES2022"]
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "**/*.test.ts", "assets"]
 }

@@ -1,5 +1,5 @@
 coverage:
-  status:
-    patch:
-      default:
-        target: 100%
+    status:
+        patch:
+            default:
+                target: 100%
