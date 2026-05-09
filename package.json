@@ -65,7 +65,7 @@
         "globals": "^17.5.0",
         "husky": "^9.1.7",
         "inquirer": "13",
-        "jest": "30.3.0",
+        "jest": "30.4.2",
         "jest-junit": "17.0.0",
         "lint-staged": "^16.4.0",
         "prettier": "3.8.3",
