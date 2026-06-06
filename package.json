@@ -52,7 +52,7 @@
         "@commitlint/cz-commitlint": "^21.0.0",
         "@eslint/eslintrc": "^3.3.5",
         "@eslint/js": "^10.0.1",
-        "@release-it/conventional-changelog": "11.0.0",
+        "@release-it/conventional-changelog": "11.0.1",
         "@types/config": "4.4.0",
         "@types/dotenv": "8.2.3",
         "@types/jest": "30.0.0",
