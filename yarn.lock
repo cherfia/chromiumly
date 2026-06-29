@@ -3744,7 +3744,7 @@ __metadata:
     jest-junit: "npm:17.0.0"
     lint-staged: "npm:^17.0.0"
     prettier: "npm:3.8.4"
-    release-it: "npm:20.2.0"
+    release-it: "npm:20.2.1"
     ts-jest: "npm:29.4.11"
     ts-node: "npm:10.9.2"
     tslib: "npm:2.8.1"
@@ -7757,9 +7757,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"release-it@npm:20.2.0":
-  version: 20.2.0
-  resolution: "release-it@npm:20.2.0"
+"release-it@npm:20.2.1":
+  version: 20.2.1
+  resolution: "release-it@npm:20.2.1"
   dependencies:
     "@inquirer/prompts": "npm:8.4.2"
     "@octokit/rest": "npm:22.0.1"
@@ -7780,13 +7780,13 @@ __metadata:
     proxy-agent: "npm:7.0.0"
     semver: "npm:7.7.4"
     tinyglobby: "npm:0.2.15"
-    undici: "npm:7.24.5"
+    undici: "npm:7.28.0"
     url-join: "npm:5.0.0"
     wildcard-match: "npm:5.1.4"
     yargs-parser: "npm:22.0.0"
   bin:
     release-it: bin/release-it.js
-  checksum: 10c0/e08311cac9ab13a4eb0c2f026336c2364c511405dd42697cef8ac65abecd3b628a674b835470214b4d0583879af6b1c1f39d3a5fc995ce50090f6d92c4aec55f
+  checksum: 10c0/9fd3fb15fd95026706235bad46899b7fa0af146373fb19a48a4223c9a7ef3e3507f795f0e9ca51e2d4b34b5e9c35d35ec86651c55f129126a733dd32f77686cb
   languageName: node
   linkType: hard
 
@@ -8618,10 +8618,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:7.24.5":
-  version: 7.24.5
-  resolution: "undici@npm:7.24.5"
-  checksum: 10c0/2a836f1f6ab078fde3eeb4cc8fd5b34eeaf52cfbdf16a9bab61b7223f43f7847bcd2125d1da7c4e3f5996c528bf9f7940015d39909bab80cfbd71b855470cf21
+"undici@npm:7.28.0":
+  version: 7.28.0
+  resolution: "undici@npm:7.28.0"
+  checksum: 10c0/fe781983a26098795e99bb1f64906cbb7d0bcaa029a26baade007b53ea67f2631d189b8f9671a31f4c8d0cb3773b7559608628ba54452fef51fec90e7c78bb0d
   languageName: node
   linkType: hard
 
