@@ -180,9 +180,24 @@ describe('PDFEngines', () => {
     describe('readMetadata', () => {
         it('should return a buffer', async () => {
             mockPromisesAccess.mockResolvedValue();
-            const buffer = await PDFEngines.readMetadata(['path/to/file.pdf']);
+            const buffer = await PDFEngines.readMetadata({
+                files: ['path/to/file.pdf']
+            });
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        });
+
+        it('should append downloadFrom when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.readMetadata({
+                files: ['path/to/file.pdf'],
+                downloadFrom: {
+                    url: 'http://example.com',
+                    extraHttpHeaders: { 'Content-Type': 'application/json' }
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
         });
     });
 
