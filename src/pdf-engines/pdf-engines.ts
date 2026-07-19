@@ -253,16 +253,25 @@ export class PDFEngines {
     /**
      * Reads metadata from the provided files.
      *
-     * @param {PathLikeOrReadStream[]} files An array of PathLikes or ReadStreams to the PDF files.
+     * @param {Object} options - Options for the read metadata operation.
+     * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the PDF files.
+     * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the metadata buffer.
      */
-    public static async readMetadata(
-        files: PathLikeOrReadStream[],
-        webhook?: WebhookOptions
-    ): Promise<Buffer> {
+    public static async readMetadata({
+        files,
+        downloadFrom,
+        webhook
+    }: {
+        files: PathLikeOrReadStream[];
+        downloadFrom?: DownloadFrom;
+        webhook?: WebhookOptions;
+    }): Promise<Buffer> {
         const data = new FormData();
 
         await PDFEnginesUtils.addFiles(files, data);
+
+        await PDFEnginesUtils.customize(data, { downloadFrom });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readMetadata}`;
 
