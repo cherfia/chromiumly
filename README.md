@@ -622,10 +622,10 @@ This method reads metadata from the provided PDF files.
 ```typescript
 import { PDFEngines } from 'chromiumly';
 
-const metadataBuffer = await PDFEngines.readMetadata([
-    'path/to/file_1.pdf',
-    'path/to/file_2.pdf'
-]);
+const metadataBuffer = await PDFEngines.readMetadata({
+    files: ['path/to/file_1.pdf'],
+    downloadFrom: [{ url: 'https://cdn.example.com/file.pdf' }] // optional: read metadata from a remote PDF
+});
 ```
 
 ##### writeMetadata
