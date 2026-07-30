@@ -80,7 +80,7 @@
         "dotenv": "17.x"
     },
     "resolutions": {
-        "conventional-changelog-conventionalcommits": "9.3.1"
+        "conventional-changelog-conventionalcommits": "10.2.1"
     },
     "lint-staged": {
         "**/*": "yarn prettier --write --ignore-unknown"
