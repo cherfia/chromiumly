@@ -376,6 +376,26 @@ describe('LibreOfficeUtils', () => {
                 );
             });
         });
+
+        describe('when updateIndexes parameter is set to false', () => {
+            it('should append updateIndexes to data', () => {
+                LibreOfficeUtils.addPageProperties(data, {
+                    updateIndexes: false
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'updateIndexes',
+                    'false'
+                );
+            });
+
+            it('should not append updateIndexes when true (default)', () => {
+                LibreOfficeUtils.addPageProperties(data, {
+                    updateIndexes: true
+                });
+                expect(mockFormDataAppend).not.toHaveBeenCalled();
+            });
+        });
     });
 
     describe('customize', () => {

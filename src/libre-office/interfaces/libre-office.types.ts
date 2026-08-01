@@ -173,6 +173,7 @@ export type PageProperties = {
     exportLinksRelativeFsys?: boolean; // Export file system hyperlinks as relative
     exportHiddenSlides?: boolean; // Export hidden slides (Impress only)
     skipEmptyPages?: boolean; // Suppress automatically inserted empty pages (Writer only)
+    updateIndexes?: boolean; // Update the document's indexes/table of contents before export (default true)
     addOriginalDocumentAsStream?: boolean; // Insert original document as a stream in PDF
 };
 

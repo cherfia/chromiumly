@@ -211,6 +211,13 @@ export class LibreOfficeUtils {
             );
         }
 
+        if (pageProperties.updateIndexes === false) {
+            data.append(
+                'updateIndexes',
+                String(pageProperties.updateIndexes)
+            );
+        }
+
         if (pageProperties.password) {
             data.append('password', pageProperties.password);
         }
