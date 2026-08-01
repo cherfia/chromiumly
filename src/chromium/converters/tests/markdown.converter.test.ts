@@ -65,6 +65,29 @@ describe('MarkdownConverter', () => {
             });
         });
 
+        describe('when multiple markdown files are passed', () => {
+            it('should append each file under its own name', async () => {
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    markdown: [
+                        { file: Buffer.from('md1'), name: 'part1.md' },
+                        { file: Buffer.from('md2'), name: 'part2.md' }
+                    ]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'files',
+                    new Blob([Buffer.from('md1')]),
+                    'part1.md'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'files',
+                    new Blob([Buffer.from('md2')]),
+                    'part2.md'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when assets parameter is passed', () => {
             it('should return a buffer', async () => {
                 const buffer = await converter.convert({

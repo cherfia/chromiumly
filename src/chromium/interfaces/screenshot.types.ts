@@ -35,7 +35,10 @@ export type UrlScreenshotOptions = ScreenshotOptions & {
 
 export type MarkdownScreenshotOptions = ScreenshotOptions & {
     html: PathLikeOrReadStream;
-    markdown: PathLikeOrReadStream;
+    /** A single markdown file, or multiple distinctly-named markdown files. */
+    markdown:
+        | PathLikeOrReadStream
+        | { file: PathLikeOrReadStream; name: string }[];
     header?: PathLikeOrReadStream;
     footer?: PathLikeOrReadStream;
     assets?: { file: PathLikeOrReadStream; name: string }[];

@@ -102,7 +102,15 @@ export class MarkdownConverter extends Converter {
 
         await GotenbergUtils.addFile(data, html, 'index.html');
 
-        await GotenbergUtils.addFile(data, markdown, 'file.md');
+        if (Array.isArray(markdown)) {
+            await Promise.all(
+                markdown.map(({ file, name }) =>
+                    GotenbergUtils.addFile(data, file, name)
+                )
+            );
+        } else {
+            await GotenbergUtils.addFile(data, markdown, 'file.md');
+        }
 
         if (assets?.length) {
             await Promise.all(

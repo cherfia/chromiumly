@@ -87,5 +87,8 @@ export type MarkdownConversionOptions = ConversionOptions & {
     assets?: { file: PathLikeOrReadStream; name: string }[];
     header?: PathLikeOrReadStream;
     footer?: PathLikeOrReadStream;
-    markdown: PathLikeOrReadStream;
+    /** A single markdown file, or multiple distinctly-named markdown files. */
+    markdown:
+        | PathLikeOrReadStream
+        | { file: PathLikeOrReadStream; name: string }[];
 };
