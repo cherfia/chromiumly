@@ -434,6 +434,13 @@ export class LibreOfficeUtils {
             );
         }
 
+        if (options.embedsMetadata) {
+            data.append(
+                'embedsMetadata',
+                JSON.stringify(options.embedsMetadata)
+            );
+        }
+
         if (options.nativeWatermarkText !== undefined) {
             data.append('nativeWatermarkText', options.nativeWatermarkText);
         }
