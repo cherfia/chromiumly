@@ -578,6 +578,11 @@ export class PDFEngines {
         webhook?: WebhookOptions;
         downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
+        GotenbergUtils.assert(
+            !!watermark.source && !!watermark.expression,
+            'watermark.source and watermark.expression are required'
+        );
+
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(data, {
@@ -618,6 +623,11 @@ export class PDFEngines {
         webhook?: WebhookOptions;
         downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
+        GotenbergUtils.assert(
+            !!stamp.source && !!stamp.expression,
+            'stamp.source and stamp.expression are required'
+        );
+
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(data, {

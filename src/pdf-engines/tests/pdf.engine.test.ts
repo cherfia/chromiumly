@@ -748,6 +748,17 @@ describe('PDFEngines', () => {
             );
         });
 
+        it('should throw when source or expression is missing', async () => {
+            await expect(
+                PDFEngines.watermark({
+                    files: ['path/to/file.pdf'],
+                    watermark: { pages: '1' }
+                })
+            ).rejects.toThrow(
+                'watermark.source and watermark.expression are required'
+            );
+        });
+
         it('should append output filename and trace headers when passed', async () => {
             mockPromisesAccess.mockResolvedValue();
             await PDFEngines.watermark({
@@ -795,6 +806,17 @@ describe('PDFEngines', () => {
                     method: 'POST',
                     body: expect.any(FormData)
                 })
+            );
+        });
+
+        it('should throw when source or expression is missing', async () => {
+            await expect(
+                PDFEngines.stamp({
+                    files: ['path/to/file.pdf'],
+                    stamp: { pages: '1' }
+                })
+            ).rejects.toThrow(
+                'stamp.source and stamp.expression are required'
             );
         });
 
