@@ -1,5 +1,7 @@
 # Changelog
 
+## [6.0.0](https://github.com/cherfia/chromiumly/compare/5.2.1...6.0.0) (2026-08-01)
+
 ## [5.2.1](https://github.com/cherfia/chromiumly/compare/5.2.0...5.2.1) (2026-04-07)
 
 ### Bug Fixes
