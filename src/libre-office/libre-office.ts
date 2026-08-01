@@ -71,7 +71,9 @@ export class LibreOffice {
         webhook,
         watermark,
         stamp,
-        rotate
+        rotate,
+        outputFilename,
+        trace
     }: {
         files: PathLikeOrReadStream[];
     } & ConversionOptions): Promise<Buffer> {
@@ -129,7 +131,10 @@ export class LibreOffice {
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
             Chromiumly.getGotenbergApiKey(),
-            GotenbergUtils.buildWebhookHeaders(webhook)
+            GotenbergUtils.combineHeaders(
+                GotenbergUtils.buildWebhookHeaders(webhook),
+                GotenbergUtils.buildOutputHeaders({ outputFilename, trace })
+            )
         );
     }
 }

@@ -7,6 +7,7 @@ import {
 } from '../../common';
 import {
     DownloadFrom,
+    OutputOptions,
     PdfEngineRotate,
     Split,
     WebhookOptions
@@ -172,7 +173,7 @@ export type PageProperties = {
     addOriginalDocumentAsStream?: boolean; // Insert original document as a stream in PDF
 };
 
-export type ConversionOptions = {
+export type ConversionOptions = OutputOptions & {
     properties?: PageProperties;
     merge?: boolean;
     pdfa?: PdfFormat;

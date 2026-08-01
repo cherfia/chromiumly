@@ -252,5 +252,25 @@ describe('LibreOffice', () => {
                 );
             });
         });
+
+        describe('when outputFilename and trace parameters are passed', () => {
+            it('should send them as request headers', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    outputFilename: 'my-file',
+                    trace: 'my-trace-id'
+                });
+                expect(mockFetch).toHaveBeenCalledWith(
+                    'http://localhost:3000/forms/libreoffice/convert',
+                    expect.objectContaining({
+                        headers: expect.objectContaining({
+                            'Gotenberg-Output-Filename': 'my-file',
+                            'Gotenberg-Trace': 'my-trace-id'
+                        })
+                    })
+                );
+            });
+        });
     });
 });
