@@ -14,6 +14,13 @@ export type { PdfEngineRotate } from './types';
 export { appendPdfEngineRotate } from './pdf-engine-rotate.utils';
 export { appendPdfEnginePermissions } from './pdf-engine-encryption.utils';
 export type { PdfEnginePermissions } from './pdf-engine-encryption.types';
+export { appendFacturX } from './factur-x.utils';
+export type {
+    FacturXOptions,
+    FacturXConformanceLevel,
+    FacturXDocumentType,
+    FacturXPdfFormat
+} from './factur-x.types';
 export type {
     PdfEngineStamp,
     PdfEngineStampSource,
