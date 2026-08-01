@@ -36,7 +36,7 @@ export type PageProperties = {
     omitBackground?: boolean; // Hide the default white background and allow generating PDFs with transparency (default false)
     landscape?: boolean; // Set the paper orientation to landscape (default false)
     scale?: number; // The scale of the page rendering (default 1.0)
-    nativePageRanges?: { from: number; to: number }; // Page ranges to print
+    nativePageRanges?: { from: number; to: number } | string; // Page ranges to print (e.g. a single range, or the free-form syntax "1-5, 8, 11-13")
 };
 
 export type ConversionOptions = ChromiumOptions &

@@ -165,18 +165,25 @@ export class ConverterUtils {
         }
 
         if (pageProperties.nativePageRanges) {
-            GotenbergUtils.assert(
-                pageProperties.nativePageRanges.from > 0 &&
-                    pageProperties.nativePageRanges.to > 0 &&
-                    pageProperties.nativePageRanges.to >=
-                        pageProperties.nativePageRanges.from,
-                'page ranges syntax error'
-            );
+            if (typeof pageProperties.nativePageRanges === 'string') {
+                data.append(
+                    'nativePageRanges',
+                    pageProperties.nativePageRanges
+                );
+            } else {
+                GotenbergUtils.assert(
+                    pageProperties.nativePageRanges.from > 0 &&
+                        pageProperties.nativePageRanges.to > 0 &&
+                        pageProperties.nativePageRanges.to >=
+                            pageProperties.nativePageRanges.from,
+                    'page ranges syntax error'
+                );
 
-            data.append(
-                'nativePageRanges',
-                `${pageProperties.nativePageRanges.from}-${pageProperties.nativePageRanges.to}`
-            );
+                data.append(
+                    'nativePageRanges',
+                    `${pageProperties.nativePageRanges.from}-${pageProperties.nativePageRanges.to}`
+                );
+            }
         }
     }
 

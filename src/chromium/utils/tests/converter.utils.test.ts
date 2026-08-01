@@ -556,6 +556,19 @@ describe('ConverterUtils', () => {
                     );
                 });
             });
+
+            describe('when nativePageRanges is a free-form string', () => {
+                it('should append it as-is', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        nativePageRanges: '1-5, 8, 11-13'
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'nativePageRanges',
+                        '1-5, 8, 11-13'
+                    );
+                });
+            });
         });
     });
 
