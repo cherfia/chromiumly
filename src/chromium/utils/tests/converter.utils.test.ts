@@ -965,6 +965,18 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when generateTaggedPdf parameter is passed', () => {
+            it('should append generateTaggedPdf', async () => {
+                await ConverterUtils.customize(data, {
+                    generateTaggedPdf: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'generateTaggedPdf',
+                    'true'
+                );
+            });
+        });
+
         describe('when embedsMetadata parameter is passed', () => {
             it('should append embedsMetadata as JSON', async () => {
                 await ConverterUtils.customize(data, {

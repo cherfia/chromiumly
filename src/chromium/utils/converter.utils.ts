@@ -353,6 +353,13 @@ export class ConverterUtils {
             );
         }
 
+        if (options.generateTaggedPdf) {
+            data.append(
+                'generateTaggedPdf',
+                String(options.generateTaggedPdf)
+            );
+        }
+
         if (options.split) {
             data.append('splitMode', options.split.mode);
             data.append('splitSpan', options.split.span);

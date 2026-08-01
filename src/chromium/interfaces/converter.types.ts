@@ -49,6 +49,7 @@ export type ConversionOptions = ChromiumOptions &
          */
         pdfFormat?: PdfFormat;
         pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
+        generateTaggedPdf?: boolean; // Embed PDF/UA accessibility structure tags, independent of pdfUA (default false)
         metadata?: Metadata;
         cookies?: Cookie[];
         split?: Split;
