@@ -203,6 +203,19 @@ describe('ScreenshotUtils', () => {
             });
         });
 
+        describe('when userAgent parameter is passed', () => {
+            it('should append userAgent', async () => {
+                await ScreenshotUtils.customize(data, {
+                    userAgent: 'my-user-agent'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                expect(data.append).toHaveBeenCalledWith(
+                    'userAgent',
+                    'my-user-agent'
+                );
+            });
+        });
+
         describe('when extraHttpHeaders parameter is passed', () => {
             it('should append extraHttpHeaders', async () => {
                 const extraHttpHeaders = {

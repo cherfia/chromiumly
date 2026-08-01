@@ -18,6 +18,7 @@ export type Cookie = {
 export type ChromiumOptions = {
     header?: PathLikeOrReadStream;
     footer?: PathLikeOrReadStream;
+    userAgent?: string; // Override the User-Agent header sent by Chromium.
     emulatedMediaType?: EmulatedMediaType;
     emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g. prefers-color-scheme). Default: None.
     waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before conversion.

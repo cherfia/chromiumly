@@ -49,11 +49,6 @@ export type ConversionOptions = ChromiumOptions &
          */
         pdfFormat?: PdfFormat;
         pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
-        /**
-         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for userAgent.
-         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
-         */
-        userAgent?: string;
         metadata?: Metadata;
         cookies?: Cookie[];
         split?: Split;

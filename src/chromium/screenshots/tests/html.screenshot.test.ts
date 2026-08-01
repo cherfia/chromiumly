@@ -74,6 +74,20 @@ describe('HtmlScreenshot', () => {
             });
         });
 
+        describe('when userAgent parameter is passed', () => {
+            it('should append userAgent', async () => {
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    userAgent: 'my-user-agent'
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'userAgent',
+                    'my-user-agent'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when emulatedMediaType parameter is passed', () => {
             it('should return a buffer', async () => {
                 const buffer = await screenshot.capture({
