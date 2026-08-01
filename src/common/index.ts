@@ -12,6 +12,8 @@ export type {
 } from './types';
 export type { PdfEngineRotate } from './types';
 export { appendPdfEngineRotate } from './pdf-engine-rotate.utils';
+export { appendPdfEnginePermissions } from './pdf-engine-encryption.utils';
+export type { PdfEnginePermissions } from './pdf-engine-encryption.types';
 export type {
     PdfEngineStamp,
     PdfEngineStampSource,
