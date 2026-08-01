@@ -109,6 +109,63 @@ describe('GotenbergUtils', () => {
         });
     });
 
+    describe('buildOutputHeaders', () => {
+        it('should return undefined when no options are provided', () => {
+            expect(GotenbergUtils.buildOutputHeaders()).toBeUndefined();
+        });
+
+        it('should return undefined when neither field is set', () => {
+            expect(GotenbergUtils.buildOutputHeaders({})).toBeUndefined();
+        });
+
+        it('should build the output filename header', () => {
+            expect(
+                GotenbergUtils.buildOutputHeaders({
+                    outputFilename: 'my-file'
+                })
+            ).toEqual({ 'Gotenberg-Output-Filename': 'my-file' });
+        });
+
+        it('should build the trace header', () => {
+            expect(
+                GotenbergUtils.buildOutputHeaders({ trace: 'my-trace-id' })
+            ).toEqual({ 'Gotenberg-Trace': 'my-trace-id' });
+        });
+
+        it('should build both headers when both fields are set', () => {
+            expect(
+                GotenbergUtils.buildOutputHeaders({
+                    outputFilename: 'my-file',
+                    trace: 'my-trace-id'
+                })
+            ).toEqual({
+                'Gotenberg-Output-Filename': 'my-file',
+                'Gotenberg-Trace': 'my-trace-id'
+            });
+        });
+    });
+
+    describe('combineHeaders', () => {
+        it('should return undefined when nothing to merge', () => {
+            expect(
+                GotenbergUtils.combineHeaders(undefined, undefined)
+            ).toBeUndefined();
+        });
+
+        it('should merge multiple header records', () => {
+            expect(
+                GotenbergUtils.combineHeaders(
+                    { 'Gotenberg-Webhook-Url': 'https://my.webhook' },
+                    undefined,
+                    { 'Gotenberg-Trace': 'my-trace-id' }
+                )
+            ).toEqual({
+                'Gotenberg-Webhook-Url': 'https://my.webhook',
+                'Gotenberg-Trace': 'my-trace-id'
+            });
+        });
+    });
+
     describe('fetch', () => {
         const data = new FormData();
         const endpoint = 'http://localhost:3000/forms/chromium/convert/html';
@@ -276,6 +333,32 @@ describe('GotenbergUtils', () => {
             expect(init).toBeDefined();
             expect((init as RequestInit).headers).not.toHaveProperty(
                 'Authorization'
+            );
+        });
+    });
+
+    describe('fetchWithoutBody', () => {
+        const endpoint = 'http://localhost:3000/health';
+
+        it('should forward the request headers', async () => {
+            await GotenbergUtils.fetchWithoutBody(
+                endpoint,
+                'GET',
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                { 'Gotenberg-Trace': 'my-trace-id' }
+            );
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                endpoint,
+                expect.objectContaining({
+                    method: 'GET',
+                    headers: expect.objectContaining({
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
             );
         });
     });

@@ -4,6 +4,7 @@ import { blob } from 'node:stream/consumers';
 import {
     DownloadFrom,
     DownloadFromEntry,
+    OutputOptions,
     PathLikeOrReadStream,
     WebhookOptions
 } from './types';
@@ -60,6 +61,45 @@ export class GotenbergUtils {
         }
 
         return headers;
+    }
+
+    /**
+     * Builds the `Gotenberg-Output-Filename` and `Gotenberg-Trace` request headers.
+     *
+     * @param {OutputOptions} [options] - The custom output filename and/or request trace id.
+     * @returns {Record<string, string> | undefined} The headers to send, or undefined if none apply.
+     */
+    public static buildOutputHeaders(
+        options?: OutputOptions
+    ): Record<string, string> | undefined {
+        if (!options) {
+            return undefined;
+        }
+
+        const headers: Record<string, string> = {};
+
+        if (options.outputFilename) {
+            headers['Gotenberg-Output-Filename'] = options.outputFilename;
+        }
+
+        if (options.trace) {
+            headers['Gotenberg-Trace'] = options.trace;
+        }
+
+        return Object.keys(headers).length ? headers : undefined;
+    }
+
+    /**
+     * Merges any number of optional header records into one, dropping the result entirely if empty.
+     *
+     * @param {...(Record<string, string> | undefined)} headerSets - The header records to merge.
+     * @returns {Record<string, string> | undefined} The merged headers, or undefined if none apply.
+     */
+    public static combineHeaders(
+        ...headerSets: (Record<string, string> | undefined)[]
+    ): Record<string, string> | undefined {
+        const merged = Object.assign({}, ...headerSets);
+        return Object.keys(merged).length ? merged : undefined;
     }
 
     private static buildRequestHeaders(
@@ -160,13 +200,15 @@ export class GotenbergUtils {
         username?: string,
         password?: string,
         customHttpHeaders?: Record<string, string>,
-        apiKey?: string
+        apiKey?: string,
+        requestHttpHeaders?: Record<string, string>
     ): Promise<Buffer> {
         const headers = this.buildRequestHeaders(
             username,
             password,
             customHttpHeaders,
-            apiKey
+            apiKey,
+            requestHttpHeaders
         );
 
         const response = await fetch(endpoint, {

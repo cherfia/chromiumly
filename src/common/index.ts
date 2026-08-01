@@ -7,6 +7,7 @@ export type {
     DownloadFrom,
     DownloadFromEntry,
     DownloadFromField,
+    OutputOptions,
     WebhookOptions
 } from './types';
 export type { PdfEngineRotate } from './types';

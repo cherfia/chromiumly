@@ -32,6 +32,13 @@ export type WebhookOptions = {
     webhookEventsUrl?: string;
 };
 
+export type OutputOptions = {
+    /** Custom filename for the resulting file; Gotenberg appends the extension. */
+    outputFilename?: string;
+    /** Custom request id to identify the request in the logs, overriding the generated UUID. */
+    trace?: string;
+};
+
 export type Split = {
     mode: 'pages' | 'intervals';
     span: string;
