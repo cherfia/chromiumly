@@ -523,10 +523,17 @@ export class PDFEngines {
         webhook?: WebhookOptions;
         downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
+        GotenbergUtils.assert(
+            !!options.userPassword || !!options.ownerPassword,
+            'At least one of userPassword or ownerPassword must be provided'
+        );
+
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
 
-        data.append('userPassword', options.userPassword);
+        if (options.userPassword) {
+            data.append('userPassword', options.userPassword);
+        }
 
         if (options.ownerPassword) {
             data.append('ownerPassword', options.ownerPassword);

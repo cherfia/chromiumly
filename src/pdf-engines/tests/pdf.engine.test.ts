@@ -884,6 +884,36 @@ describe('PDFEngines', () => {
             expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
         });
 
+        it('should return a buffer with ownerPassword only', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.encrypt({
+                files: ['path/to/file.pdf'],
+                options: {
+                    ownerPassword: 'my_owner_password'
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'ownerPassword',
+                'my_owner_password'
+            );
+            expect(mockFormDataAppend).not.toHaveBeenCalledWith(
+                'userPassword',
+                expect.anything()
+            );
+        });
+
+        it('should throw when neither userPassword nor ownerPassword is provided', async () => {
+            await expect(
+                PDFEngines.encrypt({
+                    files: ['path/to/file.pdf'],
+                    options: {}
+                })
+            ).rejects.toThrow(
+                'At least one of userPassword or ownerPassword must be provided'
+            );
+        });
+
         it('should return a buffer with userPassword and ownerPassword', async () => {
             mockPromisesAccess.mockResolvedValue();
             const buffer = await PDFEngines.encrypt({

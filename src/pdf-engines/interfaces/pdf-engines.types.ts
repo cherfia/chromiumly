@@ -49,7 +49,9 @@ export type SplitEngineOptions = ConversionOptions &
     };
 
 export type EncryptOptions = {
-    userPassword: string;
+    /** At least one of userPassword or ownerPassword is required. */
+    userPassword?: string;
+    /** An owner-password-only request produces an owner-only PDF, openable without a password. */
     ownerPassword?: string;
 } & PdfEnginePermissions;
 
