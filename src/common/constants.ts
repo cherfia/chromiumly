@@ -4,6 +4,7 @@ export enum PdfFormat {
      * @see {@link https://gotenberg.dev/docs/troubleshooting#pdfa-1a-support}
      */
     A_1a = 'PDF/A-1a',
+    A_1b = 'PDF/A-1b',
     A_2b = 'PDF/A-2b',
     A_3b = 'PDF/A-3b'
 }
