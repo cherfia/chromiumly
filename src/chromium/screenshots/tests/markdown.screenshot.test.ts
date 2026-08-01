@@ -64,6 +64,18 @@ describe('MarkdownScreenshot', () => {
             });
         });
 
+        describe('when assets parameter is passed', () => {
+            it('should return a buffer', async () => {
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    assets: [{ file: Buffer.from('asset1'), name: 'asset1' }]
+                });
+                expect(buffer).toEqual(await getResponseBuffer());
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+            });
+        });
+
         describe('when image properties parameter is passed', () => {
             it('should return a buffer', async () => {
                 const buffer = await screenshot.capture({

@@ -65,6 +65,21 @@ describe('MarkdownConverter', () => {
             });
         });
 
+        describe('when assets parameter is passed', () => {
+            it('should return a buffer', async () => {
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    assets: [
+                        { file: Buffer.from('asset1'), name: 'asset1' },
+                        { file: Buffer.from('asset2'), name: 'asset2' }
+                    ]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when pdf format parameter is passed', () => {
             it('should return a buffer', async () => {
                 const buffer = await converter.convert({

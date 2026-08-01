@@ -53,6 +53,7 @@ export class MarkdownConverter extends Converter {
     async convert({
         html,
         markdown,
+        assets,
         header,
         footer,
         properties,
@@ -102,6 +103,14 @@ export class MarkdownConverter extends Converter {
         await GotenbergUtils.addFile(data, html, 'index.html');
 
         await GotenbergUtils.addFile(data, markdown, 'file.md');
+
+        if (assets?.length) {
+            await Promise.all(
+                assets.map(({ file, name }) =>
+                    GotenbergUtils.addFile(data, file, name)
+                )
+            );
+        }
 
         await ConverterUtils.customize(data, {
             header,

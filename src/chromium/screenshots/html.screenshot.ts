@@ -44,6 +44,7 @@ export class HtmlScreenshot extends Screenshot {
      */
     async capture({
         html,
+        assets,
         properties,
         emulatedMediaType,
         emulatedMediaFeatures,
@@ -72,6 +73,14 @@ export class HtmlScreenshot extends Screenshot {
         const data = new FormData();
 
         await GotenbergUtils.addFile(data, html, 'index.html');
+
+        if (assets?.length) {
+            await Promise.all(
+                assets.map(({ file, name }) =>
+                    GotenbergUtils.addFile(data, file, name)
+                )
+            );
+        }
 
         await ScreenshotUtils.customize(data, {
             properties,

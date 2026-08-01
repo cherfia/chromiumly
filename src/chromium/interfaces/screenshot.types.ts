@@ -26,6 +26,7 @@ export type ScreenshotOptions = Omit<
 
 export type HtmlScreenshotOptions = ScreenshotOptions & {
     html: PathLikeOrReadStream;
+    assets?: { file: PathLikeOrReadStream; name: string }[];
 };
 
 export type UrlScreenshotOptions = ScreenshotOptions & {
@@ -37,4 +38,5 @@ export type MarkdownScreenshotOptions = ScreenshotOptions & {
     markdown: PathLikeOrReadStream;
     header?: PathLikeOrReadStream;
     footer?: PathLikeOrReadStream;
+    assets?: { file: PathLikeOrReadStream; name: string }[];
 };

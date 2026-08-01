@@ -46,6 +46,7 @@ export class MarkdownScreenshot extends Screenshot {
     async capture({
         html,
         markdown,
+        assets,
         properties,
         emulatedMediaType,
         emulatedMediaFeatures,
@@ -76,6 +77,14 @@ export class MarkdownScreenshot extends Screenshot {
         await GotenbergUtils.addFile(data, html, 'index.html');
 
         await GotenbergUtils.addFile(data, markdown, 'file.md');
+
+        if (assets?.length) {
+            await Promise.all(
+                assets.map(({ file, name }) =>
+                    GotenbergUtils.addFile(data, file, name)
+                )
+            );
+        }
 
         await ScreenshotUtils.customize(data, {
             properties,

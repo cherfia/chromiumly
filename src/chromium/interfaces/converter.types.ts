@@ -84,6 +84,7 @@ export type UrlConversionOptions = ConversionOptions & {
 
 export type MarkdownConversionOptions = ConversionOptions & {
     html: PathLikeOrReadStream;
+    assets?: { file: PathLikeOrReadStream; name: string }[];
     header?: PathLikeOrReadStream;
     footer?: PathLikeOrReadStream;
     markdown: PathLikeOrReadStream;
