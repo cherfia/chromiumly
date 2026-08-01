@@ -2,7 +2,10 @@ import { GotenbergUtils } from '../common';
 import { Chromiumly } from '../main.config';
 
 export class System {
-    public static async getHealth(): Promise<Buffer> {
+    /**
+     * @param {string} [trace] - Custom request id to identify the request in the logs.
+     */
+    public static async getHealth(trace?: string): Promise<Buffer> {
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.SYSTEM_ROUTES.health}`;
         return GotenbergUtils.fetchWithoutBody(
             endpoint,
@@ -10,11 +13,15 @@ export class System {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildOutputHeaders({ trace })
         );
     }
 
-    public static async headHealth(): Promise<Buffer> {
+    /**
+     * @param {string} [trace] - Custom request id to identify the request in the logs.
+     */
+    public static async headHealth(trace?: string): Promise<Buffer> {
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.SYSTEM_ROUTES.health}`;
         return GotenbergUtils.fetchWithoutBody(
             endpoint,
@@ -22,11 +29,15 @@ export class System {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildOutputHeaders({ trace })
         );
     }
 
-    public static async getPrometheusMetrics(): Promise<Buffer> {
+    /**
+     * @param {string} [trace] - Custom request id to identify the request in the logs.
+     */
+    public static async getPrometheusMetrics(trace?: string): Promise<Buffer> {
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.SYSTEM_ROUTES.prometheusMetrics}`;
         return GotenbergUtils.fetchWithoutBody(
             endpoint,
@@ -34,11 +45,15 @@ export class System {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildOutputHeaders({ trace })
         );
     }
 
-    public static async getVersion(): Promise<Buffer> {
+    /**
+     * @param {string} [trace] - Custom request id to identify the request in the logs.
+     */
+    public static async getVersion(trace?: string): Promise<Buffer> {
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.SYSTEM_ROUTES.version}`;
         return GotenbergUtils.fetchWithoutBody(
             endpoint,
@@ -46,11 +61,15 @@ export class System {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildOutputHeaders({ trace })
         );
     }
 
-    public static async getDebug(): Promise<Buffer> {
+    /**
+     * @param {string} [trace] - Custom request id to identify the request in the logs.
+     */
+    public static async getDebug(trace?: string): Promise<Buffer> {
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.SYSTEM_ROUTES.debug}`;
         return GotenbergUtils.fetchWithoutBody(
             endpoint,
@@ -58,7 +77,8 @@ export class System {
             Chromiumly.getGotenbergApiBasicAuthUsername(),
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
-            Chromiumly.getGotenbergApiKey()
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.buildOutputHeaders({ trace })
         );
     }
 }

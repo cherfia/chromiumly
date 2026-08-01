@@ -31,6 +31,19 @@ describe('System', () => {
         );
     });
 
+    it('should call GET /health with a custom trace header', async () => {
+        await System.getHealth('my-trace-id');
+        expect(mockFetch).toHaveBeenCalledWith(
+            'http://localhost:3000/health',
+            expect.objectContaining({
+                method: 'GET',
+                headers: expect.objectContaining({
+                    'Gotenberg-Trace': 'my-trace-id'
+                })
+            })
+        );
+    });
+
     it('should call HEAD /health', async () => {
         mockFetch.mockImplementation(() => Promise.resolve(mockHeadResponse()));
         const buffer = await System.headHealth();
@@ -39,6 +52,20 @@ describe('System', () => {
             'http://localhost:3000/health',
             expect.objectContaining({
                 method: 'HEAD'
+            })
+        );
+    });
+
+    it('should call HEAD /health with a custom trace header', async () => {
+        mockFetch.mockImplementation(() => Promise.resolve(mockHeadResponse()));
+        await System.headHealth('my-trace-id');
+        expect(mockFetch).toHaveBeenCalledWith(
+            'http://localhost:3000/health',
+            expect.objectContaining({
+                method: 'HEAD',
+                headers: expect.objectContaining({
+                    'Gotenberg-Trace': 'my-trace-id'
+                })
             })
         );
     });
@@ -54,6 +81,19 @@ describe('System', () => {
         );
     });
 
+    it('should call GET /version with a custom trace header', async () => {
+        await System.getVersion('my-trace-id');
+        expect(mockFetch).toHaveBeenCalledWith(
+            'http://localhost:3000/version',
+            expect.objectContaining({
+                method: 'GET',
+                headers: expect.objectContaining({
+                    'Gotenberg-Trace': 'my-trace-id'
+                })
+            })
+        );
+    });
+
     it('should call GET /debug', async () => {
         const buffer = await System.getDebug();
         expect(buffer).toEqual(await getResponseBuffer());
@@ -65,6 +105,19 @@ describe('System', () => {
         );
     });
 
+    it('should call GET /debug with a custom trace header', async () => {
+        await System.getDebug('my-trace-id');
+        expect(mockFetch).toHaveBeenCalledWith(
+            'http://localhost:3000/debug',
+            expect.objectContaining({
+                method: 'GET',
+                headers: expect.objectContaining({
+                    'Gotenberg-Trace': 'my-trace-id'
+                })
+            })
+        );
+    });
+
     it('should call GET /prometheus/metrics', async () => {
         const buffer = await System.getPrometheusMetrics();
         expect(buffer).toEqual(await getResponseBuffer());
@@ -72,6 +125,19 @@ describe('System', () => {
             'http://localhost:3000/prometheus/metrics',
             expect.objectContaining({
                 method: 'GET'
+            })
+        );
+    });
+
+    it('should call GET /prometheus/metrics with a custom trace header', async () => {
+        await System.getPrometheusMetrics('my-trace-id');
+        expect(mockFetch).toHaveBeenCalledWith(
+            'http://localhost:3000/prometheus/metrics',
+            expect.objectContaining({
+                method: 'GET',
+                headers: expect.objectContaining({
+                    'Gotenberg-Trace': 'my-trace-id'
+                })
             })
         );
     });
