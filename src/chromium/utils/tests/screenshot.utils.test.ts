@@ -126,6 +126,19 @@ describe('ScreenshotUtils', () => {
                     );
                 });
             });
+
+            describe('when deviceScaleFactor parameter is set', () => {
+                it('should append deviceScaleFactor to data', () => {
+                    ScreenshotUtils.addImageProperties(data, {
+                        format: 'png',
+                        deviceScaleFactor: 2
+                    });
+                    expect(data.append).toHaveBeenCalledWith(
+                        'deviceScaleFactor',
+                        '2'
+                    );
+                });
+            });
         });
     });
 

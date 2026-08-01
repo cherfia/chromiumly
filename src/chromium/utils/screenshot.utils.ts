@@ -56,6 +56,13 @@ export class ScreenshotUtils {
         if (imageProperties.clip) {
             data.append('clip', String(imageProperties.clip));
         }
+
+        if (imageProperties.deviceScaleFactor) {
+            data.append(
+                'deviceScaleFactor',
+                String(imageProperties.deviceScaleFactor)
+            );
+        }
     }
 
     /**

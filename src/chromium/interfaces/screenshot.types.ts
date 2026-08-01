@@ -9,6 +9,7 @@ export type ImageProperties = {
     width?: number; // The device screen width in pixels (default 800).
     height?: number; // The device screen height in pixels (default 600).
     clip?: boolean; // Define whether to clip the screenshot according to the device dimensions (default false).
+    deviceScaleFactor?: number; // The device scale factor, useful for HiDPI screenshots (default 1).
 };
 
 export type ScreenshotOptions = Omit<
