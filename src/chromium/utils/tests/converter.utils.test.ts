@@ -965,6 +965,16 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when flatten parameter is passed', () => {
+            it('should append flatten', async () => {
+                await ConverterUtils.customize(data, { flatten: true });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'flatten',
+                    'true'
+                );
+            });
+        });
+
         describe('when generateTaggedPdf parameter is passed', () => {
             it('should append generateTaggedPdf', async () => {
                 await ConverterUtils.customize(data, {

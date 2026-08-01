@@ -383,6 +383,10 @@ export class ConverterUtils {
 
         appendPdfEnginePermissions(data, options);
 
+        if (options.flatten) {
+            data.append('flatten', String(options.flatten));
+        }
+
         if (options.embeds && options.embeds.length > 0) {
             await ConverterUtils.addFilesWithFieldName(
                 options.embeds,

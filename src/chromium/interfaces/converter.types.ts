@@ -55,6 +55,7 @@ export type ConversionOptions = ChromiumOptions &
         split?: Split;
         userPassword?: string; // Password for opening the resulting PDF(s)
         ownerPassword?: string; // Password for full access on the resulting PDF(s)
+        flatten?: boolean; // Flatten the resulting PDF document (default false)
         embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
         /** Per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance */
         embedsMetadata?: EmbedsMetadata;
