@@ -89,6 +89,7 @@ export class HtmlConverter extends Converter {
         watermark,
         stamp,
         rotate,
+        facturx,
         outputFilename,
         trace
     }: HtmlConversionOptions): Promise<Buffer> {
@@ -141,7 +142,8 @@ export class HtmlConverter extends Converter {
             embeds,
             watermark,
             stamp,
-            rotate
+            rotate,
+            facturx
         });
 
         return GotenbergUtils.fetch(

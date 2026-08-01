@@ -2,6 +2,7 @@ import {
     Metadata,
     PathLikeOrReadStream,
     PdfFormat,
+    FacturXOptions,
     PdfEnginePermissions,
     PdfEngineStamp,
     PdfEngineWatermark
@@ -60,6 +61,8 @@ export type ConversionOptions = ChromiumOptions &
         stamp?: PdfEngineStamp;
         /** PDF-engine post-process page rotation */
         rotate?: PdfEngineRotate;
+        /** Turn the resulting PDF into a Factur-X / ZUGFeRD e-invoice */
+        facturx?: FacturXOptions;
     };
 
 export type HtmlConversionOptions = ConversionOptions & {

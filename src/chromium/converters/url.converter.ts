@@ -90,6 +90,7 @@ export class UrlConverter extends Converter {
         watermark,
         stamp,
         rotate,
+        facturx,
         outputFilename,
         trace
     }: UrlConversionOptions): Promise<Buffer> {
@@ -135,7 +136,8 @@ export class UrlConverter extends Converter {
             embeds,
             watermark,
             stamp,
-            rotate
+            rotate,
+            facturx
         });
 
         return GotenbergUtils.fetch(

@@ -255,6 +255,24 @@ describe('HtmlConverter', () => {
             });
         });
 
+        describe('when facturx parameter is passed', () => {
+            it('should append factur-x fields', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    facturx: {
+                        facturxXml: Buffer.from('<xml/>'),
+                        facturxConformanceLevel: 'EN 16931'
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'facturxConformanceLevel',
+                    'EN 16931'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when outputFilename and trace parameters are passed', () => {
             it('should send them as request headers', async () => {
                 await converter.convert({

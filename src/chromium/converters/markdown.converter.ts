@@ -90,6 +90,7 @@ export class MarkdownConverter extends Converter {
         watermark,
         stamp,
         rotate,
+        facturx,
         outputFilename,
         trace
     }: MarkdownConversionOptions): Promise<Buffer> {
@@ -136,7 +137,8 @@ export class MarkdownConverter extends Converter {
             embeds,
             watermark,
             stamp,
-            rotate
+            rotate,
+            facturx
         });
 
         return GotenbergUtils.fetch(

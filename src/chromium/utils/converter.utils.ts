@@ -9,6 +9,7 @@ import {
 import {
     appendPdfEngineRotate,
     appendPdfEnginePermissions,
+    appendFacturX,
     GotenbergUtils,
     PathLikeOrReadStream,
     PdfEngineWatermarkStampUtils
@@ -396,5 +397,7 @@ export class ConverterUtils {
         if (options.rotate) {
             appendPdfEngineRotate(data, options.rotate);
         }
+
+        await appendFacturX(data, options.facturx);
     }
 }
