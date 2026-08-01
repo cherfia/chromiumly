@@ -255,6 +255,32 @@ describe('HtmlConverter', () => {
             });
         });
 
+        describe('when embedsMetadata parameter is passed', () => {
+            it('should append embedsMetadata as JSON', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    embeds: ['path/to/factur-x.xml'],
+                    embedsMetadata: {
+                        'factur-x.xml': {
+                            mimeType: 'text/xml',
+                            relationship: 'Alternative'
+                        }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'embedsMetadata',
+                    JSON.stringify({
+                        'factur-x.xml': {
+                            mimeType: 'text/xml',
+                            relationship: 'Alternative'
+                        }
+                    })
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when facturx parameter is passed', () => {
             it('should append factur-x fields', async () => {
                 mockPromisesAccess.mockResolvedValue();

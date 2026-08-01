@@ -384,6 +384,13 @@ export class ConverterUtils {
             );
         }
 
+        if (options.embedsMetadata) {
+            data.append(
+                'embedsMetadata',
+                JSON.stringify(options.embedsMetadata)
+            );
+        }
+
         if (options.watermark || options.stamp) {
             await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
                 data,

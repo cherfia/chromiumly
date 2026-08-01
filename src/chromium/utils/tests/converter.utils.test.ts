@@ -965,6 +965,28 @@ describe('ConverterUtils', () => {
             });
         });
 
+        describe('when embedsMetadata parameter is passed', () => {
+            it('should append embedsMetadata as JSON', async () => {
+                await ConverterUtils.customize(data, {
+                    embedsMetadata: {
+                        'factur-x.xml': {
+                            mimeType: 'text/xml',
+                            relationship: 'Alternative'
+                        }
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'embedsMetadata',
+                    JSON.stringify({
+                        'factur-x.xml': {
+                            mimeType: 'text/xml',
+                            relationship: 'Alternative'
+                        }
+                    })
+                );
+            });
+        });
+
         describe('when facturx parameter is passed', () => {
             it('should append the factur-x fields and xml file', async () => {
                 await ConverterUtils.customize(data, {

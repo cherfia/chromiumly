@@ -7,7 +7,12 @@ import {
     PdfEngineStamp,
     PdfEngineWatermark
 } from '../../common';
-import { OutputOptions, PdfEngineRotate, Split } from '../../common/types';
+import {
+    EmbedsMetadata,
+    OutputOptions,
+    PdfEngineRotate,
+    Split
+} from '../../common/types';
 import { ChromiumOptions, Cookie } from './common.types';
 
 type PageSize = {
@@ -55,6 +60,8 @@ export type ConversionOptions = ChromiumOptions &
         userPassword?: string; // Password for opening the resulting PDF(s)
         ownerPassword?: string; // Password for full access on the resulting PDF(s)
         embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
+        /** Per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance */
+        embedsMetadata?: EmbedsMetadata;
         /** PDF-engine post-processing watermark (behind content) */
         watermark?: PdfEngineWatermark;
         /** PDF-engine post-processing stamp (on top of content) */
