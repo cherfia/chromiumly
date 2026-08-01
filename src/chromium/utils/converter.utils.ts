@@ -8,6 +8,7 @@ import {
 } from '../interfaces/converter.types';
 import {
     appendPdfEngineRotate,
+    appendPdfEnginePermissions,
     GotenbergUtils,
     PathLikeOrReadStream,
     PdfEngineWatermarkStampUtils
@@ -371,6 +372,8 @@ export class ConverterUtils {
         if (options.ownerPassword) {
             data.append('ownerPassword', options.ownerPassword);
         }
+
+        appendPdfEnginePermissions(data, options);
 
         if (options.embeds && options.embeds.length > 0) {
             await ConverterUtils.addFilesWithFieldName(

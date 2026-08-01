@@ -236,6 +236,25 @@ describe('HtmlConverter', () => {
             });
         });
 
+        describe('when permission flags are passed', () => {
+            it('should append them', async () => {
+                const buffer = await converter.convert({
+                    html: Buffer.from('data'),
+                    allowPrinting: false,
+                    allowCopying: false
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'allowPrinting',
+                    'false'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'allowCopying',
+                    'false'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when outputFilename and trace parameters are passed', () => {
             it('should send them as request headers', async () => {
                 await converter.convert({

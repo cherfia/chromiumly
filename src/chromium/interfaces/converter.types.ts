@@ -2,6 +2,7 @@ import {
     Metadata,
     PathLikeOrReadStream,
     PdfFormat,
+    PdfEnginePermissions,
     PdfEngineStamp,
     PdfEngineWatermark
 } from '../../common';
@@ -33,7 +34,8 @@ export type PageProperties = {
 };
 
 export type ConversionOptions = ChromiumOptions &
-    OutputOptions & {
+    OutputOptions &
+    PdfEnginePermissions & {
         properties?: PageProperties;
         /**
          * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for pdfFormat.
