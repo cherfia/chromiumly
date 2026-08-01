@@ -24,7 +24,7 @@ export class LibreOffice {
      * @param {boolean} [options.reduceImageResolution] - Indicates whether to reduce image resolution.
      * @param {number} [options.quality] - Quality of the JPG export.
      * @param {75 | 150 | 300 | 600 | 1200} [options.maxImageResolution] - Maximum image resolution for the converted PDF.
-     * @param {Split} [options.split] - Split the PDF into multiple files.
+     * @param {ConvertSplit} [options.split] - Split the PDF into multiple files.
      * @param {boolean} [options.flatten] - Flatten the PDF document.
      * @param {import('../common/types').PdfEngineRotate} [options.rotate] - PDF-engine post-process page rotation.
      *

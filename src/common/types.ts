@@ -46,6 +46,12 @@ export type Split = {
     flatten?: boolean;
 };
 
+/**
+ * Split configuration for routes where `flatten` is a separate top-level
+ * option rather than part of the split configuration itself.
+ */
+export type ConvertSplit = Omit<Split, 'flatten'>;
+
 /** PDF-engine post-process rotation (maps to `rotateAngle` / `rotatePages`). */
 export type PdfEngineRotate = {
     angle: 90 | 180 | 270;

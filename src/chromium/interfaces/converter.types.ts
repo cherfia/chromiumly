@@ -8,10 +8,10 @@ import {
     PdfEngineWatermark
 } from '../../common';
 import {
+    ConvertSplit,
     EmbedsMetadata,
     OutputOptions,
-    PdfEngineRotate,
-    Split
+    PdfEngineRotate
 } from '../../common/types';
 import { ChromiumOptions, Cookie } from './common.types';
 
@@ -52,7 +52,7 @@ export type ConversionOptions = ChromiumOptions &
         generateTaggedPdf?: boolean; // Embed PDF/UA accessibility structure tags, independent of pdfUA (default false)
         metadata?: Metadata;
         cookies?: Cookie[];
-        split?: Split;
+        split?: ConvertSplit;
         userPassword?: string; // Password for opening the resulting PDF(s)
         ownerPassword?: string; // Password for full access on the resulting PDF(s)
         flatten?: boolean; // Flatten the resulting PDF document (default false)
