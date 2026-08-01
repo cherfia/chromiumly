@@ -2,6 +2,7 @@ import {
     Metadata,
     PathLikeOrReadStream,
     PdfFormat,
+    type PdfEnginePermissions,
     type PdfEngineStamp,
     type PdfEngineWatermark
 } from '../../common';
@@ -20,27 +21,33 @@ export type ConversionOptions = OutputOptions & {
     webhook?: WebhookOptions;
 };
 
-export type MergeOptions = ConversionOptions & {
-    metadata?: Metadata;
-    flatten?: boolean;
-    watermark?: PdfEngineWatermark;
-    stamp?: PdfEngineStamp;
-    rotate?: PdfEngineRotate;
-};
+export type MergeOptions = ConversionOptions &
+    PdfEnginePermissions & {
+        metadata?: Metadata;
+        flatten?: boolean;
+        userPassword?: string;
+        ownerPassword?: string;
+        watermark?: PdfEngineWatermark;
+        stamp?: PdfEngineStamp;
+        rotate?: PdfEngineRotate;
+    };
 
-export type SplitEngineOptions = OutputOptions & {
-    files: PathLikeOrReadStream[];
-    options: Split;
-    webhook?: WebhookOptions;
-    watermark?: PdfEngineWatermark;
-    stamp?: PdfEngineStamp;
-    rotate?: PdfEngineRotate;
-};
+export type SplitEngineOptions = ConversionOptions &
+    PdfEnginePermissions & {
+        files: PathLikeOrReadStream[];
+        options: Split;
+        metadata?: Metadata;
+        userPassword?: string;
+        ownerPassword?: string;
+        watermark?: PdfEngineWatermark;
+        stamp?: PdfEngineStamp;
+        rotate?: PdfEngineRotate;
+    };
 
 export type EncryptOptions = {
     userPassword: string;
     ownerPassword?: string;
-};
+} & PdfEnginePermissions;
 
 export type Bookmark = {
     title: string;

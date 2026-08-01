@@ -196,6 +196,33 @@ describe('PDFEngines', () => {
             expect(mockFormDataAppend).toHaveBeenCalledWith('rotatePages', '1');
         });
 
+        it('should append encryption fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.merge({
+                files: ['path/to/file.pdf'],
+                userPassword: 'my_user_password',
+                ownerPassword: 'my_owner_password',
+                allowPrinting: false,
+                allowAssembling: true
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'userPassword',
+                'my_user_password'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'ownerPassword',
+                'my_owner_password'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'allowPrinting',
+                'false'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'allowAssembling',
+                'true'
+            );
+        });
+
         it('should append output filename and trace headers when passed', async () => {
             mockPromisesAccess.mockResolvedValue();
             await PDFEngines.merge({
@@ -496,6 +523,75 @@ describe('PDFEngines', () => {
                 })
             );
         });
+
+        it('should append metadata, pdf/a, and pdf/ua fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: { mode: 'pages', span: '1-2' },
+                pdfa: PdfFormat.A_2b,
+                pdfUA: true,
+                metadata: { Author: 'John Doe' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'pdfa',
+                PdfFormat.A_2b
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith('pdfua', 'true');
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'metadata',
+                JSON.stringify({ Author: 'John Doe' })
+            );
+        });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: { mode: 'pages', span: '1-2' },
+                downloadFrom: {
+                    url: 'http://example.com',
+                    extraHttpHeaders: { 'Content-Type': 'application/json' }
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([
+                    {
+                        url: 'http://example.com',
+                        extraHttpHeaders: { 'Content-Type': 'application/json' }
+                    }
+                ])
+            );
+        });
+
+        it('should append encryption fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: { mode: 'pages', span: '1-2' },
+                userPassword: 'my_user_password',
+                ownerPassword: 'my_owner_password',
+                allowPrinting: false,
+                allowAssembling: true
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'userPassword',
+                'my_user_password'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'ownerPassword',
+                'my_owner_password'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'allowPrinting',
+                'false'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'allowAssembling',
+                'true'
+            );
+        });
     });
 
     describe('rotate', () => {
@@ -702,6 +798,26 @@ describe('PDFEngines', () => {
             });
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
+        });
+
+        it('should append permission flags when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.encrypt({
+                files: ['path/to/file.pdf'],
+                options: {
+                    userPassword: 'my_user_password',
+                    allowPrinting: false,
+                    allowAssembling: true
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'allowPrinting',
+                'false'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'allowAssembling',
+                'true'
+            );
         });
 
         it('should append output filename and trace headers when passed', async () => {

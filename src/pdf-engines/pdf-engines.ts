@@ -4,6 +4,7 @@ import path from 'path';
 import { Chromiumly } from '../main.config';
 import {
     appendPdfEngineRotate,
+    appendPdfEnginePermissions,
     GotenbergUtils,
     PathLikeOrReadStream,
     Metadata,
@@ -35,6 +36,8 @@ export class PDFEngines {
      * @param {Metadata} [options.metadata] - Metadata to be written.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @param {boolean} [options.flatten] - Flatten the PDF document.
+     * @param {string} [options.userPassword] - Password for opening the resulting PDF.
+     * @param {string} [options.ownerPassword] - Password for full access on the resulting PDF.
      *
      * @returns {Promise<Buffer>} A Promise resolving to the merged PDF content as a buffer
      */
@@ -46,6 +49,14 @@ export class PDFEngines {
         downloadFrom,
         webhook,
         flatten,
+        userPassword,
+        ownerPassword,
+        allowPrinting,
+        allowCopying,
+        allowModifying,
+        allowAnnotating,
+        allowFillingForms,
+        allowAssembling,
         watermark,
         stamp,
         rotate,
@@ -61,6 +72,20 @@ export class PDFEngines {
             downloadFrom,
             webhook,
             flatten
+        });
+        if (userPassword) {
+            data.append('userPassword', userPassword);
+        }
+        if (ownerPassword) {
+            data.append('ownerPassword', ownerPassword);
+        }
+        appendPdfEnginePermissions(data, {
+            allowPrinting,
+            allowCopying,
+            allowModifying,
+            allowAnnotating,
+            allowFillingForms,
+            allowAssembling
         });
         if (watermark || stamp) {
             await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
@@ -150,6 +175,18 @@ export class PDFEngines {
         files,
         options,
         webhook,
+        pdfa,
+        pdfUA,
+        metadata,
+        downloadFrom,
+        userPassword,
+        ownerPassword,
+        allowPrinting,
+        allowCopying,
+        allowModifying,
+        allowAnnotating,
+        allowFillingForms,
+        allowAssembling,
         watermark,
         stamp,
         rotate,
@@ -174,6 +211,28 @@ export class PDFEngines {
             );
             data.append('splitUnify', String(options.unify));
         }
+
+        await PDFEnginesUtils.customize(data, {
+            pdfa,
+            pdfUA,
+            metadata,
+            downloadFrom
+        });
+
+        if (userPassword) {
+            data.append('userPassword', userPassword);
+        }
+        if (ownerPassword) {
+            data.append('ownerPassword', ownerPassword);
+        }
+        appendPdfEnginePermissions(data, {
+            allowPrinting,
+            allowCopying,
+            allowModifying,
+            allowAnnotating,
+            allowFillingForms,
+            allowAssembling
+        });
 
         if (watermark || stamp) {
             await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
@@ -432,6 +491,8 @@ export class PDFEngines {
         if (options.ownerPassword) {
             data.append('ownerPassword', options.ownerPassword);
         }
+
+        appendPdfEnginePermissions(data, options);
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.encrypt}`;
 
