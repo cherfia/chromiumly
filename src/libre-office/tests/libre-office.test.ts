@@ -253,6 +253,26 @@ describe('LibreOffice', () => {
             });
         });
 
+        describe('when permission flags are passed', () => {
+            it('should append them', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    allowPrinting: false,
+                    allowCopying: false
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'allowPrinting',
+                    'false'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'allowCopying',
+                    'false'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when outputFilename and trace parameters are passed', () => {
             it('should send them as request headers', async () => {
                 mockPromisesAccess.mockResolvedValue();

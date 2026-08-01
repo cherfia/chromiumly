@@ -4,6 +4,7 @@ import { blob } from 'node:stream/consumers';
 
 import {
     appendPdfEngineRotate,
+    appendPdfEnginePermissions,
     GotenbergUtils,
     PdfEngineWatermarkStampUtils
 } from '../../common';
@@ -421,6 +422,8 @@ export class LibreOfficeUtils {
         if (options.ownerPassword) {
             data.append('ownerPassword', options.ownerPassword);
         }
+
+        appendPdfEnginePermissions(data, options);
 
         if (options.embeds && options.embeds.length > 0) {
             await LibreOfficeUtils.addFilesWithFieldName(

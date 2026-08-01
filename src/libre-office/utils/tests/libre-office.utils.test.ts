@@ -681,6 +681,36 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
+        describe('when permission flags are passed', () => {
+            it('should append only the flags that are explicitly set', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    allowPrinting: false,
+                    allowAssembling: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                expect(data.append).toHaveBeenCalledWith(
+                    'allowPrinting',
+                    'false'
+                );
+                expect(data.append).toHaveBeenCalledWith(
+                    'allowAssembling',
+                    'true'
+                );
+            });
+
+            it('should append every permission flag when all are set', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    allowPrinting: true,
+                    allowCopying: false,
+                    allowModifying: true,
+                    allowAnnotating: false,
+                    allowFillingForms: true,
+                    allowAssembling: false
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
+            });
+        });
+
         describe('when embeds parameter is passed', () => {
             it('should append embeds with string paths', async () => {
                 mockPromisesAccess.mockResolvedValue();
