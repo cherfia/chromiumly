@@ -82,14 +82,21 @@ run();
         - [Format Conversion](#format-conversion)
         - [Merging](#merging)
         - [PDF Rotation](#pdf-rotation)
+        - [Watermark and stamp (dedicated routes)](#watermark-and-stamp-dedicated-routes)
         - [Metadata Management](#metadata-management)
         - [Bookmarks Management](#bookmarks-management)
+        - [Encryption (dedicated route)](#encryption-dedicated-route)
+        - [Embedding Files (dedicated route)](#embedding-files-dedicated-route)
+        - [Factur-X / ZUGFeRD (dedicated route)](#factur-x--zugferd-dedicated-route)
         - [File Generation](#file-generation)
     - [System](#system)
     - [PDF Splitting](#pdf-splitting)
     - [PDF Flattening](#pdf-flattening)
     - [PDF Encryption](#pdf-encryption)
+    - [PDF Permissions](#pdf-permissions)
     - [Embedding Files](#embedding-files)
+    - [Factur-X / ZUGFeRD](#factur-x--zugferd)
+    - [Output Filename and Request Tracing](#output-filename-and-request-tracing)
     - [Templates (hosted API only)](#templates-hosted-api-only)
     - [Watermark and stamp](#watermark-and-stamp)
 5. [Usage Example](#snippet)
@@ -301,6 +308,30 @@ const buffer = await screenshot.capture({
 });
 ```
 
+The `markdown` field on the Markdown convert and screenshot routes also accepts an array of distinctly-named files, all referenced from the same `index.html` template:
+
+```typescript
+const buffer = await markdownConverter.convert({
+    html: 'path/to/index.html',
+    markdown: [
+        { file: 'path/to/chapter1.md', name: 'chapter1.md' },
+        { file: 'path/to/chapter2.md', name: 'chapter2.md' }
+    ]
+});
+```
+
+HTML and Markdown convert/screenshot routes also accept an optional `assets` field for images, stylesheets, or other files referenced from the HTML/markdown content:
+
+```typescript
+const buffer = await htmlConverter.convert({
+    html: 'path/to/index.html',
+    assets: [
+        { file: 'path/to/style.css', name: 'style.css' },
+        { file: 'path/to/logo.png', name: 'logo.png' }
+    ]
+});
+```
+
 Each `convert()` method takes an optional `properties` parameter of the following type which dictates how the PDF generated
 file will look like.
 
@@ -308,23 +339,25 @@ file will look like.
 type PageProperties = {
     singlePage?: boolean; // Print the entire content in one single page (default false)
     size?: {
-        width: number | string; // Paper width (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 8.5)
-        height: number | string; // Paper height (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 11)
+        width?: number | string; // Paper width (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 8.5)
+        height?: number | string; // Paper height (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 11)
     };
     margins?: {
-        top: number | string; // Top margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
-        bottom: number | string; // Bottom margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
-        left: number | string; // Left margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
-        right: number | string; // Right margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+        top?: number | string; // Top margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+        bottom?: number | string; // Bottom margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+        left?: number | string; // Left margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
+        right?: number | string; // Right margin (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 0.39)
     };
     preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
     printBackground?: boolean; // Print the background graphics (default false)
     omitBackground?: boolean; // Hide the default white background and allow generating PDFs with transparency (default false)
     landscape?: boolean; // Set the paper orientation to landscape (default false)
     scale?: number; // The scale of the page rendering (default 1.0)
-    nativePageRanges?: { from: number; to: number }; // Page ranges to print
+    nativePageRanges?: { from: number; to: number } | string; // Page ranges to print, either a single range or the free-form syntax "1-5, 8, 11-13"
 };
 ```
+
+Every field of `size` and `margins` defaults independently, so you can set just one dimension or margin and let Gotenberg fill in the rest.
 
 **Page Size and Margins Units**
 
@@ -366,8 +399,11 @@ In addition to the `PageProperties` customization options, the `convert()` metho
 ```typescript
 type ConversionOptions = {
     properties?: PageProperties; // Customize the appearance of the generated PDF
-    pdfFormat?: PdfFormat; // Define the PDF format for the conversion
+    /** @deprecated Chromium no longer supports pdfFormat since Gotenberg 8.0.0; use pdfa instead of pdfFormat. */
+    pdfFormat?: PdfFormat;
     pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
+    generateTaggedPdf?: boolean; // Embed PDF/UA accessibility structure tags, independent of pdfUA (default false)
+    generateDocumentOutline?: boolean; // Generate a document outline / bookmarks from the page's heading tags (default false)
     userAgent?: string; // Customize the user agent string sent during conversion
     header?: PathLikeOrReadStream; // Specify a custom header for the PDF
     footer?: PathLikeOrReadStream; // Specify a custom footer for the PDF
@@ -379,7 +415,7 @@ type ConversionOptions = {
     extraHttpHeaders?: Record<string, string>; // Include additional HTTP headers in the request
     failOnHttpStatusCodes?: number[]; // List of HTTP status codes triggering a 409 Conflict response (default [499, 599])
     failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
-    failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
+    failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default None)
     ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
     failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
     skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
@@ -388,12 +424,24 @@ type ConversionOptions = {
     cookies?: Cookie[]; // Cookies to be written.
     downloadFrom?: DownloadFrom; // Download a file from one or multiple URLs. Each URL must return a Content-Disposition header with a filename parameter.
     webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
-    split?: SplitOptions; // Split the PDF file into multiple files.
+    outputFilename?: string; // Custom filename for the resulting file; Gotenberg appends the extension.
+    trace?: string; // Custom request id to identify the request in the logs, overriding the generated UUID.
+    split?: ConvertSplit; // Split the PDF file into multiple files.
+    flatten?: boolean; // Flatten the resulting PDF document (default false)
     userPassword?: string; // Password for opening the resulting PDF(s).
     ownerPassword?: string; // Password for full access on the resulting PDF(s).
+    allowPrinting?: boolean; // Allow printing the document (default true)
+    allowCopying?: boolean; // Allow copying content from the document (default true)
+    allowModifying?: boolean; // Allow modifying the document (default true)
+    allowAnnotating?: boolean; // Allow adding or modifying annotations (default true)
+    allowFillingForms?: boolean; // Allow filling in form fields (default true)
+    allowAssembling?: boolean; // Allow document assembly, e.g. inserting, deleting, or rotating pages (default true)
     embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
+    embedsMetadata?: EmbedsMetadata; // Per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance.
     watermark?: PdfEngineWatermark; // Optional PDF-engine post-processing watermark (behind page content).
     stamp?: PdfEngineStamp; // Optional PDF-engine post-processing stamp (on top of page content).
+    rotate?: PdfEngineRotate; // Optional PDF-engine post-process page rotation.
+    facturx?: FacturXOptions; // Turn the resulting PDF into a Factur-X / ZUGFeRD e-invoice.
 };
 ```
 
@@ -408,13 +456,27 @@ type DownloadFromEntry = {
 type DownloadFrom = DownloadFromEntry | DownloadFromEntry[];
 
 type WebhookOptions = {
-    webhookUrl: string;
-    webhookErrorUrl: string;
+    webhookUrl?: string; // At least one of webhookUrl or webhookErrorUrl is required.
+    /** @deprecated Use webhookEventsUrl instead, together with webhookUrl. */
+    webhookErrorUrl?: string;
     webhookMethod?: 'POST' | 'PUT' | 'PATCH';
     webhookErrorMethod?: 'POST' | 'PUT' | 'PATCH';
     webhookExtraHttpHeaders?: Record<string, string>;
     webhookEventsUrl?: string;
 };
+
+type EmbedsMetadata = Record<
+    string, // filename, matching an entry in `embeds`
+    {
+        mimeType?: string; // Written to the embedded file stream's /Subtype
+        relationship?:
+            | 'Source'
+            | 'Data'
+            | 'Alternative'
+            | 'Supplement'
+            | 'Unspecified'; // The /AFRelationship value
+    }
+>;
 ```
 
 Optional `watermark` and `stamp` use the same multipart field names as [Gotenberg’s PDF-engine watermark/stamp](https://gotenberg.dev/docs/manipulate-pdfs/watermark-pdfs): text, image, or PDF sources, with JSON `options` depending on your configured engine (e.g. pdfcpu). See [Watermark PDFs](https://gotenberg.dev/docs/manipulate-pdfs/watermark-pdfs) and [Stamp PDFs](https://gotenberg.dev/docs/manipulate-pdfs/stamp-pdfs) in the official docs.
@@ -449,16 +511,16 @@ type ImageProperties = {
     width?: number; // The device screen width in pixels (default 800).
     height?: number; // The device screen height in pixels (default 600).
     clip?: boolean; // Define whether to clip the screenshot according to the device dimensions (default false).
+    deviceScaleFactor?: number; // The device scale factor, useful for HiDPI screenshots (default 1).
 };
 ```
 
-Furthermore, alongside the customization options offered by `ImageProperties`, the `capture()` method accommodates a variety of parameters to expand the versatility of the screenshot process. Below is a comprehensive overview of all parameters available:
+Furthermore, alongside the customization options offered by `ImageProperties`, the `capture()` method accommodates a variety of parameters to expand the versatility of the screenshot process. Below is a comprehensive overview of all parameters available. Note that screenshots produce an image rather than a PDF, so PDF-only options like `header`/`footer`, `generateDocumentOutline`, `userPassword`/`ownerPassword`, and `embeds` don't apply here.
 
 ```typescript
 type ScreenshotOptions = {
     properties?: ImageProperties;
-    header?: PathLikeOrReadStream;
-    footer?: PathLikeOrReadStream;
+    userAgent?: string; // Override the User-Agent header sent by Chromium.
     emulatedMediaType?: EmulatedMediaType;
     emulatedMediaFeatures?: EmulatedMediaFeature[]; // Override CSS media features (e.g., prefers-color-scheme). Default: None.
     waitDelay?: string; // Duration (e.g, '5s') to wait when loading an HTML document before convertion.
@@ -467,7 +529,7 @@ type ScreenshotOptions = {
     extraHttpHeaders?: Record<string, string>;
     failOnHttpStatusCodes?: number[]; // Return a 409 Conflict response if the HTTP status code is in the list (default [499,599])
     failOnConsoleExceptions?: boolean; // Return a 409 Conflict response if there are exceptions in the Chromium console (default false)
-    failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default [499,599])
+    failOnResourceHttpStatusCodes?: number[]; // Return a 409 Conflict response if resource HTTP status code is in the list (default None)
     ignoreResourceHttpStatusDomains?: string[]; // Domains to exclude from resource HTTP status code checks (matches exact domains or subdomains)
     failOnResourceLoadingFailed?: boolean; // Return a 409 Conflict response if resource loading failed (default false)
     skipNetworkIdleEvent?: boolean; // Do not wait for Chromium network to be idle (default true)
@@ -476,9 +538,8 @@ type ScreenshotOptions = {
     cookies?: Cookie[]; // Cookies to be written.
     downloadFrom?: DownloadFrom; // Download files from one or multiple URLs.
     webhook?: WebhookOptions; // Request-level webhook headers for async callbacks.
-    userPassword?: string; // Password for opening the resulting PDF(s).
-    ownerPassword?: string; // Password for full access on the resulting PDF(s).
-    embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF.
+    outputFilename?: string; // Custom filename for the resulting file; Gotenberg appends the extension.
+    trace?: string; // Custom request id to identify the request in the logs, overriding the generated UUID.
 };
 ```
 
@@ -499,9 +560,35 @@ const buffer = await LibreOffice.convert({
 });
 ```
 
-Similarly to Chromium's route `convert` method, this method takes the following optional parameters :
+Similarly to Chromium's route `convert` method, this method takes an optional `properties` parameter of the following type, which
+also includes a `password` field to open the source document:
 
-- `properties`: changes how the PDF generated file will look like. It also includes a `password` parameter to open the source file.
+```typescript
+type PageProperties = {
+    password?: string; // Password to open the source document
+    landscape?: boolean; // Paper orientation landscape (default false)
+    nativePageRanges?: { from: number; to: number }; // Page ranges to print
+    exportFormFields?: boolean; // Export form fields as interactive widgets, or false to flatten them during conversion (default true)
+    singlePageSheets?: boolean; // Render entire spreadsheet as a single page (default false)
+    allowDuplicateFieldNames?: boolean; // Allow multiple form fields with the same name
+    exportBookmarks?: boolean; // Export bookmarks to the resulting PDF (default true)
+    exportBookmarksToPdfDestination?: boolean; // Export bookmarks as Named Destination in the PDF
+    exportPlaceholders?: boolean; // Export placeholder fields' visual markings only
+    exportNotes?: boolean; // Export notes to the resulting PDF
+    exportNotesPages?: boolean; // Export notes pages (Impress documents only)
+    exportOnlyNotesPages?: boolean; // Export only notes pages, when exportNotesPages is true
+    exportNotesInMargin?: boolean; // Export notes in the margin of the resulting PDF
+    convertOooTargetToPdfTarget?: boolean; // Change .od[tpgs] extensions to .pdf in exported links
+    exportLinksRelativeFsys?: boolean; // Export file system related hyperlinks as relative
+    exportHiddenSlides?: boolean; // Export hidden slides (Impress documents only)
+    skipEmptyPages?: boolean; // Suppress the automatic insertion of blank pages (Writer documents only)
+    updateIndexes?: boolean; // Update the document's indexes/table of contents before export (default true)
+    addOriginalDocumentAsStream?: boolean; // Insert the original file as a stream in the resulting PDF
+};
+```
+
+In addition to `properties`, the `convert()` method accepts the following optional parameters:
+
 - `pdfa`: PDF format of the conversion resulting file (i.e. `PDF/A-1b`, `PDF/A-2b`, `PDF/A-3b`).
 - `pdfUA`: enables PDF for Universal Access for optimal accessibility.
 - `merge`: merges all the resulting files from the conversion into an individual PDF file.
@@ -526,21 +613,29 @@ Similarly to Chromium's route `convert` method, this method takes the following 
 - `useTransitionEffects`: use transition effects for Impress slides.
 - `openBookmarkLevels`: number of bookmark levels opened on load (`-1` opens all levels).
 - `downloadFrom`: download files remotely (`DownloadFromEntry` or `DownloadFromEntry[]`).
-- `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
+- `split`: split the resulting PDF into multiple files — same shape as Chromium's `split` (`ConvertSplit`, see [PDF Splitting](#pdf-splitting)).
+- `flatten`: a boolean that, when set to true, flattens the resulting PDF's form fields and annotations, making them uneditable.
 - `userPassword`: password for opening the resulting PDF(s).
 - `ownerPassword`: password for full access on the resulting PDF(s).
+- `allowPrinting` / `allowCopying` / `allowModifying` / `allowAnnotating` / `allowFillingForms` / `allowAssembling`: PDF permission booleans, each defaulting to `true` — see [PDF Permissions](#pdf-permissions).
 - `embeds`: files to embed in the generated PDF (repeatable). This feature enables the creation of PDFs compatible with standards like [ZUGFeRD / Factur-X](https://fnfe-mpe.org/factur-x/), which require embedding XML invoices and other files within the PDF.
+- `embedsMetadata`: per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance — see [Embedding Files](#embedding-files).
+- `facturx`: turn the resulting PDF into a Factur-X / ZUGFeRD e-invoice — see [Factur-X / ZUGFeRD](#factur-x--zugferd).
+- `outputFilename` / `trace`: custom output filename and/or request trace id — see [Output Filename and Request Tracing](#output-filename-and-request-tracing).
 - `webhook`: request-level webhook headers for async callbacks.
 - **Native LibreOffice watermarks** (applied during export): `nativeWatermarkText`, `nativeWatermarkColor`, `nativeWatermarkFontHeight`, `nativeWatermarkRotateAngle`, `nativeWatermarkFontName`, `nativeTiledWatermarkText` — see [Convert to PDF](https://gotenberg.dev/docs/convert-with-libreoffice/convert-to-pdf).
 - **PDF-engine watermark/stamp** (post-processing after conversion): `watermark` and `stamp` — same shapes as in Chromium `ConversionOptions` (`PdfEngineWatermark` / `PdfEngineStamp`). For `{ data, ext }` file objects, use the same pattern as in `files`.
+- `rotate`: PDF-engine post-process page rotation — see [PDF Rotation](#pdf-rotation).
 
 ### PDF Engines
 
 The `PDFEngines` class interacts with Gotenberg's [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/pdfa-pdfua) routes to manipulate PDF files.
 
+Every method below also accepts the optional cross-cutting parameters `downloadFrom`, `webhook`, `outputFilename`, and `trace` (omitted from most examples for brevity). See the `DownloadFrom`/`WebhookOptions` types under [Chromium](#chromium) and [Output Filename and Request Tracing](#output-filename-and-request-tracing).
+
 #### Format Conversion
 
-This method interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/pdfa-pdfua) convertion route to transform PDF files into the requested PDF/A format and/or PDF/UA.
+This method interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/pdfa-pdfua) convertion route to transform PDF files into the requested PDF/A format and/or PDF/UA. At least one of `pdfa` or `pdfUA` must be provided.
 
 ```typescript
 import { PDFEngines } from 'chromiumly';
@@ -565,9 +660,22 @@ import { PDFEngines } from 'chromiumly';
 const buffer = await PDFEngines.merge({
     files: ['path/to/file_1.pdf', 'path/to/file_2.pdf'],
     pdfa: PdfFormat.A_2b,
-    pdfUA: true
+    pdfUA: true,
+    metadata: { Author: 'Taha Cherfia' },
+    flatten: true,
+    bookmarks: [{ title: 'Section 1', page: 1 }],
+    autoIndexBookmarks: false, // auto-extract and offset each input's existing bookmarks (default false)
+    userPassword: 'my_user_password',
+    ownerPassword: 'my_owner_password',
+    allowPrinting: false
 });
 ```
+
+Optional `metadata` writes metadata to the merged PDF, and `flatten` flattens its form fields and annotations, both matching [Merge PDFs](https://gotenberg.dev/docs/manipulate-pdfs/merge-pdfs) in the Gotenberg docs.
+
+Optional `bookmarks` sets a final bookmark list on the merged PDF, or a filename-keyed map applied to each input before merging (its page indexes get offset automatically). Optional `autoIndexBookmarks` instead auto-extracts and offsets each input's existing bookmarks. `bookmarks` and `autoIndexBookmarks` are mutually exclusive strategies for populating the merged PDF's outline.
+
+Optional `userPassword`/`ownerPassword` and the six permission booleans (`allowPrinting`, `allowCopying`, `allowModifying`, `allowAnnotating`, `allowFillingForms`, `allowAssembling`) encrypt the merged output — see [PDF Encryption](#pdf-encryption) and [PDF Permissions](#pdf-permissions).
 
 Optional `watermark` and `stamp` (`PdfEngineWatermark` / `PdfEngineStamp`) apply PDF-engine post-processing to the merged output, matching [Merge PDFs](https://gotenberg.dev/docs/manipulate-pdfs/merge-pdfs) in the Gotenberg docs.
 
@@ -681,6 +789,64 @@ const updated = await PDFEngines.writeBookmarks({
 });
 ```
 
+#### Encryption (dedicated route)
+
+`PDFEngines.encrypt()` calls Gotenberg's [encrypt route](https://gotenberg.dev/docs/manipulate-pdfs/encrypt-pdfs) to encrypt existing PDFs directly, without going through a conversion. At least one of `userPassword` or `ownerPassword` is required; since Gotenberg 8.34.0, an owner-password-only request produces an owner-only PDF that opens without a password but still enforces the given permissions.
+
+```typescript
+import { PDFEngines } from 'chromiumly';
+
+const encrypted = await PDFEngines.encrypt({
+    files: ['path/to/document.pdf'],
+    options: {
+        userPassword: 'my_user_password',
+        ownerPassword: 'my_owner_password',
+        allowPrinting: false,
+        allowCopying: false
+    }
+});
+```
+
+See [PDF Encryption](#pdf-encryption) and [PDF Permissions](#pdf-permissions) for the full set of encryption and permission fields, also available on Chromium and LibreOffice `convert()`, and on `PDFEngines.merge()`/`PDFEngines.split()`.
+
+#### Embedding Files (dedicated route)
+
+`PDFEngines.embed()` calls Gotenberg's [embed route](https://gotenberg.dev/docs/manipulate-pdfs/attachments) to attach files to existing PDFs directly, without going through a conversion.
+
+```typescript
+import { PDFEngines } from 'chromiumly';
+
+const embedded = await PDFEngines.embed({
+    files: ['path/to/document.pdf'],
+    embeds: ['path/to/invoice.xml', 'path/to/logo.png'],
+    embedsMetadata: {
+        'invoice.xml': { mimeType: 'text/xml', relationship: 'Data' }
+    }
+});
+```
+
+See [Embedding Files](#embedding-files) for the `embedsMetadata` shape, also available on Chromium and LibreOffice `convert()`.
+
+#### Factur-X / ZUGFeRD (dedicated route)
+
+`PDFEngines.facturX()` calls Gotenberg's [Factur-X route](https://gotenberg.dev/docs/manipulate-pdfs/factur-x) to turn existing PDFs into Factur-X / ZUGFeRD e-invoices directly, without going through a conversion: it embeds the CII invoice XML under the canonical `factur-x.xml` name and converts the PDF to PDF/A-3.
+
+```typescript
+import { PDFEngines } from 'chromiumly';
+
+const invoice = await PDFEngines.facturX({
+    files: ['path/to/document.pdf'],
+    facturx: {
+        facturxXml: 'path/to/invoice.xml',
+        facturxConformanceLevel: 'EN 16931',
+        facturxDocumentType: 'INVOICE', // optional, defaults to 'INVOICE'
+        facturxVersion: '1.0' // optional, defaults to '1.0'
+    }
+});
+```
+
+See [Factur-X / ZUGFeRD](#factur-x--zugferd) for the full `facturx` field shape, also available on Chromium and LibreOffice `convert()`.
+
 #### File Generation
 
 It is just a generic complementary method that takes the `buffer` returned by the `convert` method, and a
@@ -690,12 +856,13 @@ Please note that all the PDF files can be found `__generated__` folder in the ro
 
 ### PDF Splitting
 
-Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route has a `split` parameter that allows splitting the PDF file into multiple files. The `split` parameter is an object with the following properties:
+Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route has a `split` parameter (type `ConvertSplit`) that allows splitting the resulting PDF into multiple files:
 
 - `mode`: the mode of the split. It can be `pages` or `intervals`.
 - `span`: the span of the split. It is a string that represents the range of pages to split.
 - `unify`: a boolean that allows unifying the split files. Only works when `mode` is `pages`.
-- `flatten`: a boolean that, when set to true, flattens the split PDF files, making form fields and annotations uneditable.
+
+Note that `flatten` is a separate top-level parameter on these routes (see [PDF Flattening](#pdf-flattening)), not part of `split` itself.
 
 ```typescript
 import { UrlConverter } from 'chromiumly';
@@ -709,7 +876,7 @@ const buffer = await UrlConverter.convert({
 });
 ```
 
-On the other hand, PDFEngines' has a `split` method that interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/split-pdfs) split route which splits PDF files into multiple files.
+On the other hand, PDFEngines' has a `split` method that interacts with [PDF Engines](https://gotenberg.dev/docs/manipulate-pdfs/split-pdfs) split route which splits PDF files into multiple files. Here, `options.flatten` is part of the split configuration itself, rather than a separate top-level field:
 
 ```typescript
 import { PDFEngines } from 'chromiumly';
@@ -719,12 +886,16 @@ const buffer = await PDFEngines.split({
     options: {
         mode: 'pages',
         span: '1-2',
-        unify: true
-    }
+        unify: true,
+        flatten: true
+    },
+    metadata: { Author: 'Taha Cherfia' },
+    pdfa: PdfFormat.A_2b,
+    userPassword: 'my_user_password'
 });
 ```
 
-`PDFEngines.split` also accepts optional `watermark`, `stamp`, and `rotate` for the same PDF-engine post-processing as merge.
+`PDFEngines.split` also accepts optional `metadata`, `pdfa`/`pdfUA`, `userPassword`/`ownerPassword` and the six permission booleans (see [PDF Permissions](#pdf-permissions)), and `watermark`, `stamp`, and `rotate` for the same PDF-engine post-processing as merge.
 
 > ⚠️ **Note**: Gotenberg does not currently validate the `span` value when `mode` is set to `pages`, as the validation depends on the chosen engine for the split feature. See [PDF Engines module configuration](https://gotenberg.dev/docs/configuration#pdf-engines) for more details.
 
@@ -743,7 +914,7 @@ const buffer = await PDFEngines.flatten([
 
 ### PDF Encryption
 
-Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route supports PDF encryption through the `userPassword` and `ownerPassword` parameters. The `userPassword` is required to open the PDF, while the `ownerPassword` provides full access permissions.
+Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route, as well as `PDFEngines.merge()` and `PDFEngines.split()`, supports PDF encryption through the `userPassword` and `ownerPassword` parameters. The `userPassword` is required to open the PDF, while the `ownerPassword` provides full access permissions.
 
 ```typescript
 import { UrlConverter } from 'chromiumly';
@@ -754,6 +925,36 @@ const buffer = await UrlConverter.convert({
     ownerPassword: 'my_owner_password'
 });
 ```
+
+There's also a dedicated `PDFEngines.encrypt()` route for encrypting existing PDFs directly — see [Encryption (dedicated route)](#encryption-dedicated-route). Unlike the routes above, it requires at least one of `userPassword` or `ownerPassword`, and (since Gotenberg 8.34.0) allows an owner-password-only PDF that opens without a password but still enforces permissions.
+
+### PDF Permissions
+
+Each route in [PDF Encryption](#pdf-encryption) above also accepts six permission booleans, all defaulting to `true`:
+
+```typescript
+type PdfEnginePermissions = {
+    allowPrinting?: boolean; // Allow printing the document
+    allowCopying?: boolean; // Allow copying content from the document
+    allowModifying?: boolean; // Allow modifying the document
+    allowAnnotating?: boolean; // Allow adding or modifying annotations
+    allowFillingForms?: boolean; // Allow filling in form fields
+    allowAssembling?: boolean; // Allow document assembly, e.g. inserting, deleting, or rotating pages
+};
+```
+
+```typescript
+import { UrlConverter } from 'chromiumly';
+
+const buffer = await UrlConverter.convert({
+    url: 'https://www.example.com/',
+    ownerPassword: 'my_owner_password',
+    allowPrinting: false,
+    allowCopying: false
+});
+```
+
+Permission enforcement depends on the active PDF engine: QPDF honors each permission individually, pdfcpu restricts all permissions if any one is denied, and PDFtk supports neither owner-only encryption nor permission restrictions. Restrictions are advisory: PDF viewers honor them, but they aren't cryptographically enforced once the document opens.
 
 ### Embedding Files
 
@@ -776,6 +977,100 @@ const buffer = await htmlConverter.convert({
 ```
 
 All embedded files will be attached to the generated PDF and can be extracted using PDF readers that support file attachments.
+
+Optional `embedsMetadata` sets per-attachment metadata, keyed by filename, required for PDF/A-3 and Factur-X compliance:
+
+```typescript
+type EmbedsMetadata = Record<
+    string, // filename, matching an entry in `embeds`
+    {
+        mimeType?: string; // Written to the embedded file stream's /Subtype
+        relationship?:
+            | 'Source'
+            | 'Data'
+            | 'Alternative'
+            | 'Supplement'
+            | 'Unspecified'; // The /AFRelationship value
+    }
+>;
+```
+
+```typescript
+const buffer = await htmlConverter.convert({
+    html: 'path/to/index.html',
+    embeds: ['path/to/invoice.xml'],
+    embedsMetadata: {
+        'invoice.xml': { mimeType: 'text/xml', relationship: 'Data' }
+    }
+});
+```
+
+There's also a dedicated `PDFEngines.embed()` route for attaching files to existing PDFs directly — see [Embedding Files (dedicated route)](#embedding-files-dedicated-route).
+
+### Factur-X / ZUGFeRD
+
+Each [Chromium](#chromium) and [LibreOffice](#libreoffice) route supports turning the resulting PDF into a [Factur-X / ZUGFeRD](https://fnfe-mpe.org/factur-x/) e-invoice through the `facturx` parameter, which embeds the CII invoice XML under the canonical `factur-x.xml` name and converts the PDF to PDF/A-3:
+
+```typescript
+type FacturXOptions = {
+    facturxXml: PathLikeOrReadStream; // The Factur-X CII invoice XML; embedded as factur-x.xml regardless of the given filename.
+    facturxConformanceLevel:
+        | 'MINIMUM'
+        | 'BASIC WL'
+        | 'BASIC'
+        | 'EN 16931'
+        | 'EXTENDED'
+        | 'XRECHNUNG';
+    facturxDocumentType?: 'INVOICE' | 'ORDER' | 'ORDER_RESPONSE' | 'ORDER_CHANGE'; // Defaults to 'INVOICE'.
+    facturxVersion?: string; // Defaults to '1.0'.
+    pdfa?: 'PDF/A-3a' | 'PDF/A-3b' | 'PDF/A-3u';
+    pdfUA?: boolean;
+};
+```
+
+```typescript
+import { HtmlConverter } from 'chromiumly';
+
+const htmlConverter = new HtmlConverter();
+const buffer = await htmlConverter.convert({
+    html: 'path/to/index.html',
+    facturx: {
+        facturxXml: 'path/to/invoice.xml',
+        facturxConformanceLevel: 'EN 16931'
+    }
+});
+```
+
+There's also a dedicated `PDFEngines.facturX()` route for turning existing PDFs into Factur-X e-invoices directly — see [Factur-X / ZUGFeRD (dedicated route)](#factur-x--zugferd-dedicated-route).
+
+### Output Filename and Request Tracing
+
+Every route accepts optional `outputFilename` and `trace` parameters, mapping to the `Gotenberg-Output-Filename` and `Gotenberg-Trace` request headers:
+
+```typescript
+type OutputOptions = {
+    outputFilename?: string; // Custom filename for the resulting file; Gotenberg appends the extension.
+    trace?: string; // Custom request id to identify the request in the logs, overriding the generated UUID.
+};
+```
+
+```typescript
+import { UrlConverter } from 'chromiumly';
+
+const buffer = await UrlConverter.convert({
+    url: 'https://www.example.com/',
+    outputFilename: 'my-document',
+    trace: 'my-correlation-id'
+});
+```
+
+The [System](#system) routes accept `trace` too (there's no resulting file, so no `outputFilename`):
+
+```typescript
+import { System } from 'chromiumly';
+
+const health = await System.getHealth('my-correlation-id');
+```
 
 ### Templates (hosted API only)
 
@@ -859,7 +1154,7 @@ interface InvoiceSaasTemplateData {
     invoiceNumber: string;
     createdDate: string;
     dueDate: string;
-    companyLogo: string;
+    companyLogo?: string;
     sender: TemplateParty;
     receiver: TemplateParty;
     items: InvoiceItem[];
@@ -869,13 +1164,19 @@ interface InvoiceSaasTemplateData {
     taxAmount: string;
     total: string;
     footerNote: string;
-    footerDisclaimer: string;
+    footerDisclaimer?: string;
+}
+
+// invoice_classic uses this variant instead, where companyLogo is required.
+interface InvoiceClassicTemplateData
+    extends Omit<InvoiceSaasTemplateData, 'companyLogo'> {
+    companyLogo: string;
 }
 
 interface TemplateParty {
     name: string;
     addressLine1: string;
-    addressLine2: string;
+    addressLine2?: string;
     tax?: string;
     iban?: string;
     bic?: string;
@@ -888,6 +1189,8 @@ interface InvoiceItem {
     amount: string;
 }
 ```
+
+`invoice_saas`, `invoice_freelancer`, `invoice_minimal`, and `invoice_modern` all use `InvoiceSaasTemplateData`; `invoice_classic` uses `InvoiceClassicTemplateData`, the only variant where `companyLogo` is required.
 
 The `currency` field accepts any [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code exported as the `Currency` type (e.g. `"USD"`, `"EUR"`, `"GBP"`).
 
@@ -907,7 +1210,7 @@ For image or PDF sources, set `source` to `image` or `pdf`, set `expression` to 
 
 ### System
 
-The `System` class exposes Gotenberg system endpoints:
+The `System` class exposes Gotenberg system endpoints. Every method accepts an optional `trace` argument (custom request id, mapped to the `Gotenberg-Trace` header — see [Output Filename and Request Tracing](#output-filename-and-request-tracing)):
 
 ```typescript
 import { System } from 'chromiumly';
@@ -917,6 +1220,7 @@ const heartbeat = await System.headHealth(); // HEAD /health
 const version = await System.getVersion(); // GET /version
 const debug = await System.getDebug(); // GET /debug
 const metrics = await System.getPrometheusMetrics(); // GET /prometheus/metrics
+const tracedHealth = await System.getHealth('my-correlation-id');
 ```
 
 ## Snippet
@@ -946,7 +1250,6 @@ async function run() {
         failOnConsoleExceptions: true,
         skipNetworkIdleEvent: false,
         skipNetworkAlmostIdleEvent: false,
-        optimizeForSpeed: true,
         split: {
             mode: 'pages',
             span: '1-2',
