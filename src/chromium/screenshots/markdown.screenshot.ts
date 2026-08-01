@@ -66,7 +66,9 @@ export class MarkdownScreenshot extends Screenshot {
         generateDocumentOutline,
         userPassword,
         ownerPassword,
-        embeds
+        embeds,
+        outputFilename,
+        trace
     }: MarkdownScreenshotOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -105,7 +107,10 @@ export class MarkdownScreenshot extends Screenshot {
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
             Chromiumly.getGotenbergApiKey(),
-            GotenbergUtils.buildWebhookHeaders(webhook)
+            GotenbergUtils.combineHeaders(
+                GotenbergUtils.buildWebhookHeaders(webhook),
+                GotenbergUtils.buildOutputHeaders({ outputFilename, trace })
+            )
         );
     }
 }

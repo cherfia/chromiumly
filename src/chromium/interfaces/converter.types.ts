@@ -5,7 +5,7 @@ import {
     PdfEngineStamp,
     PdfEngineWatermark
 } from '../../common';
-import { PdfEngineRotate, Split } from '../../common/types';
+import { OutputOptions, PdfEngineRotate, Split } from '../../common/types';
 import { ChromiumOptions, Cookie } from './common.types';
 
 type PageSize = {
@@ -32,32 +32,33 @@ export type PageProperties = {
     nativePageRanges?: { from: number; to: number }; // Page ranges to print
 };
 
-export type ConversionOptions = ChromiumOptions & {
-    properties?: PageProperties;
-    /**
-     * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for pdfFormat.
-     * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
-     */
-    pdfFormat?: PdfFormat;
-    pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
-    /**
-     * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for userAgent.
-     * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
-     */
-    userAgent?: string;
-    metadata?: Metadata;
-    cookies?: Cookie[];
-    split?: Split;
-    userPassword?: string; // Password for opening the resulting PDF(s)
-    ownerPassword?: string; // Password for full access on the resulting PDF(s)
-    embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
-    /** PDF-engine post-processing watermark (behind content) */
-    watermark?: PdfEngineWatermark;
-    /** PDF-engine post-processing stamp (on top of content) */
-    stamp?: PdfEngineStamp;
-    /** PDF-engine post-process page rotation */
-    rotate?: PdfEngineRotate;
-};
+export type ConversionOptions = ChromiumOptions &
+    OutputOptions & {
+        properties?: PageProperties;
+        /**
+         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for pdfFormat.
+         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
+         */
+        pdfFormat?: PdfFormat;
+        pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
+        /**
+         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for userAgent.
+         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
+         */
+        userAgent?: string;
+        metadata?: Metadata;
+        cookies?: Cookie[];
+        split?: Split;
+        userPassword?: string; // Password for opening the resulting PDF(s)
+        ownerPassword?: string; // Password for full access on the resulting PDF(s)
+        embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
+        /** PDF-engine post-processing watermark (behind content) */
+        watermark?: PdfEngineWatermark;
+        /** PDF-engine post-processing stamp (on top of content) */
+        stamp?: PdfEngineStamp;
+        /** PDF-engine post-process page rotation */
+        rotate?: PdfEngineRotate;
+    };
 
 export type HtmlConversionOptions = ConversionOptions & {
     html: PathLikeOrReadStream;

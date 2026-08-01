@@ -1,4 +1,5 @@
 import { PathLikeOrReadStream } from '../../common';
+import { OutputOptions } from '../../common/types';
 import { ChromiumOptions } from './common.types';
 
 export type ImageProperties = {
@@ -13,13 +14,14 @@ export type ImageProperties = {
 export type ScreenshotOptions = Omit<
     ChromiumOptions,
     'assets' | 'header' | 'footer'
-> & {
-    properties?: ImageProperties;
-    optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
-    userPassword?: string; // Password for opening the resulting PDF(s)
-    ownerPassword?: string; // Password for full access on the resulting PDF(s)
-    embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
-};
+> &
+    OutputOptions & {
+        properties?: ImageProperties;
+        optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
+        userPassword?: string; // Password for opening the resulting PDF(s)
+        ownerPassword?: string; // Password for full access on the resulting PDF(s)
+        embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
+    };
 
 export type HtmlScreenshotOptions = ScreenshotOptions & {
     html: PathLikeOrReadStream;

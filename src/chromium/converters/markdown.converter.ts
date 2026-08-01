@@ -83,7 +83,9 @@ export class MarkdownConverter extends Converter {
         embeds,
         watermark,
         stamp,
-        rotate
+        rotate,
+        outputFilename,
+        trace
     }: MarkdownConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -132,7 +134,10 @@ export class MarkdownConverter extends Converter {
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
             Chromiumly.getGotenbergApiKey(),
-            GotenbergUtils.buildWebhookHeaders(webhook)
+            GotenbergUtils.combineHeaders(
+                GotenbergUtils.buildWebhookHeaders(webhook),
+                GotenbergUtils.buildOutputHeaders({ outputFilename, trace })
+            )
         );
     }
 }

@@ -83,7 +83,9 @@ export class UrlConverter extends Converter {
         embeds,
         watermark,
         stamp,
-        rotate
+        rotate,
+        outputFilename,
+        trace
     }: UrlConversionOptions): Promise<Buffer> {
         const _url = new URL(url);
         const data = new FormData();
@@ -131,7 +133,10 @@ export class UrlConverter extends Converter {
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
             Chromiumly.getGotenbergApiKey(),
-            GotenbergUtils.buildWebhookHeaders(webhook)
+            GotenbergUtils.combineHeaders(
+                GotenbergUtils.buildWebhookHeaders(webhook),
+                GotenbergUtils.buildOutputHeaders({ outputFilename, trace })
+            )
         );
     }
 }

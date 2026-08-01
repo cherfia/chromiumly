@@ -176,6 +176,27 @@ describe('MarkdownConverter', () => {
             });
         });
 
+        describe('when outputFilename and trace parameters are passed', () => {
+            it('should send them as request headers', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await converter.convert({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    outputFilename: 'my-file',
+                    trace: 'my-trace-id'
+                });
+                expect(mockFetch).toHaveBeenCalledWith(
+                    converter.endpoint,
+                    expect.objectContaining({
+                        headers: expect.objectContaining({
+                            'Gotenberg-Output-Filename': 'my-file',
+                            'Gotenberg-Trace': 'my-trace-id'
+                        })
+                    })
+                );
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();

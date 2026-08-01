@@ -82,7 +82,9 @@ export class HtmlConverter extends Converter {
         embeds,
         watermark,
         stamp,
-        rotate
+        rotate,
+        outputFilename,
+        trace
     }: HtmlConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
@@ -137,7 +139,10 @@ export class HtmlConverter extends Converter {
             Chromiumly.getGotenbergApiBasicAuthPassword(),
             Chromiumly.getCustomHttpHeaders(),
             Chromiumly.getGotenbergApiKey(),
-            GotenbergUtils.buildWebhookHeaders(webhook)
+            GotenbergUtils.combineHeaders(
+                GotenbergUtils.buildWebhookHeaders(webhook),
+                GotenbergUtils.buildOutputHeaders({ outputFilename, trace })
+            )
         );
     }
 }
