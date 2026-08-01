@@ -265,15 +265,21 @@ export class PDFEngines {
      * Flattens a PDF file.
      *
      * @param {PathLikeOrReadStream[]} files - An array of PathLikes or ReadStreams to the PDF files to be flattened.
+     * @param {WebhookOptions} [webhook] - Optional webhook delivery.
+     * @param {OutputOptions} [output] - Optional custom output filename and/or trace id.
+     * @param {DownloadFrom} [downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
      * @returns {Promise<Buffer>} A Promise resolving to the flattened PDF content as a buffer
      */
     public static async flatten(
         files: PathLikeOrReadStream[],
         webhook?: WebhookOptions,
-        output?: OutputOptions
+        output?: OutputOptions,
+        downloadFrom?: DownloadFrom
     ): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
+
+        await PDFEnginesUtils.customize(data, { downloadFrom });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.flatten}`;
 
@@ -303,6 +309,7 @@ export class PDFEngines {
         angle,
         pages,
         webhook,
+        downloadFrom,
         outputFilename,
         trace
     }: {
@@ -310,10 +317,12 @@ export class PDFEngines {
         angle: 90 | 180 | 270;
         pages?: string;
         webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         appendPdfEngineRotate(data, { angle, pages });
+        await PDFEnginesUtils.customize(data, { downloadFrom });
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.rotate}`;
         return GotenbergUtils.fetch(
             endpoint,
@@ -381,17 +390,21 @@ export class PDFEngines {
         files,
         metadata,
         webhook,
+        downloadFrom,
         outputFilename,
         trace
     }: {
         files: PathLikeOrReadStream[];
         metadata: Metadata;
         webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
         const data = new FormData();
         data.append('metadata', JSON.stringify(metadata));
 
         await PDFEnginesUtils.addFiles(files, data);
+
+        await PDFEnginesUtils.customize(data, { downloadFrom });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeMetadata}`;
 
@@ -412,10 +425,13 @@ export class PDFEngines {
     public static async readBookmarks(
         files: PathLikeOrReadStream[],
         webhook?: WebhookOptions,
-        output?: OutputOptions
+        output?: OutputOptions,
+        downloadFrom?: DownloadFrom
     ): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
+
+        await PDFEnginesUtils.customize(data, { downloadFrom });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.readBookmarks}`;
 
@@ -437,16 +453,20 @@ export class PDFEngines {
         files,
         bookmarks,
         webhook,
+        downloadFrom,
         outputFilename,
         trace
     }: {
         files: PathLikeOrReadStream[];
         bookmarks: Bookmarks;
         webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
         const data = new FormData();
         data.append('bookmarks', JSON.stringify(bookmarks));
         await PDFEnginesUtils.addFiles(files, data);
+
+        await PDFEnginesUtils.customize(data, { downloadFrom });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.writeBookmarks}`;
 
@@ -476,12 +496,14 @@ export class PDFEngines {
         files,
         options,
         webhook,
+        downloadFrom,
         outputFilename,
         trace
     }: {
         files: PathLikeOrReadStream[];
         options: EncryptOptions;
         webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
@@ -493,6 +515,8 @@ export class PDFEngines {
         }
 
         appendPdfEnginePermissions(data, options);
+
+        await PDFEnginesUtils.customize(data, { downloadFrom });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.encrypt}`;
 
@@ -520,18 +544,21 @@ export class PDFEngines {
         files,
         watermark,
         webhook,
+        downloadFrom,
         outputFilename,
         trace
     }: {
         files: PathLikeOrReadStream[];
         watermark: PdfEngineWatermark;
         webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(data, {
             watermark
         });
+        await PDFEnginesUtils.customize(data, { downloadFrom });
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.watermark}`;
         return GotenbergUtils.fetch(
             endpoint,
@@ -557,18 +584,21 @@ export class PDFEngines {
         files,
         stamp,
         webhook,
+        downloadFrom,
         outputFilename,
         trace
     }: {
         files: PathLikeOrReadStream[];
         stamp: PdfEngineStamp;
         webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(data, {
             stamp
         });
+        await PDFEnginesUtils.customize(data, { downloadFrom });
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.stamp}`;
         return GotenbergUtils.fetch(
             endpoint,

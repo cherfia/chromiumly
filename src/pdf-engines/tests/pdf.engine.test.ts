@@ -326,6 +326,19 @@ describe('PDFEngines', () => {
                 })
             );
         });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.writeMetadata({
+                files: ['path/to/file.pdf'],
+                metadata: { Author: 'John Doe' },
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
+            );
+        });
     });
 
     describe('bookmarks', () => {
@@ -408,6 +421,33 @@ describe('PDFEngines', () => {
                         'Gotenberg-Trace': 'my-trace-id'
                     })
                 })
+            );
+        });
+
+        it('should append downloadFrom when reading bookmarks', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.readBookmarks(
+                ['path/to/file.pdf'],
+                undefined,
+                undefined,
+                { url: 'http://example.com' }
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
+            );
+        });
+
+        it('should append downloadFrom when writing bookmarks', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.writeBookmarks({
+                files: ['path/to/file.pdf'],
+                bookmarks: [{ title: 'Chapter 1', page: 1 }],
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
             );
         });
     });
@@ -659,6 +699,19 @@ describe('PDFEngines', () => {
                 })
             );
         });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.rotate({
+                files: ['path/to/file.pdf'],
+                angle: 90,
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
+            );
+        });
     });
 
     describe('watermark', () => {
@@ -694,6 +747,19 @@ describe('PDFEngines', () => {
                         'Gotenberg-Trace': 'my-trace-id'
                     })
                 })
+            );
+        });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.watermark({
+                files: ['path/to/file.pdf'],
+                watermark: { source: 'text', expression: 'CONFIDENTIAL' },
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
             );
         });
     });
@@ -733,6 +799,19 @@ describe('PDFEngines', () => {
                 })
             );
         });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.stamp({
+                files: ['path/to/file.pdf'],
+                stamp: { source: 'text', expression: 'APPROVED' },
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
+            );
+        });
     });
 
     describe('flatten', () => {
@@ -757,6 +836,20 @@ describe('PDFEngines', () => {
                         'Gotenberg-Trace': 'my-trace-id'
                     })
                 })
+            );
+        });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.flatten(
+                ['path/to/file.pdf'],
+                undefined,
+                undefined,
+                { url: 'http://example.com' }
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
             );
         });
     });
@@ -817,6 +910,19 @@ describe('PDFEngines', () => {
             expect(mockFormDataAppend).toHaveBeenCalledWith(
                 'allowAssembling',
                 'true'
+            );
+        });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.encrypt({
+                files: ['path/to/file.pdf'],
+                options: { userPassword: 'my_user_password' },
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
             );
         });
 
