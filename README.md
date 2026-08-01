@@ -502,7 +502,7 @@ const buffer = await LibreOffice.convert({
 Similarly to Chromium's route `convert` method, this method takes the following optional parameters :
 
 - `properties`: changes how the PDF generated file will look like. It also includes a `password` parameter to open the source file.
-- `pdfa`: PDF format of the conversion resulting file (i.e. `PDF/A-1a`, `PDF/A-2b`, `PDF/A-3b`).
+- `pdfa`: PDF format of the conversion resulting file (i.e. `PDF/A-1b`, `PDF/A-2b`, `PDF/A-3b`).
 - `pdfUA`: enables PDF for Universal Access for optimal accessibility.
 - `merge`: merges all the resulting files from the conversion into an individual PDF file.
 - `metadata`: writes metadata to the generated PDF file.
