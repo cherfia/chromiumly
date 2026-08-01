@@ -8,7 +8,10 @@ export type {
     DownloadFromEntry,
     DownloadFromField,
     OutputOptions,
-    WebhookOptions
+    WebhookOptions,
+    EmbedsMetadata,
+    EmbedMetadataEntry,
+    EmbedAttachmentRelationship
 } from './types';
 export type { PdfEngineRotate } from './types';
 export { appendPdfEngineRotate } from './pdf-engine-rotate.utils';

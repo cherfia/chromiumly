@@ -52,3 +52,21 @@ export type PdfEngineRotate = {
     /** Page ranges (e.g. `1-3`, `5`). Omit or empty = all pages. */
     pages?: string;
 };
+
+/** The `/AFRelationship` value for an embedded attachment. */
+export type EmbedAttachmentRelationship =
+    | 'Source'
+    | 'Data'
+    | 'Alternative'
+    | 'Supplement'
+    | 'Unspecified';
+
+export type EmbedMetadataEntry = {
+    /** Written to the embedded file stream's `/Subtype`. */
+    mimeType?: string;
+    /** The `/AFRelationship` value. */
+    relationship?: EmbedAttachmentRelationship;
+};
+
+/** Per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance. */
+export type EmbedsMetadata = Record<string, EmbedMetadataEntry>;

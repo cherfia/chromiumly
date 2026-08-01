@@ -977,6 +977,42 @@ describe('PDFEngines', () => {
             expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
         });
 
+        it('should append embedsMetadata when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.embed({
+                files: ['path/to/invoice.pdf'],
+                embeds: ['path/to/factur-x.xml'],
+                embedsMetadata: {
+                    'factur-x.xml': {
+                        mimeType: 'text/xml',
+                        relationship: 'Alternative'
+                    }
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'embedsMetadata',
+                JSON.stringify({
+                    'factur-x.xml': {
+                        mimeType: 'text/xml',
+                        relationship: 'Alternative'
+                    }
+                })
+            );
+        });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.embed({
+                files: ['path/to/file.pdf'],
+                embeds: ['path/to/embed.xml'],
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
+            );
+        });
+
         it('should append output filename and trace headers when passed', async () => {
             mockPromisesAccess.mockResolvedValue();
             await PDFEngines.embed({

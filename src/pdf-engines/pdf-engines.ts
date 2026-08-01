@@ -15,7 +15,12 @@ import {
     PdfEngineWatermarkStampUtils
 } from '../common';
 import { PDFEnginesUtils } from './utils/pdf-engines.utils';
-import { DownloadFrom, OutputOptions, WebhookOptions } from '../common/types';
+import {
+    DownloadFrom,
+    EmbedsMetadata,
+    OutputOptions,
+    WebhookOptions
+} from '../common/types';
 import {
     ConversionOptions,
     EncryptOptions,
@@ -628,17 +633,27 @@ export class PDFEngines {
     public static async embed({
         files,
         embeds,
+        embedsMetadata,
         webhook,
+        downloadFrom,
         outputFilename,
         trace
     }: {
         files: PathLikeOrReadStream[];
         embeds: PathLikeOrReadStream[];
+        embedsMetadata?: EmbedsMetadata;
         webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
     } & OutputOptions): Promise<Buffer> {
         const data = new FormData();
         await PDFEnginesUtils.addFiles(files, data);
         await PDFEnginesUtils.addFilesWithFieldName(embeds, data, 'embeds');
+
+        if (embedsMetadata) {
+            data.append('embedsMetadata', JSON.stringify(embedsMetadata));
+        }
+
+        await PDFEnginesUtils.customize(data, { downloadFrom });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.embed}`;
 
