@@ -223,6 +223,23 @@ describe('PDFEngines', () => {
             );
         });
 
+        it('should append bookmarks and autoIndexBookmarks when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.merge({
+                files: ['path/to/file.pdf'],
+                bookmarks: [{ title: 'Chapter 1', page: 1 }],
+                autoIndexBookmarks: true
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'bookmarks',
+                JSON.stringify([{ title: 'Chapter 1', page: 1 }])
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'autoIndexBookmarks',
+                'true'
+            );
+        });
+
         it('should append output filename and trace headers when passed', async () => {
             mockPromisesAccess.mockResolvedValue();
             await PDFEngines.merge({

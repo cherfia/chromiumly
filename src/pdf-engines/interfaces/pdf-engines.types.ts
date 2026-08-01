@@ -25,6 +25,10 @@ export type MergeOptions = ConversionOptions &
     PdfEnginePermissions & {
         metadata?: Metadata;
         flatten?: boolean;
+        /** Bookmark list for the merged PDF, or a filename-keyed map applied before merging. */
+        bookmarks?: Bookmarks;
+        /** Auto-extract and offset each input's existing bookmarks (default false). */
+        autoIndexBookmarks?: boolean;
         userPassword?: string;
         ownerPassword?: string;
         watermark?: PdfEngineWatermark;

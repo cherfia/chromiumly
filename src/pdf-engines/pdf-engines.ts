@@ -56,6 +56,8 @@ export class PDFEngines {
         downloadFrom,
         webhook,
         flatten,
+        bookmarks,
+        autoIndexBookmarks,
         userPassword,
         ownerPassword,
         allowPrinting,
@@ -80,6 +82,15 @@ export class PDFEngines {
             webhook,
             flatten
         });
+        if (bookmarks) {
+            data.append('bookmarks', JSON.stringify(bookmarks));
+        }
+        if (autoIndexBookmarks) {
+            data.append(
+                'autoIndexBookmarks',
+                String(autoIndexBookmarks)
+            );
+        }
         if (userPassword) {
             data.append('userPassword', userPassword);
         }
