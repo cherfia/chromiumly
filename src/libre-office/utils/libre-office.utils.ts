@@ -5,6 +5,7 @@ import { blob } from 'node:stream/consumers';
 import {
     appendPdfEngineRotate,
     appendPdfEnginePermissions,
+    appendFacturX,
     GotenbergUtils,
     PdfEngineWatermarkStampUtils
 } from '../../common';
@@ -533,5 +534,7 @@ export class LibreOfficeUtils {
         if (options.rotate) {
             appendPdfEngineRotate(data, options.rotate);
         }
+
+        await appendFacturX(data, options.facturx);
     }
 }

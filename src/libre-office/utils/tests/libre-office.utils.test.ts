@@ -711,6 +711,26 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
+        describe('when facturx parameter is passed', () => {
+            it('should append the factur-x fields and xml file', async () => {
+                await LibreOfficeUtils.customize(data, {
+                    facturx: {
+                        facturxXml: Buffer.from('<xml/>'),
+                        facturxConformanceLevel: 'EN 16931'
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'facturxXml',
+                    expect.any(Blob),
+                    'factur-x.xml'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'facturxConformanceLevel',
+                    'EN 16931'
+                );
+            });
+        });
+
         describe('when embeds parameter is passed', () => {
             it('should append embeds with string paths', async () => {
                 mockPromisesAccess.mockResolvedValue();

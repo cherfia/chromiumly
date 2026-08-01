@@ -78,6 +78,7 @@ export class LibreOffice {
         watermark,
         stamp,
         rotate,
+        facturx,
         outputFilename,
         trace
     }: {
@@ -131,7 +132,8 @@ export class LibreOffice {
             nativeTiledWatermarkText,
             watermark,
             stamp,
-            rotate
+            rotate,
+            facturx
         });
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;

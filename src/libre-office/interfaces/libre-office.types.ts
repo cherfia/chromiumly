@@ -2,6 +2,7 @@ import { ReadStream } from 'fs';
 import {
     Metadata,
     PdfFormat,
+    type FacturXOptions,
     type PdfEnginePermissions,
     type PdfEngineStamp,
     type PdfEngineWatermark
@@ -227,4 +228,6 @@ export type ConversionOptions = OutputOptions &
         };
         /** PDF-engine post-process page rotation */
         rotate?: PdfEngineRotate;
+        /** Turn the resulting PDF into a Factur-X / ZUGFeRD e-invoice */
+        facturx?: FacturXOptions;
     };

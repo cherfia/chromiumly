@@ -273,6 +273,24 @@ describe('LibreOffice', () => {
             });
         });
 
+        describe('when facturx parameter is passed', () => {
+            it('should append the factur-x fields', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                const buffer = await LibreOffice.convert({
+                    files: ['path/to/file.docx'],
+                    facturx: {
+                        facturxXml: Buffer.from('<xml/>'),
+                        facturxConformanceLevel: 'EN 16931'
+                    }
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'facturxConformanceLevel',
+                    'EN 16931'
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when outputFilename and trace parameters are passed', () => {
             it('should send them as request headers', async () => {
                 mockPromisesAccess.mockResolvedValue();
