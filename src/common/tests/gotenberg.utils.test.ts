@@ -53,6 +53,62 @@ describe('GotenbergUtils', () => {
         });
     });
 
+    describe('buildWebhookHeaders', () => {
+        it('should return undefined when no options are provided', () => {
+            expect(GotenbergUtils.buildWebhookHeaders()).toBeUndefined();
+        });
+
+        it('should build headers from webhookUrl alone', () => {
+            expect(
+                GotenbergUtils.buildWebhookHeaders({
+                    webhookUrl: 'https://my.webhook/success'
+                })
+            ).toEqual({
+                'Gotenberg-Webhook-Url': 'https://my.webhook/success'
+            });
+        });
+
+        it('should build headers from the deprecated webhookErrorUrl alone', () => {
+            expect(
+                GotenbergUtils.buildWebhookHeaders({
+                    webhookErrorUrl: 'https://my.webhook/error'
+                })
+            ).toEqual({
+                'Gotenberg-Webhook-Error-Url': 'https://my.webhook/error'
+            });
+        });
+
+        it('should build all optional headers when provided', () => {
+            expect(
+                GotenbergUtils.buildWebhookHeaders({
+                    webhookUrl: 'https://my.webhook/success',
+                    webhookErrorUrl: 'https://my.webhook/error',
+                    webhookMethod: 'PUT',
+                    webhookErrorMethod: 'PATCH',
+                    webhookExtraHttpHeaders: { Authorization: 'Bearer 123' },
+                    webhookEventsUrl: 'https://my.webhook/events'
+                })
+            ).toEqual({
+                'Gotenberg-Webhook-Url': 'https://my.webhook/success',
+                'Gotenberg-Webhook-Error-Url': 'https://my.webhook/error',
+                'Gotenberg-Webhook-Method': 'PUT',
+                'Gotenberg-Webhook-Error-Method': 'PATCH',
+                'Gotenberg-Webhook-Extra-Http-Headers': JSON.stringify({
+                    Authorization: 'Bearer 123'
+                }),
+                'Gotenberg-Webhook-Events-Url': 'https://my.webhook/events'
+            });
+        });
+
+        it('should throw when neither webhookUrl nor webhookErrorUrl is provided', () => {
+            expect(() =>
+                GotenbergUtils.buildWebhookHeaders({ webhookMethod: 'POST' })
+            ).toThrow(
+                'At least one of webhookUrl or webhookErrorUrl must be provided'
+            );
+        });
+    });
+
     describe('fetch', () => {
         const data = new FormData();
         const endpoint = 'http://localhost:3000/forms/chromium/convert/html';

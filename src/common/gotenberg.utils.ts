@@ -25,10 +25,20 @@ export class GotenbergUtils {
             return undefined;
         }
 
-        const headers: Record<string, string> = {
-            'Gotenberg-Webhook-Url': options.webhookUrl,
-            'Gotenberg-Webhook-Error-Url': options.webhookErrorUrl
-        };
+        this.assert(
+            !!options.webhookUrl || !!options.webhookErrorUrl,
+            'At least one of webhookUrl or webhookErrorUrl must be provided'
+        );
+
+        const headers: Record<string, string> = {};
+
+        if (options.webhookUrl) {
+            headers['Gotenberg-Webhook-Url'] = options.webhookUrl;
+        }
+
+        if (options.webhookErrorUrl) {
+            headers['Gotenberg-Webhook-Error-Url'] = options.webhookErrorUrl;
+        }
 
         if (options.webhookMethod) {
             headers['Gotenberg-Webhook-Method'] = options.webhookMethod;

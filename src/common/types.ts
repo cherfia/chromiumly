@@ -18,8 +18,14 @@ export type DownloadFromEntry = {
 export type DownloadFrom = DownloadFromEntry | DownloadFromEntry[];
 
 export type WebhookOptions = {
-    webhookUrl: string;
-    webhookErrorUrl: string;
+    /**
+     * At least one of `webhookUrl` or `webhookErrorUrl` is required.
+     */
+    webhookUrl?: string;
+    /**
+     * @deprecated Use the events url instead, together with `webhookUrl`.
+     */
+    webhookErrorUrl?: string;
     webhookMethod?: 'POST' | 'PUT' | 'PATCH';
     webhookErrorMethod?: 'POST' | 'PUT' | 'PATCH';
     webhookExtraHttpHeaders?: Record<string, string>;
