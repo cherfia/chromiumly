@@ -102,6 +102,26 @@ describe('PDFEngines', () => {
                     })
                 );
             });
+
+            it('should append output filename and trace headers when passed', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await PDFEngines.convert({
+                    files: ['path/to/file_1.pdf'],
+                    pdfa: PdfFormat.A_2b,
+                    outputFilename: 'my-file',
+                    trace: 'my-trace-id'
+                });
+
+                expect(mockFetch).toHaveBeenCalledWith(
+                    'http://localhost:3000/forms/pdfengines/convert',
+                    expect.objectContaining({
+                        headers: expect.objectContaining({
+                            'Gotenberg-Output-Filename': 'my-file',
+                            'Gotenberg-Trace': 'my-trace-id'
+                        })
+                    })
+                );
+            });
         });
     });
 
@@ -175,6 +195,24 @@ describe('PDFEngines', () => {
             );
             expect(mockFormDataAppend).toHaveBeenCalledWith('rotatePages', '1');
         });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.merge({
+                files: ['path/to/file.pdf'],
+                outputFilename: 'my-merge',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/merge',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-merge',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
+        });
     });
 
     describe('readMetadata', () => {
@@ -198,6 +236,24 @@ describe('PDFEngines', () => {
             });
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.readMetadata({
+                files: ['path/to/file.pdf'],
+                outputFilename: 'my-metadata',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/metadata/read',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-metadata',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
         });
     });
 
@@ -223,6 +279,25 @@ describe('PDFEngines', () => {
             });
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+        });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.writeMetadata({
+                files: ['path/to/file.pdf'],
+                metadata: { Author: 'John Doe' },
+                outputFilename: 'my-metadata',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/metadata/write',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-metadata',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
         });
     });
 
@@ -268,6 +343,43 @@ describe('PDFEngines', () => {
                 expect.objectContaining({
                     method: 'POST',
                     body: expect.any(FormData)
+                })
+            );
+        });
+
+        it('should append output filename and trace headers when reading bookmarks', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.readBookmarks(
+                ['path/to/file.pdf'],
+                undefined,
+                { outputFilename: 'my-bookmarks', trace: 'my-trace-id' }
+            );
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/bookmarks/read',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-bookmarks',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
+        });
+
+        it('should append output filename and trace headers when writing bookmarks', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.writeBookmarks({
+                files: ['path/to/file.pdf'],
+                bookmarks: [{ title: 'Chapter 1', page: 1 }],
+                outputFilename: 'my-bookmarks',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/bookmarks/write',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-bookmarks',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
                 })
             );
         });
@@ -365,6 +477,25 @@ describe('PDFEngines', () => {
                 '180'
             );
         });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.split({
+                files: ['path/to/file.pdf'],
+                options: { mode: 'pages', span: '1-2' },
+                outputFilename: 'my-split',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/split',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-split',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
+        });
     });
 
     describe('rotate', () => {
@@ -413,6 +544,25 @@ describe('PDFEngines', () => {
                 })
             );
         });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.rotate({
+                files: ['path/to/file.pdf'],
+                angle: 90,
+                outputFilename: 'my-rotate',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/rotate',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-rotate',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
+        });
     });
 
     describe('watermark', () => {
@@ -428,6 +578,25 @@ describe('PDFEngines', () => {
                 expect.objectContaining({
                     method: 'POST',
                     body: expect.any(FormData)
+                })
+            );
+        });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.watermark({
+                files: ['path/to/file.pdf'],
+                watermark: { source: 'text', expression: 'CONFIDENTIAL' },
+                outputFilename: 'my-watermark',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/watermark',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-watermark',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
                 })
             );
         });
@@ -449,6 +618,25 @@ describe('PDFEngines', () => {
                 })
             );
         });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.stamp({
+                files: ['path/to/file.pdf'],
+                stamp: { source: 'text', expression: 'APPROVED' },
+                outputFilename: 'my-stamp',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/stamp',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-stamp',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
+        });
     });
 
     describe('flatten', () => {
@@ -457,6 +645,23 @@ describe('PDFEngines', () => {
             const buffer = await PDFEngines.flatten(['path/to/file.pdf']);
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+        });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.flatten(['path/to/file.pdf'], undefined, {
+                outputFilename: 'my-flatten',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/flatten',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-flatten',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
         });
     });
 
@@ -498,6 +703,25 @@ describe('PDFEngines', () => {
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
         });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.encrypt({
+                files: ['path/to/file.pdf'],
+                options: { userPassword: 'my_user_password' },
+                outputFilename: 'my-encrypted-file',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/encrypt',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-encrypted-file',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
+        });
     });
 
     describe('embed', () => {
@@ -529,6 +753,25 @@ describe('PDFEngines', () => {
             });
             expect(buffer).toEqual(await getResponseBuffer());
             expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
+        });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.embed({
+                files: ['path/to/file.pdf'],
+                embeds: ['path/to/embed.xml'],
+                outputFilename: 'my-embed',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/embed',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-embed',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
         });
     });
 

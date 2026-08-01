@@ -7,12 +7,13 @@ import {
 } from '../../common';
 import {
     DownloadFrom,
+    OutputOptions,
     WebhookOptions,
     type PdfEngineRotate,
     type Split
 } from '../../common/types';
 
-export type ConversionOptions = {
+export type ConversionOptions = OutputOptions & {
     pdfa?: PdfFormat;
     pdfUA?: boolean;
     downloadFrom?: DownloadFrom;
@@ -27,7 +28,7 @@ export type MergeOptions = ConversionOptions & {
     rotate?: PdfEngineRotate;
 };
 
-export type SplitEngineOptions = {
+export type SplitEngineOptions = OutputOptions & {
     files: PathLikeOrReadStream[];
     options: Split;
     webhook?: WebhookOptions;
