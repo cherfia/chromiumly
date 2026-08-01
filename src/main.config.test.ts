@@ -101,6 +101,10 @@ describe('Chromiumly', () => {
             );
         });
 
+        it('should expose the factur-x route', () => {
+            expect(Chromiumly.PDF_ENGINE_ROUTES.facturX).toBe('factur-x');
+        });
+
         it('should expose system routes', () => {
             expect(Chromiumly.SYSTEM_ROUTES.health).toBe('health');
             expect(Chromiumly.SYSTEM_ROUTES.version).toBe('version');

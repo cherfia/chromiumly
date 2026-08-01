@@ -5,6 +5,8 @@ import { Chromiumly } from '../main.config';
 import {
     appendPdfEngineRotate,
     appendPdfEnginePermissions,
+    appendFacturX,
+    FacturXOptions,
     GotenbergUtils,
     PathLikeOrReadStream,
     Metadata,
@@ -639,6 +641,47 @@ export class PDFEngines {
         await PDFEnginesUtils.addFilesWithFieldName(embeds, data, 'embeds');
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.embed}`;
+
+        return GotenbergUtils.fetch(
+            endpoint,
+            data,
+            Chromiumly.getGotenbergApiBasicAuthUsername(),
+            Chromiumly.getGotenbergApiBasicAuthPassword(),
+            Chromiumly.getCustomHttpHeaders(),
+            Chromiumly.getGotenbergApiKey(),
+            GotenbergUtils.combineHeaders(
+                GotenbergUtils.buildWebhookHeaders(webhook),
+                GotenbergUtils.buildOutputHeaders({ outputFilename, trace })
+            )
+        );
+    }
+
+    /**
+     * Turns existing PDFs into Factur-X / ZUGFeRD e-invoices: embeds the CII
+     * invoice XML and converts to PDF/A-3.
+     *
+     * @param options.files - PDF files to turn into Factur-X documents.
+     * @param options.facturx - Factur-X invoice XML and metadata.
+     */
+    public static async facturX({
+        files,
+        facturx,
+        webhook,
+        downloadFrom,
+        outputFilename,
+        trace
+    }: {
+        files: PathLikeOrReadStream[];
+        facturx: FacturXOptions;
+        webhook?: WebhookOptions;
+        downloadFrom?: DownloadFrom;
+    } & OutputOptions): Promise<Buffer> {
+        const data = new FormData();
+        await PDFEnginesUtils.addFiles(files, data);
+        await appendFacturX(data, facturx);
+        await PDFEnginesUtils.customize(data, { downloadFrom });
+
+        const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.PDF_ENGINES_PATH}/${Chromiumly.PDF_ENGINE_ROUTES.facturX}`;
 
         return GotenbergUtils.fetch(
             endpoint,

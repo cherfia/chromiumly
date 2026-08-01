@@ -997,6 +997,97 @@ describe('PDFEngines', () => {
         });
     });
 
+    describe('facturX', () => {
+        it('should POST to forms/pdfengines/factur-x', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            const buffer = await PDFEngines.facturX({
+                files: ['path/to/invoice.pdf'],
+                facturx: {
+                    facturxXml: Buffer.from('<xml/>'),
+                    facturxConformanceLevel: 'EN 16931'
+                }
+            });
+            expect(buffer).toEqual(await getResponseBuffer());
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/factur-x',
+                expect.objectContaining({
+                    method: 'POST',
+                    body: expect.any(FormData)
+                })
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'facturxConformanceLevel',
+                'EN 16931'
+            );
+        });
+
+        it('should append optional factur-x fields when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.facturX({
+                files: ['path/to/invoice.pdf'],
+                facturx: {
+                    facturxXml: Buffer.from('<xml/>'),
+                    facturxConformanceLevel: 'BASIC',
+                    facturxDocumentType: 'ORDER',
+                    facturxVersion: '1.0',
+                    pdfa: 'PDF/A-3b',
+                    pdfUA: true
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'facturxDocumentType',
+                'ORDER'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'facturxVersion',
+                '1.0'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'pdfa',
+                'PDF/A-3b'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith('pdfua', 'true');
+        });
+
+        it('should append downloadFrom when provided', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.facturX({
+                files: ['path/to/invoice.pdf'],
+                facturx: {
+                    facturxXml: Buffer.from('<xml/>'),
+                    facturxConformanceLevel: 'BASIC'
+                },
+                downloadFrom: { url: 'http://example.com' }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([{ url: 'http://example.com' }])
+            );
+        });
+
+        it('should append output filename and trace headers when passed', async () => {
+            mockPromisesAccess.mockResolvedValue();
+            await PDFEngines.facturX({
+                files: ['path/to/invoice.pdf'],
+                facturx: {
+                    facturxXml: Buffer.from('<xml/>'),
+                    facturxConformanceLevel: 'BASIC'
+                },
+                outputFilename: 'my-invoice',
+                trace: 'my-trace-id'
+            });
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://localhost:3000/forms/pdfengines/factur-x',
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'Gotenberg-Output-Filename': 'my-invoice',
+                        'Gotenberg-Trace': 'my-trace-id'
+                    })
+                })
+            );
+        });
+    });
+
     describe('generate', () => {
         const mockFilename = 'test.pdf';
         const mockBuffer = Buffer.from('mock pdf content');

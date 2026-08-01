@@ -25,6 +25,7 @@ enum PdfEngineRoute {
     FLATTEN = 'flatten',
     ENCRYPT = 'encrypt',
     EMBED = 'embed',
+    FACTUR_X = 'factur-x',
     WATERMARK = 'watermark',
     STAMP = 'stamp',
     ROTATE = 'rotate'
@@ -149,6 +150,7 @@ export class Chromiumly {
         flatten: PdfEngineRoute.FLATTEN,
         encrypt: PdfEngineRoute.ENCRYPT,
         embed: PdfEngineRoute.EMBED,
+        facturX: PdfEngineRoute.FACTUR_X,
         watermark: PdfEngineRoute.WATERMARK,
         stamp: PdfEngineRoute.STAMP,
         rotate: PdfEngineRoute.ROTATE
