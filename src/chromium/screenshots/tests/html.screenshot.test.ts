@@ -85,6 +85,24 @@ describe('HtmlScreenshot', () => {
             });
         });
 
+        describe('when cookies parameter is passed', () => {
+            it('should append cookies', async () => {
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    cookies: [
+                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                    ]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'cookies',
+                    JSON.stringify([
+                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                    ])
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when userAgent parameter is passed', () => {
             it('should append userAgent', async () => {
                 const buffer = await screenshot.capture({

@@ -64,6 +64,25 @@ describe('MarkdownScreenshot', () => {
             });
         });
 
+        describe('when cookies parameter is passed', () => {
+            it('should append cookies', async () => {
+                const buffer = await screenshot.capture({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    cookies: [
+                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                    ]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'cookies',
+                    JSON.stringify([
+                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                    ])
+                );
+                expect(buffer).toEqual(await getResponseBuffer());
+            });
+        });
+
         describe('when multiple markdown files are passed', () => {
             it('should append each file under its own name', async () => {
                 const buffer = await screenshot.capture({
