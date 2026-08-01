@@ -220,6 +220,30 @@ describe('ConverterUtils', () => {
                     );
                 });
             });
+
+            describe('when only one dimension is set', () => {
+                it('should append only width when height is omitted', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { width: 8.5 }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperWidth',
+                        8.5
+                    );
+                });
+
+                it('should append only height when width is omitted', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        size: { height: 11 }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'paperHeight',
+                        11
+                    );
+                });
+            });
         });
 
         describe('Page margins', () => {
@@ -466,6 +490,38 @@ describe('ConverterUtils', () => {
                             }
                         });
                     }).toThrow('marginTop cannot be negative');
+                });
+            });
+
+            describe('when only some margins are set', () => {
+                it('should append only the provided margins', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        margins: { top: 1, left: '1cm' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginTop',
+                        1
+                    );
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginLeft',
+                        '1cm'
+                    );
+                });
+
+                it('should append only bottom and right when only those are provided', () => {
+                    ConverterUtils.addPageProperties(data, {
+                        margins: { bottom: 1, right: '1cm' }
+                    });
+                    expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginBottom',
+                        1
+                    );
+                    expect(mockFormDataAppend).toHaveBeenCalledWith(
+                        'marginRight',
+                        '1cm'
+                    );
                 });
             });
         });
