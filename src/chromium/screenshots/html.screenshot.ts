@@ -39,7 +39,6 @@ export class HtmlScreenshot extends Screenshot {
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
      * @param {DownloadFrom} [options.downloadFrom] - Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
-     * @param {boolean} [options.generateDocumentOutline] - Whether to generate document outline.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
      */
     async capture({
@@ -64,10 +63,6 @@ export class HtmlScreenshot extends Screenshot {
         cookies,
         downloadFrom,
         webhook,
-        generateDocumentOutline,
-        userPassword,
-        ownerPassword,
-        embeds,
         outputFilename,
         trace
     }: HtmlScreenshotOptions): Promise<Buffer> {
@@ -102,11 +97,7 @@ export class HtmlScreenshot extends Screenshot {
             optimizeForSpeed,
             cookies,
             downloadFrom,
-            webhook,
-            generateDocumentOutline,
-            userPassword,
-            ownerPassword,
-            embeds
+            webhook
         });
 
         return GotenbergUtils.fetch(

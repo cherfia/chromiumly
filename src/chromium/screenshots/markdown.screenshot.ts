@@ -40,7 +40,6 @@ export class MarkdownScreenshot extends Screenshot {
      * @param {number[]} [options.failOnResourceHttpStatusCodes] - Whether to fail on resource HTTP status code.
      * @param {string[]} [options.ignoreResourceHttpStatusDomains] - Domains to exclude from resource HTTP status code checks.
      * @param {boolean} [options.failOnResourceLoadingFailed] - Whether to fail on resource loading failed.
-     * @param {boolean} [options.generateDocumentOutline] - Whether to generate document outline.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
      */
     async capture({
@@ -66,10 +65,6 @@ export class MarkdownScreenshot extends Screenshot {
         failOnResourceHttpStatusCodes,
         ignoreResourceHttpStatusDomains,
         failOnResourceLoadingFailed,
-        generateDocumentOutline,
-        userPassword,
-        ownerPassword,
-        embeds,
         outputFilename,
         trace
     }: MarkdownScreenshotOptions): Promise<Buffer> {
@@ -114,11 +109,7 @@ export class MarkdownScreenshot extends Screenshot {
             optimizeForSpeed,
             cookies,
             downloadFrom,
-            webhook,
-            generateDocumentOutline,
-            userPassword,
-            ownerPassword,
-            embeds
+            webhook
         });
 
         return GotenbergUtils.fetch(

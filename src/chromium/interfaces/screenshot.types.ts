@@ -14,14 +14,11 @@ export type ImageProperties = {
 
 export type ScreenshotOptions = Omit<
     ChromiumOptions,
-    'assets' | 'header' | 'footer'
+    'assets' | 'header' | 'footer' | 'generateDocumentOutline'
 > &
     OutputOptions & {
         properties?: ImageProperties;
         optimizeForSpeed?: boolean; // Define whether to optimize image encoding for speed, not for resulting size.
-        userPassword?: string; // Password for opening the resulting PDF(s)
-        ownerPassword?: string; // Password for full access on the resulting PDF(s)
-        embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
     };
 
 export type HtmlScreenshotOptions = ScreenshotOptions & {
@@ -39,7 +36,5 @@ export type MarkdownScreenshotOptions = ScreenshotOptions & {
     markdown:
         | PathLikeOrReadStream
         | { file: PathLikeOrReadStream; name: string }[];
-    header?: PathLikeOrReadStream;
-    footer?: PathLikeOrReadStream;
     assets?: { file: PathLikeOrReadStream; name: string }[];
 };

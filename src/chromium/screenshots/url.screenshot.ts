@@ -41,7 +41,6 @@ export class UrlScreenshot extends Screenshot {
      * @param {boolean} [options.skipNetworkIdleEvent] - Whether to skip network idle event.
      * @param {boolean} [options.optimizeForSpeed] - Whether to optimize for speed.
      * @param {Cookie[]} options.cookies - Cookies to be written.
-     * @param {boolean} [options.generateDocumentOutline] - Whether to generate document outline.
      * @returns {Promise<Buffer>} A Promise resolving to the image buffer.
      */
     async capture({
@@ -65,10 +64,6 @@ export class UrlScreenshot extends Screenshot {
         cookies,
         downloadFrom,
         webhook,
-        generateDocumentOutline,
-        userPassword,
-        ownerPassword,
-        embeds,
         outputFilename,
         trace
     }: UrlScreenshotOptions): Promise<Buffer> {
@@ -96,11 +91,7 @@ export class UrlScreenshot extends Screenshot {
             optimizeForSpeed,
             cookies,
             downloadFrom,
-            webhook,
-            generateDocumentOutline,
-            userPassword,
-            ownerPassword,
-            embeds
+            webhook
         });
 
         return GotenbergUtils.fetch(
