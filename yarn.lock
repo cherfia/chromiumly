@@ -3900,7 +3900,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:8.68.0"
     "@typescript-eslint/parser": "npm:8.68.0"
     commitizen: "npm:4.3.2"
-    config: "npm:4.x"
+    config: "npm:5.x"
     dotenv: "npm:17.x"
     eslint: "npm:10.2.0"
     eslint-config-prettier: "npm:^10.1.8"
@@ -4151,12 +4151,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"config@npm:*, config@npm:4.x":
+"config@npm:*":
   version: 4.4.2
   resolution: "config@npm:4.4.2"
   dependencies:
     json5: "npm:^2.2.3"
   checksum: 10c0/2ef94db31c8f573d2beefa6682ec16f142f9f56710c43e4fc8a8d5bb48cc056b1f8174ae8fa4554af23c041e366dc8c940e7e6d9664904c6ef0ed2e60fe51216
+  languageName: node
+  linkType: hard
+
+"config@npm:5.x":
+  version: 5.0.1
+  resolution: "config@npm:5.0.1"
+  dependencies:
+    json5: "npm:^2.2.3"
+  checksum: 10c0/835f299f3d29f4b8d38b3f5fafcf8ac20d0798970912cdc280a36ec8727b13de90b573c69e04b894019b6012d5540bbe2d8261f78ceb16b77484020762d57bb1
   languageName: node
   linkType: hard
 
