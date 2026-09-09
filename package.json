@@ -76,7 +76,7 @@
         "typescript": "6.0.3"
     },
     "optionalDependencies": {
-        "config": "4.x",
+        "config": "5.x",
         "dotenv": "17.x"
     },
     "resolutions": {
