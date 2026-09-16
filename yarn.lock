@@ -3990,7 +3990,7 @@ __metadata:
     jest-junit: "npm:17.0.0"
     lint-staged: "npm:^17.0.0"
     prettier: "npm:3.9.6"
-    release-it: "npm:21.0.2"
+    release-it: "npm:21.0.3"
     ts-jest: "npm:29.4.12"
     ts-node: "npm:10.9.2"
     tslib: "npm:2.8.1"
@@ -7832,9 +7832,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"release-it@npm:21.0.2":
-  version: 21.0.2
-  resolution: "release-it@npm:21.0.2"
+"release-it@npm:21.0.3":
+  version: 21.0.3
+  resolution: "release-it@npm:21.0.3"
   dependencies:
     "@inquirer/prompts": "npm:8.5.2"
     "@octokit/rest": "npm:22.0.1"
@@ -7860,7 +7860,7 @@ __metadata:
     wildcard-match: "npm:5.1.4"
   bin:
     release-it: bin/release-it.js
-  checksum: 10c0/9cb74de095db256e28fbbc2a540c8bc7d9f8dd054b5bf01ffbf792cdc6cc911d5d32f747977b9b547ff65209931efd0d1491e86180fba74dc2aeb095937a4075
+  checksum: 10c0/1c2d30d39e06e20459d3932cbec5ec9d6cd39d568f0c539ea55ba97060d2da91e3f6c17bb0158a574245e58c544b3c05b826f6058c1c44ff71032abd2b9614e8
   languageName: node
   linkType: hard
 
