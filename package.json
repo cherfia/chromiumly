@@ -77,7 +77,7 @@
     },
     "optionalDependencies": {
         "config": "4.x",
-        "dotenv": "17.x"
+        "dotenv": "18.x"
     },
     "resolutions": {
         "conventional-changelog-conventionalcommits": "10.4.0"
