@@ -92,17 +92,17 @@ describe('Chromiumly', () => {
     });
 
     describe('routes', () => {
-        it('should expose pdf engine bookmark routes', () => {
-            expect(Chromiumly.PDF_ENGINE_ROUTES.readBookmarks).toBe(
-                'bookmarks/read'
-            );
-            expect(Chromiumly.PDF_ENGINE_ROUTES.writeBookmarks).toBe(
-                'bookmarks/write'
-            );
-        });
-
-        it('should expose the factur-x route', () => {
-            expect(Chromiumly.PDF_ENGINE_ROUTES.facturX).toBe('factur-x');
+        it('should expose the pdf path and routes', () => {
+            expect(Chromiumly.PDF_PATH).toBe('forms/pdf');
+            expect(Chromiumly.PDF_ROUTES).toEqual({
+                pipe: 'pipe',
+                info: 'info',
+                metadata: 'metadata',
+                bookmarks: 'bookmarks',
+                attachments: 'attachments',
+                form: 'form',
+                validate: 'validate'
+            });
         });
 
         it('should expose system routes', () => {

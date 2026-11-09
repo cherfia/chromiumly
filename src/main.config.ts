@@ -11,24 +11,18 @@ export enum ChromiumRoute {
 }
 
 /**
- * Enum representing the available routes for the PDF engine.
+ * Enum representing the PDF routes that aren't a single stage.
+ * Each stage also has its own route, named after its op.
  * @enum {string}
  */
-enum PdfEngineRoute {
-    CONVERT = 'convert',
-    MERGE = 'merge',
-    READ_METADATA = 'metadata/read',
-    WRITE_METADATA = 'metadata/write',
-    READ_BOOKMARKS = 'bookmarks/read',
-    WRITE_BOOKMARKS = 'bookmarks/write',
-    SPLIT = 'split',
-    FLATTEN = 'flatten',
-    ENCRYPT = 'encrypt',
-    EMBED = 'embed',
-    FACTUR_X = 'factur-x',
-    WATERMARK = 'watermark',
-    STAMP = 'stamp',
-    ROTATE = 'rotate'
+enum PdfRoute {
+    PIPE = 'pipe',
+    INFO = 'info',
+    METADATA = 'metadata',
+    BOOKMARKS = 'bookmarks',
+    ATTACHMENTS = 'attachments',
+    FORM = 'form',
+    VALIDATE = 'validate'
 }
 
 /**
@@ -108,10 +102,10 @@ export class Chromiumly {
         'forms/chromium/screenshot';
 
     /**
-     * The path for PDF engine-related operations.
+     * The path for PDF operations.
      * @type {string}
      */
-    public static readonly PDF_ENGINES_PATH = 'forms/pdfengines';
+    public static readonly PDF_PATH = 'forms/pdf';
 
     /**
      * The path for LibreOffice-related conversions.
@@ -136,24 +130,17 @@ export class Chromiumly {
     };
 
     /**
-     * Routes for PDF engine operations.
+     * Routes for PDF operations that aren't a single stage.
      * @type {Object}
      */
-    public static readonly PDF_ENGINE_ROUTES = {
-        convert: PdfEngineRoute.CONVERT,
-        merge: PdfEngineRoute.MERGE,
-        readMetadata: PdfEngineRoute.READ_METADATA,
-        writeMetadata: PdfEngineRoute.WRITE_METADATA,
-        readBookmarks: PdfEngineRoute.READ_BOOKMARKS,
-        writeBookmarks: PdfEngineRoute.WRITE_BOOKMARKS,
-        split: PdfEngineRoute.SPLIT,
-        flatten: PdfEngineRoute.FLATTEN,
-        encrypt: PdfEngineRoute.ENCRYPT,
-        embed: PdfEngineRoute.EMBED,
-        facturX: PdfEngineRoute.FACTUR_X,
-        watermark: PdfEngineRoute.WATERMARK,
-        stamp: PdfEngineRoute.STAMP,
-        rotate: PdfEngineRoute.ROTATE
+    public static readonly PDF_ROUTES = {
+        pipe: PdfRoute.PIPE,
+        info: PdfRoute.INFO,
+        metadata: PdfRoute.METADATA,
+        bookmarks: PdfRoute.BOOKMARKS,
+        attachments: PdfRoute.ATTACHMENTS,
+        form: PdfRoute.FORM,
+        validate: PdfRoute.VALIDATE
     };
 
     /**

@@ -15,7 +15,8 @@ export {
     UrlConverter,
     UrlScreenshot
 } from './chromium';
-export { PDFEngines } from './pdf-engines';
+export { PDF } from './pdf';
+export type * from './pdf/interfaces/pdf.types';
 export { LibreOffice } from './libre-office';
 export { System } from './system';
 export {
