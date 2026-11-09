@@ -2,17 +2,9 @@ import { PathLike, ReadStream } from 'fs';
 
 export type PathLikeOrReadStream = PathLike | ReadStream;
 
-export type Metadata = {
-    [key: string]: boolean | number | string | string[];
-};
-
-export type DownloadFromField = 'embedded' | 'watermark' | 'stamp' | '';
-
 export type DownloadFromEntry = {
     url: string;
     extraHttpHeaders?: Record<string, string>;
-    embedded?: boolean;
-    field?: DownloadFromField;
     /** Names the downloaded file, over the server's `Content-Disposition` header and the URL path. */
     filename?: string;
 };
@@ -47,37 +39,3 @@ export type RequestInputOptions = {
 /** A paper size Gotenberg knows by name. */
 export type PaperSize =
     'A3' | 'A4' | 'A5' | 'B4' | 'B5' | 'Letter' | 'Legal' | 'Tabloid';
-
-export type Split = {
-    mode: 'pages' | 'intervals';
-    span: string;
-    unify?: boolean;
-    flatten?: boolean;
-};
-
-/**
- * Split configuration for routes where `flatten` is a separate top-level
- * option rather than part of the split configuration itself.
- */
-export type ConvertSplit = Omit<Split, 'flatten'>;
-
-/** PDF-engine post-process rotation (maps to `rotateAngle` / `rotatePages`). */
-export type PdfEngineRotate = {
-    angle: 90 | 180 | 270;
-    /** Page ranges (e.g. `1-3`, `5`). Omit or empty = all pages. */
-    pages?: string;
-};
-
-/** The `/AFRelationship` value for an embedded attachment. */
-export type EmbedAttachmentRelationship =
-    'Source' | 'Data' | 'Alternative' | 'Supplement' | 'Unspecified';
-
-export type EmbedMetadataEntry = {
-    /** Written to the embedded file stream's `/Subtype`. */
-    mimeType?: string;
-    /** The `/AFRelationship` value. */
-    relationship?: EmbedAttachmentRelationship;
-};
-
-/** Per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance. */
-export type EmbedsMetadata = Record<string, EmbedMetadataEntry>;
