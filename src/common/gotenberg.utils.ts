@@ -297,7 +297,7 @@ export class GotenbergUtils {
         fieldName = 'files'
     ): Promise<void> {
         if (Buffer.isBuffer(file)) {
-            data.append(fieldName, new Blob([file]), name);
+            data.append(fieldName, new Blob([new Uint8Array(file)]), name);
         } else if (file instanceof ReadStream) {
             const content = await blob(file);
             data.append(fieldName, content, name);
