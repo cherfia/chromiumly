@@ -48,6 +48,32 @@ describe('gotenberg module loading', () => {
         );
     });
 
+    it('should suppress WARNING console.error messages during module load', () => {
+        const mockConsoleError = jest.fn();
+        console.error = mockConsoleError;
+
+        jest.isolateModules(() => {
+            jest.doMock('dotenv', () => ({
+                config: jest
+                    .fn()
+                    .mockReturnValue({ error: new Error('file not found') })
+            }));
+            jest.doMock('config', () => {
+                console.error(
+                    'WARNING: No configurations found in configuration directory'
+                );
+                return {
+                    has: jest.fn().mockReturnValue(false),
+                    get: jest.fn()
+                };
+            });
+
+            require('./gotenberg');
+        });
+
+        expect(mockConsoleError).not.toHaveBeenCalled();
+    });
+
     it('should handle dotenv not being available', () => {
         jest.isolateModules(() => {
             jest.doMock('dotenv', () => {
