@@ -180,7 +180,7 @@ export class GotenbergUtils {
 
         this.assert(
             duplicate === undefined,
-            `Two uploaded files are named ${duplicate}; rename one of them`
+            `Two uploaded files are named ${duplicate}; rename one of them, or have a stage reuse the upload with { name: '${duplicate}' }`
         );
     }
 

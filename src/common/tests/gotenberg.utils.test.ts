@@ -476,7 +476,7 @@ describe('GotenbergUtils', () => {
                     formData('report.pdf', 'logo.png', 'report.pdf')
                 )
             ).toThrow(
-                'Two uploaded files are named report.pdf; rename one of them'
+                "Two uploaded files are named report.pdf; rename one of them, or have a stage reuse the upload with { name: 'report.pdf' }"
             );
         });
 

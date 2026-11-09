@@ -636,7 +636,7 @@ const merged = await PDF.merge({
 });
 ```
 
-Two uploads under the same name, such as an input and a stage file, throw an error before the request is sent.
+Two uploads under the same name, such as an input and a stage file, throw an error before the request is sent. To use a file the request already uploads, such as an HTML asset, in a stage, reference it with `{ name }` instead of uploading it again.
 
 #### Single-stage routes
 
