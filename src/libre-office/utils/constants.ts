@@ -20,7 +20,6 @@ export const LIBRE_OFFICE_EXTENSIONS = [
     'dxf',
     'emf',
     'eps',
-    'epub',
     'fodg',
     'fodp',
     'fods',
@@ -65,6 +64,8 @@ export const LIBRE_OFFICE_EXTENSIONS = [
     'potx',
     'ppm',
     'pps',
+    'ppsm',
+    'ppsx',
     'ppt',
     'pptm',
     'pptx',
@@ -79,6 +80,7 @@ export const LIBRE_OFFICE_EXTENSIONS = [
     'sdc',
     'sdd',
     'sdp',
+    'sdw',
     'sgl',
     'slk',
     'smf',
@@ -102,6 +104,7 @@ export const LIBRE_OFFICE_EXTENSIONS = [
     'uof',
     'uop',
     'uos',
+    'uot',
     'vdx',
     'vor',
     'vsd',
@@ -127,4 +130,6 @@ export const LIBRE_OFFICE_EXTENSIONS = [
     'xml',
     'xpm',
     'zabw'
-];
+] as const;
+
+export type LibreOfficeExtension = (typeof LIBRE_OFFICE_EXTENSIONS)[number];

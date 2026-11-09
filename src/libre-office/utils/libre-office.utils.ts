@@ -2,13 +2,7 @@ import { constants, openAsBlob, promises, ReadStream } from 'fs';
 import path from 'path';
 import { blob } from 'node:stream/consumers';
 
-import {
-    appendPdfEngineRotate,
-    appendPdfEnginePermissions,
-    appendFacturX,
-    GotenbergUtils,
-    PdfEngineWatermarkStampUtils
-} from '../../common';
+import { GotenbergUtils, StageUtils } from '../../common';
 import { LIBRE_OFFICE_EXTENSIONS } from './constants';
 import {
     ConversionOptions,
@@ -20,17 +14,6 @@ import {
  * Utility class for handling common tasks related to LibreOffice conversions.
  */
 export class LibreOfficeUtils {
-    private static isLibreFileInfo(
-        file: unknown
-    ): file is { data: Buffer | ReadStream; ext: string } {
-        return (
-            typeof file === 'object' &&
-            file !== null &&
-            'data' in file &&
-            'ext' in file
-        );
-    }
-
     private static async getFileInfo(file: PathLikeOrReadStream) {
         if (typeof file === 'string') {
             await promises.access(file, constants.R_OK);
@@ -59,7 +42,11 @@ export class LibreOfficeUtils {
         await Promise.all(
             files.map(async (file, index) => {
                 const fileInfo = await this.getFileInfo(file);
-                if (!LIBRE_OFFICE_EXTENSIONS.includes(fileInfo.ext)) {
+                if (
+                    !(LIBRE_OFFICE_EXTENSIONS as readonly string[]).includes(
+                        fileInfo.ext
+                    )
+                ) {
                     throw new Error(`${fileInfo.ext} is not supported`);
                 }
                 const filename = `file${String(index + 1).padStart(
@@ -94,19 +81,35 @@ export class LibreOfficeUtils {
             data.append('landscape', String(pageProperties.landscape));
         }
 
-        if (pageProperties.nativePageRanges) {
-            GotenbergUtils.assert(
-                pageProperties.nativePageRanges.from > 0 &&
-                    pageProperties.nativePageRanges.to > 0 &&
-                    pageProperties.nativePageRanges.to >=
-                        pageProperties.nativePageRanges.from,
-                'page ranges syntax error'
-            );
+        if (pageProperties.paperSize) {
+            data.append('paperSize', pageProperties.paperSize);
+        }
 
-            data.append(
-                'nativePageRanges',
-                `${pageProperties.nativePageRanges.from}-${pageProperties.nativePageRanges.to}`
-            );
+        if (pageProperties.paperWidth !== undefined) {
+            data.append('paperWidth', String(pageProperties.paperWidth));
+        }
+
+        if (pageProperties.paperHeight !== undefined) {
+            data.append('paperHeight', String(pageProperties.paperHeight));
+        }
+
+        if (pageProperties.nativePages) {
+            if (typeof pageProperties.nativePages === 'string') {
+                data.append('nativePages', pageProperties.nativePages);
+            } else {
+                GotenbergUtils.assert(
+                    pageProperties.nativePages.from > 0 &&
+                        pageProperties.nativePages.to > 0 &&
+                        pageProperties.nativePages.to >=
+                            pageProperties.nativePages.from,
+                    'page ranges syntax error'
+                );
+
+                data.append(
+                    'nativePages',
+                    `${pageProperties.nativePages.from}-${pageProperties.nativePages.to}`
+                );
+            }
         }
 
         if (pageProperties.exportFormFields === false) {
@@ -116,11 +119,8 @@ export class LibreOfficeUtils {
             );
         }
 
-        if (pageProperties.singlePageSheets) {
-            data.append(
-                'singlePageSheets',
-                String(pageProperties.singlePageSheets)
-            );
+        if (pageProperties.singlePage) {
+            data.append('singlePage', String(pageProperties.singlePage));
         }
 
         if (pageProperties.allowDuplicateFieldNames) {
@@ -130,10 +130,10 @@ export class LibreOfficeUtils {
             );
         }
 
-        if (pageProperties.exportBookmarks === false) {
+        if (pageProperties.nativeBookmarks === false) {
             data.append(
-                'exportBookmarks',
-                String(pageProperties.exportBookmarks)
+                'nativeBookmarks',
+                String(pageProperties.nativeBookmarks)
             );
         }
 
@@ -212,49 +212,12 @@ export class LibreOfficeUtils {
         }
 
         if (pageProperties.updateIndexes === false) {
-            data.append(
-                'updateIndexes',
-                String(pageProperties.updateIndexes)
-            );
+            data.append('updateIndexes', String(pageProperties.updateIndexes));
         }
 
         if (pageProperties.password) {
             data.append('password', pageProperties.password);
         }
-    }
-
-    /**
-     * Adds files to the FormData object with a custom field name.
-     *
-     * @param {PathLikeOrReadStream[]} files - An array of files to be added to the FormData.
-     * @param {FormData} data - The FormData object to which files will be added.
-     * @param {string} fieldName - The field name to use when appending files (e.g., 'files', 'embeds').
-     * @returns {Promise<void>} A Promise that resolves once the files have been added.
-     */
-    public static async addFilesWithFieldName(
-        files: PathLikeOrReadStream[],
-        data: FormData,
-        fieldName: string
-    ): Promise<void> {
-        await Promise.all(
-            files.map(async (file, index) => {
-                const fileInfo = await this.getFileInfo(file);
-                const filename = path.basename(
-                    typeof file === 'string' ? file : `file${index + 1}`
-                );
-                if (Buffer.isBuffer(fileInfo.data)) {
-                    data.append(fieldName, new Blob([fileInfo.data]), filename);
-                } else if (fileInfo.data instanceof ReadStream) {
-                    const content = await blob(fileInfo.data);
-                    data.append(fieldName, content, filename);
-                } else {
-                    await promises.access(fileInfo.data, constants.R_OK);
-                    const _filename = path.basename(fileInfo.data.toString());
-                    const content = await openAsBlob(fileInfo.data);
-                    data.append(fieldName, content, _filename);
-                }
-            })
-        );
     }
 
     /**
@@ -268,54 +231,53 @@ export class LibreOfficeUtils {
         data: FormData,
         options: ConversionOptions
     ): Promise<void> {
-        if (options.pdfa) {
-            data.append('pdfa', options.pdfa);
+        if (options.nativePdfa) {
+            data.append('nativePdfa', options.nativePdfa);
         }
 
-        if (options.pdfUA) {
-            data.append('pdfua', String(options.pdfUA));
+        if (options.nativePdfua) {
+            data.append('nativePdfua', options.nativePdfua);
         }
 
-        if (options.merge) {
-            data.append('merge', String(options.merge));
+        if (options.nativeTaggedPdf) {
+            data.append('nativeTaggedPdf', String(options.nativeTaggedPdf));
         }
 
-        if (options.metadata) {
-            data.append('metadata', JSON.stringify(options.metadata));
-        }
-
-        if (options.losslessImageCompression) {
+        if (options.nativeLosslessImageCompression) {
             data.append(
-                'losslessImageCompression',
-                String(options.losslessImageCompression)
+                'nativeLosslessImageCompression',
+                String(options.nativeLosslessImageCompression)
             );
         }
 
-        if (options.reduceImageResolution) {
+        if (options.nativeReduceImageResolution) {
             data.append(
-                'reduceImageResolution',
-                String(options.reduceImageResolution)
+                'nativeReduceImageResolution',
+                String(options.nativeReduceImageResolution)
             );
         }
 
-        if (options.quality) {
+        if (options.nativeQuality) {
             GotenbergUtils.assert(
-                options.quality >= 1 && options.quality <= 100,
+                options.nativeQuality >= 1 && options.nativeQuality <= 100,
                 'Invalid compression quality. Please provide a value between 1 and 100.'
             );
-            data.append('quality', options.quality);
+            data.append('nativeQuality', String(options.nativeQuality));
         }
 
-        if (options.maxImageResolution) {
+        if (options.nativeMaxImageResolution) {
             GotenbergUtils.assert(
-                options.reduceImageResolution === true,
-                'Compression quality is only supported when the reduceImageResolution property is enabled.'
+                options.nativeReduceImageResolution === true,
+                'nativeMaxImageResolution is only supported when nativeReduceImageResolution is enabled.'
             );
-            data.append('maxImageResolution', options.maxImageResolution);
+            data.append(
+                'nativeMaxImageResolution',
+                String(options.nativeMaxImageResolution)
+            );
         }
 
         if (options.initialView !== undefined) {
-            data.append('initialView', String(options.initialView));
+            data.append('initialView', options.initialView);
         }
 
         if (options.initialPage !== undefined) {
@@ -323,7 +285,7 @@ export class LibreOfficeUtils {
         }
 
         if (options.magnification !== undefined) {
-            data.append('magnification', String(options.magnification));
+            data.append('magnification', options.magnification);
         }
 
         if (options.zoom !== undefined) {
@@ -331,11 +293,7 @@ export class LibreOfficeUtils {
         }
 
         if (options.pageLayout !== undefined) {
-            data.append('pageLayout', String(options.pageLayout));
-        }
-
-        if (options.firstPageOnLeft) {
-            data.append('firstPageOnLeft', String(options.firstPageOnLeft));
+            data.append('pageLayout', options.pageLayout);
         }
 
         if (options.resizeWindowToInitialPage) {
@@ -392,92 +350,39 @@ export class LibreOfficeUtils {
             );
         }
 
-        if (options.downloadFrom) {
-            data.append(
-                'downloadFrom',
-                JSON.stringify(
-                    GotenbergUtils.normalizeDownloadFrom(options.downloadFrom)
-                )
-            );
-        }
-
         if (options.properties) {
             LibreOfficeUtils.addPageProperties(data, options.properties);
         }
 
-        if (options.split) {
-            data.append('splitMode', options.split.mode);
-
-            data.append('splitSpan', options.split.span);
-
-            if (options.split.unify) {
-                GotenbergUtils.assert(
-                    options.split.mode === 'pages',
-                    'split unify is only supported for pages mode'
-                );
-                data.append('splitUnify', String(options.split.unify));
-            }
-        }
-
-        if (options.flatten) {
-            data.append('flatten', String(options.flatten));
-        }
-
-        if (options.userPassword) {
-            data.append('userPassword', options.userPassword);
-        }
-
-        if (options.ownerPassword) {
-            data.append('ownerPassword', options.ownerPassword);
-        }
-
-        appendPdfEnginePermissions(data, options);
-
-        if (options.embeds && options.embeds.length > 0) {
-            await LibreOfficeUtils.addFilesWithFieldName(
-                options.embeds,
-                data,
-                'embeds'
-            );
-        }
-
-        if (options.embedsMetadata) {
-            data.append(
-                'embedsMetadata',
-                JSON.stringify(options.embedsMetadata)
-            );
-        }
+        GotenbergUtils.assert(
+            !(options.nativeWatermarkText && options.nativeTiledWatermarkText),
+            'Set nativeWatermarkText or nativeTiledWatermarkText, not both'
+        );
 
         if (options.nativeWatermarkText !== undefined) {
             data.append('nativeWatermarkText', options.nativeWatermarkText);
         }
 
         if (options.nativeWatermarkColor !== undefined) {
+            data.append('nativeWatermarkColor', options.nativeWatermarkColor);
+        }
+
+        if (options.nativeWatermarkFontSize !== undefined) {
             data.append(
-                'nativeWatermarkColor',
-                String(options.nativeWatermarkColor)
+                'nativeWatermarkFontSize',
+                String(options.nativeWatermarkFontSize)
             );
         }
 
-        if (options.nativeWatermarkFontHeight !== undefined) {
+        if (options.nativeWatermarkRotation !== undefined) {
             data.append(
-                'nativeWatermarkFontHeight',
-                String(options.nativeWatermarkFontHeight)
+                'nativeWatermarkRotation',
+                String(options.nativeWatermarkRotation)
             );
         }
 
-        if (options.nativeWatermarkRotateAngle !== undefined) {
-            data.append(
-                'nativeWatermarkRotateAngle',
-                String(options.nativeWatermarkRotateAngle)
-            );
-        }
-
-        if (options.nativeWatermarkFontName !== undefined) {
-            data.append(
-                'nativeWatermarkFontName',
-                options.nativeWatermarkFontName
-            );
+        if (options.nativeWatermarkFont !== undefined) {
+            data.append('nativeWatermarkFont', options.nativeWatermarkFont);
         }
 
         if (options.nativeTiledWatermarkText !== undefined) {
@@ -487,68 +392,11 @@ export class LibreOfficeUtils {
             );
         }
 
-        if (options.watermark || options.stamp) {
-            const watermarkForUtils = options.watermark
-                ? (() => {
-                      const { file, ...rest } = options.watermark!;
-                      if (file === undefined) {
-                          return rest;
-                      }
-                      if (LibreOfficeUtils.isLibreFileInfo(file)) {
-                          return rest;
-                      }
-                      return { ...rest, file };
-                  })()
-                : undefined;
+        await GotenbergUtils.appendRequestInputs(data, {
+            archives: options.archives,
+            downloadFrom: options.downloadFrom
+        });
 
-            const stampForUtils = options.stamp
-                ? (() => {
-                      const { file, ...rest } = options.stamp!;
-                      if (file === undefined) {
-                          return rest;
-                      }
-                      if (LibreOfficeUtils.isLibreFileInfo(file)) {
-                          return rest;
-                      }
-                      return { ...rest, file };
-                  })()
-                : undefined;
-
-            await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
-                data,
-                {
-                    watermark: watermarkForUtils,
-                    stamp: stampForUtils
-                }
-            );
-
-            if (
-                options.watermark?.file !== undefined &&
-                LibreOfficeUtils.isLibreFileInfo(options.watermark.file)
-            ) {
-                await LibreOfficeUtils.addFilesWithFieldName(
-                    [options.watermark.file],
-                    data,
-                    'watermark'
-                );
-            }
-
-            if (
-                options.stamp?.file !== undefined &&
-                LibreOfficeUtils.isLibreFileInfo(options.stamp.file)
-            ) {
-                await LibreOfficeUtils.addFilesWithFieldName(
-                    [options.stamp.file],
-                    data,
-                    'stamp'
-                );
-            }
-        }
-
-        if (options.rotate) {
-            appendPdfEngineRotate(data, options.rotate);
-        }
-
-        await appendFacturX(data, options.facturx);
+        await StageUtils.appendStages(data, options.stages);
     }
 }

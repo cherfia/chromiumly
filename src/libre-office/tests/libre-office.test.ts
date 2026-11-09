@@ -1,7 +1,6 @@
 import { promises } from 'fs';
 
 import { LibreOffice } from '../libre-office';
-import { PdfFormat } from '../../common';
 
 const mockResponse = () => new Response('content');
 
@@ -49,37 +48,34 @@ describe('LibreOffice', () => {
                 mockPromisesAccess.mockResolvedValue();
                 const buffer = await LibreOffice.convert({
                     files: ['path/to/file.docx', 'path/to/file.bib'],
-                    properties: { landscape: true, password: 'password' },
-                    pdfa: PdfFormat.A_2b,
-                    pdfUA: true,
-                    metadata: { author: 'John Doe' },
-                    merge: true,
-                    losslessImageCompression: true,
-                    reduceImageResolution: true,
-                    quality: 50,
-                    maxImageResolution: 75,
+                    properties: {
+                        landscape: true,
+                        password: 'password',
+                        paperSize: 'A4'
+                    },
+                    nativePdfa: 'PDF/A-2b',
+                    nativePdfua: 'PDF/UA-1',
+                    nativeLosslessImageCompression: true,
+                    nativeReduceImageResolution: true,
+                    nativeQuality: 50,
+                    nativeMaxImageResolution: 75,
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     },
-                    split: {
-                        mode: 'pages',
-                        span: '1-10',
-                        unify: true
-                    },
-                    flatten: true,
-                    userPassword: 'my_user_password',
-                    ownerPassword: 'my_owner_password'
+                    stages: [
+                        { op: 'merge' },
+                        { op: 'encrypt', userPassword: 'my_user_password' }
+                    ]
                 });
                 expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(19);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(13);
                 expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
+                    'stages',
+                    JSON.stringify([
+                        { op: 'merge' },
+                        { op: 'encrypt', userPassword: 'my_user_password' }
+                    ])
                 );
                 expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'downloadFrom',
@@ -95,199 +91,50 @@ describe('LibreOffice', () => {
             });
         });
 
-        describe('when native watermark options are passed', () => {
-            it('should append native watermark fields', async () => {
+        describe('when a stage names a file', () => {
+            it('should upload it next to the documents', async () => {
                 mockPromisesAccess.mockResolvedValue();
                 await LibreOffice.convert({
                     files: ['path/to/file.docx'],
-                    nativeWatermarkText: 'DRAFT',
-                    nativeWatermarkColor: 16711680,
-                    nativeWatermarkFontHeight: 0,
-                    nativeWatermarkRotateAngle: 450,
-                    nativeWatermarkFontName: 'Arial',
-                    nativeTiledWatermarkText: 'TILED'
+                    stages: [
+                        {
+                            op: 'stamp-pdf',
+                            source: {
+                                file: Buffer.from('pdf'),
+                                name: 'letterhead.pdf'
+                            }
+                        }
+                    ]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkText',
-                    'DRAFT'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkColor',
-                    '16711680'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkFontHeight',
-                    '0'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkRotateAngle',
-                    '450'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkFontName',
-                    'Arial'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeTiledWatermarkText',
-                    'TILED'
-                );
+                expect(
+                    mockFormDataAppend.mock.calls
+                        .filter(([field]) => field === 'files')
+                        .map((call) => call[2])
+                ).toEqual(['file01.docx', 'letterhead.pdf']);
             });
         });
 
-        describe('when userPassword parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await LibreOffice.convert({
-                    files: ['path/to/file.docx'],
-                    userPassword: 'my_user_password'
-                });
-                expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-            });
-        });
-
-        describe('when ownerPassword parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await LibreOffice.convert({
-                    files: ['path/to/file.docx'],
-                    ownerPassword: 'my_owner_password'
-                });
-                expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-            });
-        });
-
-        describe('when both userPassword and ownerPassword are passed', () => {
-            it('should return a buffer', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await LibreOffice.convert({
-                    files: ['path/to/file.docx'],
-                    userPassword: 'my_user_password',
-                    ownerPassword: 'my_owner_password'
-                });
-                expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-            });
-        });
-
-        describe('when embeds parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await LibreOffice.convert({
-                    files: ['path/to/file.docx'],
-                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
-                });
-                expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-            });
-        });
-
-        describe('when rotate is passed', () => {
-            it('should append rotateAngle and rotatePages', async () => {
+        describe('when webhook parameter is passed', () => {
+            it('should send the webhook headers', async () => {
                 mockPromisesAccess.mockResolvedValue();
                 await LibreOffice.convert({
                     files: ['path/to/file.docx'],
-                    rotate: { angle: 270, pages: '2' }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'rotateAngle',
-                    '270'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'rotatePages',
-                    '2'
-                );
-            });
-        });
-
-        describe('when PDF-engine watermark and stamp are passed', () => {
-            it('should append watermark and stamp form fields', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await LibreOffice.convert({
-                    files: ['path/to/file.docx'],
-                    watermark: {
-                        source: 'text',
-                        expression: 'CONFIDENTIAL'
-                    },
-                    stamp: {
-                        source: 'text',
-                        expression: 'APPROVED',
-                        pages: '1'
+                    webhook: {
+                        webhookUrl: 'https://example.com/upload',
+                        webhookEventsUrl: 'https://example.com/events'
                     }
                 });
-                expect(buffer).toEqual(await getResponseBuffer());
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkSource',
-                    'text'
+                expect(mockFetch).toHaveBeenCalledWith(
+                    'http://localhost:3000/forms/libreoffice/convert',
+                    expect.objectContaining({
+                        headers: expect.objectContaining({
+                            'Gotenberg-Webhook-Url':
+                                'https://example.com/upload',
+                            'Gotenberg-Webhook-Events-Url':
+                                'https://example.com/events'
+                        })
+                    })
                 );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkExpression',
-                    'CONFIDENTIAL'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampSource',
-                    'text'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampExpression',
-                    'APPROVED'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampPages',
-                    '1'
-                );
-            });
-        });
-
-        describe('when permission flags are passed', () => {
-            it('should append them', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await LibreOffice.convert({
-                    files: ['path/to/file.docx'],
-                    allowPrinting: false,
-                    allowCopying: false
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'allowPrinting',
-                    'false'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'allowCopying',
-                    'false'
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when facturx parameter is passed', () => {
-            it('should append the factur-x fields', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await LibreOffice.convert({
-                    files: ['path/to/file.docx'],
-                    facturx: {
-                        facturxXml: Buffer.from('<xml/>'),
-                        facturxConformanceLevel: 'EN 16931'
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'facturxConformanceLevel',
-                    'EN 16931'
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
             });
         });
 
