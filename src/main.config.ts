@@ -36,8 +36,7 @@ enum LibreOfficeRoute {
 enum SystemRoute {
     HEALTH = 'health',
     VERSION = 'version',
-    DEBUG = 'debug',
-    PROMETHEUS_METRICS = 'prometheus/metrics'
+    DEBUG = 'debug'
 }
 
 /**
@@ -158,8 +157,7 @@ export class Chromiumly {
     public static readonly SYSTEM_ROUTES = {
         health: SystemRoute.HEALTH,
         version: SystemRoute.VERSION,
-        debug: SystemRoute.DEBUG,
-        prometheusMetrics: SystemRoute.PROMETHEUS_METRICS
+        debug: SystemRoute.DEBUG
     };
 
     /**

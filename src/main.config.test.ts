@@ -109,8 +109,8 @@ describe('Chromiumly', () => {
             expect(Chromiumly.SYSTEM_ROUTES.health).toBe('health');
             expect(Chromiumly.SYSTEM_ROUTES.version).toBe('version');
             expect(Chromiumly.SYSTEM_ROUTES.debug).toBe('debug');
-            expect(Chromiumly.SYSTEM_ROUTES.prometheusMetrics).toBe(
-                'prometheus/metrics'
+            expect(Chromiumly.SYSTEM_ROUTES).not.toHaveProperty(
+                'prometheusMetrics'
             );
         });
     });
