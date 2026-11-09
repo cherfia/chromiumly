@@ -1,19 +1,9 @@
-import { constants, openAsBlob, promises, ReadStream } from 'fs';
-import path from 'path';
-import { blob } from 'node:stream/consumers';
-
 import {
     ConversionOptions,
     PageProperties
 } from '../interfaces/converter.types';
-import {
-    appendPdfEngineRotate,
-    appendPdfEnginePermissions,
-    appendFacturX,
-    GotenbergUtils,
-    PathLikeOrReadStream,
-    PdfEngineWatermarkStampUtils
-} from '../../common';
+import { GotenbergUtils, StageUtils } from '../../common';
+import { ChromiumUtils } from './chromium.utils';
 
 /**
  * Utility class for handling common tasks related to conversion.
@@ -41,6 +31,10 @@ export class ConverterUtils {
     ): void {
         if (pageProperties.singlePage) {
             data.append('singlePage', String(pageProperties.singlePage));
+        }
+
+        if (pageProperties.paperSize) {
+            data.append('paperSize', pageProperties.paperSize);
         }
 
         if (pageProperties.size) {
@@ -181,60 +175,24 @@ export class ConverterUtils {
             data.append('scale', pageProperties.scale);
         }
 
-        if (pageProperties.nativePageRanges) {
-            if (typeof pageProperties.nativePageRanges === 'string') {
-                data.append(
-                    'nativePageRanges',
-                    pageProperties.nativePageRanges
-                );
+        if (pageProperties.nativePages) {
+            if (typeof pageProperties.nativePages === 'string') {
+                data.append('nativePages', pageProperties.nativePages);
             } else {
                 GotenbergUtils.assert(
-                    pageProperties.nativePageRanges.from > 0 &&
-                        pageProperties.nativePageRanges.to > 0 &&
-                        pageProperties.nativePageRanges.to >=
-                            pageProperties.nativePageRanges.from,
+                    pageProperties.nativePages.from > 0 &&
+                        pageProperties.nativePages.to > 0 &&
+                        pageProperties.nativePages.to >=
+                            pageProperties.nativePages.from,
                     'page ranges syntax error'
                 );
 
                 data.append(
-                    'nativePageRanges',
-                    `${pageProperties.nativePageRanges.from}-${pageProperties.nativePageRanges.to}`
+                    'nativePages',
+                    `${pageProperties.nativePages.from}-${pageProperties.nativePages.to}`
                 );
             }
         }
-    }
-
-    /**
-     * Adds files to the FormData object with a custom field name.
-     *
-     * @param {PathLikeOrReadStream[]} files - An array of files to be added to the FormData.
-     * @param {FormData} data - The FormData object to which files will be added.
-     * @param {string} fieldName - The field name to use when appending files (e.g., 'files', 'embeds').
-     * @returns {Promise<void>} A Promise that resolves once the files have been added.
-     */
-    public static async addFilesWithFieldName(
-        files: PathLikeOrReadStream[],
-        data: FormData,
-        fieldName: string
-    ): Promise<void> {
-        await Promise.all(
-            files.map(async (file, index) => {
-                const filename = path.basename(
-                    typeof file === 'string' ? file : `file${index + 1}`
-                );
-                if (Buffer.isBuffer(file)) {
-                    data.append(fieldName, new Blob([file]), filename);
-                } else if (file instanceof ReadStream) {
-                    const content = await blob(file);
-                    data.append(fieldName, content, filename);
-                } else {
-                    await promises.access(file, constants.R_OK);
-                    const _filename = path.basename(file.toString());
-                    const content = await openAsBlob(file);
-                    data.append(fieldName, content, _filename);
-                }
-            })
-        );
     }
 
     /**
@@ -248,198 +206,27 @@ export class ConverterUtils {
         data: FormData,
         options: ConversionOptions
     ): Promise<void> {
-        if (options.pdfFormat) {
-            data.append('pdfa', options.pdfFormat);
-        }
-
-        if (options.pdfUA) {
-            data.append('pdfua', String(options.pdfUA));
-        }
-
         if (options.header) {
-            const { header } = options;
-            await GotenbergUtils.addFile(data, header, 'header.html');
+            await GotenbergUtils.addFile(data, options.header, 'header.html');
         }
 
         if (options.footer) {
-            const { footer } = options;
-            await GotenbergUtils.addFile(data, footer, 'footer.html');
-        }
-
-        if (options.emulatedMediaType) {
-            data.append('emulatedMediaType', options.emulatedMediaType);
-        }
-
-        if (options.emulatedMediaFeatures?.length) {
-            data.append(
-                'emulatedMediaFeatures',
-                JSON.stringify(options.emulatedMediaFeatures)
-            );
+            await GotenbergUtils.addFile(data, options.footer, 'footer.html');
         }
 
         if (options.properties) {
             ConverterUtils.addPageProperties(data, options.properties);
         }
 
-        if (options.waitDelay) {
-            data.append('waitDelay', options.waitDelay);
+        if (options.nativeBookmarks) {
+            data.append('nativeBookmarks', String(options.nativeBookmarks));
         }
 
-        if (options.waitForExpression) {
-            data.append('waitForExpression', options.waitForExpression);
+        if (options.nativeTaggedPdf) {
+            data.append('nativeTaggedPdf', String(options.nativeTaggedPdf));
         }
 
-        if (options.waitForSelector) {
-            data.append('waitForSelector', options.waitForSelector);
-        }
-
-        if (options.userAgent) {
-            data.append('userAgent', options.userAgent);
-        }
-
-        if (options.extraHttpHeaders) {
-            data.append(
-                'extraHttpHeaders',
-                JSON.stringify(options.extraHttpHeaders)
-            );
-        }
-
-        if (options.failOnHttpStatusCodes) {
-            data.append(
-                'failOnHttpStatusCodes',
-                JSON.stringify(options.failOnHttpStatusCodes)
-            );
-        }
-
-        if (options.failOnResourceHttpStatusCodes) {
-            data.append(
-                'failOnResourceHttpStatusCodes',
-                JSON.stringify(options.failOnResourceHttpStatusCodes)
-            );
-        }
-
-        if (options.ignoreResourceHttpStatusDomains) {
-            data.append(
-                'ignoreResourceHttpStatusDomains',
-                JSON.stringify(options.ignoreResourceHttpStatusDomains)
-            );
-        }
-
-        if (options.failOnResourceLoadingFailed) {
-            data.append(
-                'failOnResourceLoadingFailed',
-                String(options.failOnResourceLoadingFailed)
-            );
-        }
-
-        if (options.failOnConsoleExceptions) {
-            data.append(
-                'failOnConsoleExceptions',
-                String(options.failOnConsoleExceptions)
-            );
-        }
-
-        if (options.skipNetworkIdleEvent === false) {
-            data.append(
-                'skipNetworkIdleEvent',
-                String(options.skipNetworkIdleEvent)
-            );
-        }
-
-        if (options.skipNetworkAlmostIdleEvent === false) {
-            data.append(
-                'skipNetworkAlmostIdleEvent',
-                String(options.skipNetworkAlmostIdleEvent)
-            );
-        }
-
-        if (options.metadata) {
-            data.append('metadata', JSON.stringify(options.metadata));
-        }
-
-        if (options.cookies) {
-            data.append('cookies', JSON.stringify(options.cookies));
-        }
-
-        if (options.downloadFrom) {
-            data.append(
-                'downloadFrom',
-                JSON.stringify(
-                    GotenbergUtils.normalizeDownloadFrom(options.downloadFrom)
-                )
-            );
-        }
-
-        if (options.generateDocumentOutline) {
-            data.append(
-                'generateDocumentOutline',
-                String(options.generateDocumentOutline)
-            );
-        }
-
-        if (options.generateTaggedPdf) {
-            data.append(
-                'generateTaggedPdf',
-                String(options.generateTaggedPdf)
-            );
-        }
-
-        if (options.split) {
-            data.append('splitMode', options.split.mode);
-            data.append('splitSpan', options.split.span);
-
-            if (options.split.unify) {
-                GotenbergUtils.assert(
-                    options.split.mode === 'pages',
-                    'split unify is only supported for pages mode'
-                );
-                data.append('splitUnify', String(options.split.unify));
-            }
-        }
-
-        if (options.userPassword) {
-            data.append('userPassword', options.userPassword);
-        }
-
-        if (options.ownerPassword) {
-            data.append('ownerPassword', options.ownerPassword);
-        }
-
-        appendPdfEnginePermissions(data, options);
-
-        if (options.flatten) {
-            data.append('flatten', String(options.flatten));
-        }
-
-        if (options.embeds && options.embeds.length > 0) {
-            await ConverterUtils.addFilesWithFieldName(
-                options.embeds,
-                data,
-                'embeds'
-            );
-        }
-
-        if (options.embedsMetadata) {
-            data.append(
-                'embedsMetadata',
-                JSON.stringify(options.embedsMetadata)
-            );
-        }
-
-        if (options.watermark || options.stamp) {
-            await PdfEngineWatermarkStampUtils.appendPdfEngineWatermarkStamp(
-                data,
-                {
-                    watermark: options.watermark,
-                    stamp: options.stamp
-                }
-            );
-        }
-
-        if (options.rotate) {
-            appendPdfEngineRotate(data, options.rotate);
-        }
-
-        await appendFacturX(data, options.facturx);
+        await ChromiumUtils.customize(data, options);
+        await StageUtils.appendStages(data, options.stages);
     }
 }

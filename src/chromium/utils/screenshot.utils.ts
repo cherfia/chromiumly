@@ -4,6 +4,7 @@ import {
 } from './../interfaces/screenshot.types';
 
 import { GotenbergUtils } from '../../common';
+import { ChromiumUtils } from './chromium.utils';
 
 /**
  * Utility class for handling common tasks related to screenshot.
@@ -27,8 +28,8 @@ export class ScreenshotUtils {
                 'Compression quality is exclusively supported for JPEG format.'
             );
             GotenbergUtils.assert(
-                imageProperties.quality >= 0 && imageProperties.quality <= 100,
-                'Invalid compression quality. Please provide a value between 0 and 100.'
+                imageProperties.quality >= 1 && imageProperties.quality <= 100,
+                'Invalid compression quality. Please provide a value between 1 and 100.'
             );
 
             data.append('quality', imageProperties.quality);
@@ -53,6 +54,10 @@ export class ScreenshotUtils {
             data.append('clip', String(imageProperties.clip));
         }
 
+        if (imageProperties.selector) {
+            data.append('selector', imageProperties.selector);
+        }
+
         if (imageProperties.deviceScaleFactor) {
             data.append(
                 'deviceScaleFactor',
@@ -72,109 +77,14 @@ export class ScreenshotUtils {
         data: FormData,
         options: ScreenshotOptions
     ): Promise<void> {
-        if (options.emulatedMediaType) {
-            data.append('emulatedMediaType', options.emulatedMediaType);
-        }
-
-        if (options.emulatedMediaFeatures?.length) {
-            data.append(
-                'emulatedMediaFeatures',
-                JSON.stringify(options.emulatedMediaFeatures)
-            );
-        }
-
         if (options.properties) {
             ScreenshotUtils.addImageProperties(data, options.properties);
-        }
-
-        if (options.waitDelay) {
-            data.append('waitDelay', options.waitDelay);
-        }
-
-        if (options.waitForExpression) {
-            data.append('waitForExpression', options.waitForExpression);
-        }
-
-        if (options.waitForSelector) {
-            data.append('waitForSelector', options.waitForSelector);
-        }
-
-        if (options.userAgent) {
-            data.append('userAgent', options.userAgent);
-        }
-
-        if (options.extraHttpHeaders) {
-            data.append(
-                'extraHttpHeaders',
-                JSON.stringify(options.extraHttpHeaders)
-            );
-        }
-
-        if (options.failOnHttpStatusCodes) {
-            data.append(
-                'failOnHttpStatusCodes',
-                JSON.stringify(options.failOnHttpStatusCodes)
-            );
-        }
-
-        if (options.failOnResourceHttpStatusCodes) {
-            data.append(
-                'failOnResourceHttpStatusCodes',
-                JSON.stringify(options.failOnResourceHttpStatusCodes)
-            );
-        }
-
-        if (options.ignoreResourceHttpStatusDomains) {
-            data.append(
-                'ignoreResourceHttpStatusDomains',
-                JSON.stringify(options.ignoreResourceHttpStatusDomains)
-            );
-        }
-
-        if (options.failOnResourceLoadingFailed) {
-            data.append(
-                'failOnResourceLoadingFailed',
-                String(options.failOnResourceLoadingFailed)
-            );
-        }
-
-        if (options.failOnConsoleExceptions) {
-            data.append(
-                'failOnConsoleExceptions',
-                String(options.failOnConsoleExceptions)
-            );
-        }
-
-        if (options.skipNetworkIdleEvent === false) {
-            data.append(
-                'skipNetworkIdleEvent',
-                String(options.skipNetworkIdleEvent)
-            );
-        }
-
-        if (options.skipNetworkAlmostIdleEvent === false) {
-            data.append(
-                'skipNetworkAlmostIdleEvent',
-                String(options.skipNetworkAlmostIdleEvent)
-            );
         }
 
         if (options.optimizeForSpeed) {
             data.append('optimizeForSpeed', String(options.optimizeForSpeed));
         }
 
-        if (options.cookies) {
-            data.append('cookies', JSON.stringify(options.cookies));
-        }
-
-        if (options.downloadFrom) {
-            data.append(
-                'downloadFrom',
-                JSON.stringify(
-                    GotenbergUtils.normalizeDownloadFrom(options.downloadFrom)
-                )
-            );
-        }
-
+        await ChromiumUtils.customize(data, options);
     }
 }

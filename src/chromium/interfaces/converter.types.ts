@@ -1,23 +1,10 @@
-import {
-    Metadata,
-    PathLikeOrReadStream,
-    PdfFormat,
-    FacturXOptions,
-    PdfEnginePermissions,
-    PdfEngineStamp,
-    PdfEngineWatermark
-} from '../../common';
-import {
-    ConvertSplit,
-    EmbedsMetadata,
-    OutputOptions,
-    PdfEngineRotate
-} from '../../common/types';
-import { ChromiumOptions, Cookie } from './common.types';
+import { PathLikeOrReadStream, Stage } from '../../common';
+import { OutputOptions, PaperSize } from '../../common/types';
+import { ChromiumOptions } from './common.types';
 
 type PageSize = {
-    width?: number | string; // Paper width (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 8.5)
-    height?: number | string; // Paper height (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc, default 11)
+    width?: number | string; // Paper width (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc), overriding paperSize
+    height?: number | string; // Paper height (number in inches or string with units: 72pt, 96px, 1in, 25.4mm, 2.54cm, 6pc), overriding paperSize
 };
 
 type PageMargins = {
@@ -29,6 +16,7 @@ type PageMargins = {
 
 export type PageProperties = {
     singlePage?: boolean; // Print the entire content in one single page (default false)
+    paperSize?: PaperSize; // Named paper size (default Letter)
     size?: PageSize;
     margins?: PageMargins;
     preferCssPageSize?: boolean; // Define whether to prefer page size as defined by CSS (default false)
@@ -36,59 +24,33 @@ export type PageProperties = {
     omitBackground?: boolean; // Hide the default white background and allow generating PDFs with transparency (default false)
     landscape?: boolean; // Set the paper orientation to landscape (default false)
     scale?: number; // The scale of the page rendering (default 1.0)
-    nativePageRanges?: { from: number; to: number } | string; // Page ranges to print (e.g. a single range, or the free-form syntax "1-5, 8, 11-13")
+    nativePages?: { from: number; to: number } | string; // Pages to print (e.g. a single range, or the free-form syntax "1-5, 8, 11-13")
 };
 
 export type ConversionOptions = ChromiumOptions &
-    OutputOptions &
-    PdfEnginePermissions & {
+    OutputOptions & {
         properties?: PageProperties;
-        /**
-         * @deprecated Starting from Gotenberg version 8.0.0, Chromium no longer provides support for pdfFormat.
-         * @see {@link https://github.com/gotenberg/gotenberg/releases/tag/v8.0.0}
-         */
-        pdfFormat?: PdfFormat;
-        pdfUA?: boolean; // Enable PDF for Universal Access for optimal accessibility (default false)
-        generateTaggedPdf?: boolean; // Embed PDF/UA accessibility structure tags, independent of pdfUA (default false)
-        metadata?: Metadata;
-        cookies?: Cookie[];
-        split?: ConvertSplit;
-        userPassword?: string; // Password for opening the resulting PDF(s)
-        ownerPassword?: string; // Password for full access on the resulting PDF(s)
-        flatten?: boolean; // Flatten the resulting PDF document (default false)
-        embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
-        /** Per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance */
-        embedsMetadata?: EmbedsMetadata;
-        /** PDF-engine post-processing watermark (behind content) */
-        watermark?: PdfEngineWatermark;
-        /** PDF-engine post-processing stamp (on top of content) */
-        stamp?: PdfEngineStamp;
-        /** PDF-engine post-process page rotation */
-        rotate?: PdfEngineRotate;
-        /** Turn the resulting PDF into a Factur-X / ZUGFeRD e-invoice */
-        facturx?: FacturXOptions;
+        header?: PathLikeOrReadStream;
+        footer?: PathLikeOrReadStream;
+        nativeBookmarks?: boolean; // Build bookmarks from the headings; implies nativeTaggedPdf (default false)
+        nativeTaggedPdf?: boolean; // Write a tagged PDF, whose structure screen readers follow (default false)
+        /** Stages to run on the printed PDF, in order. */
+        stages?: Stage[];
     };
 
 export type HtmlConversionOptions = ConversionOptions & {
     html: PathLikeOrReadStream;
     assets?: { file: PathLikeOrReadStream; name: string }[];
-    header?: PathLikeOrReadStream;
-    footer?: PathLikeOrReadStream;
 };
 
 export type UrlConversionOptions = ConversionOptions & {
     url: string;
-    header?: PathLikeOrReadStream;
-    footer?: PathLikeOrReadStream;
 };
 
 export type MarkdownConversionOptions = ConversionOptions & {
     html: PathLikeOrReadStream;
     assets?: { file: PathLikeOrReadStream; name: string }[];
-    header?: PathLikeOrReadStream;
-    footer?: PathLikeOrReadStream;
     /** A single markdown file, or multiple distinctly-named markdown files. */
     markdown:
-        | PathLikeOrReadStream
-        | { file: PathLikeOrReadStream; name: string }[];
+        PathLikeOrReadStream | { file: PathLikeOrReadStream; name: string }[];
 };
