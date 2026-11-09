@@ -166,6 +166,25 @@ export class GotenbergUtils {
     }
 
     /**
+     * Asserts that no two files are uploaded under the same name: Gotenberg tells files apart by name,
+     * so one of them would be lost.
+     *
+     * @param {FormData} data - The FormData object about to be sent.
+     * @throws {Error} Throws an error naming the first duplicated file name.
+     */
+    public static assertUniqueFileNames(data: FormData): void {
+        const names = data.getAll('files').map((file) => (file as File).name);
+        const duplicate = names.find(
+            (name, index) => names.indexOf(name) !== index
+        );
+
+        this.assert(
+            duplicate === undefined,
+            `Two uploaded files are named ${duplicate}; rename one of them`
+        );
+    }
+
+    /**
      * Performs a POST request to the specified Gotenberg endpoint with the provided FormData.
      *
      * @param {string} endpoint - The Gotenberg endpoint URL.
@@ -186,6 +205,8 @@ export class GotenbergUtils {
         apiKey?: string,
         requestHttpHeaders?: Record<string, string>
     ): Promise<Buffer> {
+        this.assertUniqueFileNames(data);
+
         const headers = this.buildRequestHeaders(
             username,
             password,

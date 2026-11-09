@@ -455,4 +455,39 @@ describe('GotenbergUtils', () => {
             expect(archives.sort()).toEqual(['archive2.zip', 'site.zip']);
         });
     });
+
+    describe('assertUniqueFileNames', () => {
+        const formData = (...names: string[]) =>
+            ({
+                getAll: () => names.map((name) => new File(['x'], name))
+            }) as unknown as FormData;
+
+        it('should accept distinct file names', () => {
+            expect(() =>
+                GotenbergUtils.assertUniqueFileNames(
+                    formData('index.html', 'logo.png')
+                )
+            ).not.toThrow();
+        });
+
+        it('should throw an error naming a duplicated file name', () => {
+            expect(() =>
+                GotenbergUtils.assertUniqueFileNames(
+                    formData('report.pdf', 'logo.png', 'report.pdf')
+                )
+            ).toThrow(
+                'Two uploaded files are named report.pdf; rename one of them'
+            );
+        });
+
+        it('should refuse to send a request with duplicated file names', async () => {
+            await expect(
+                GotenbergUtils.fetch(
+                    'http://localhost:3000/forms/pdf/merge',
+                    formData('a.pdf', 'a.pdf')
+                )
+            ).rejects.toThrow('Two uploaded files are named a.pdf');
+            expect(mockFetch).not.toHaveBeenCalled();
+        });
+    });
 });
