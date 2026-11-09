@@ -26,22 +26,49 @@ export class StageUtils {
      */
     private static resolveFile(file: StageFile, uploads: StageUploads): string {
         if (typeof file === 'string') {
-            const name = path.basename(file);
-            uploads.set(name, file);
-            return name;
+            return this.register(path.basename(file), file, uploads);
         }
 
         if (file instanceof URL) {
-            const name = path.basename(fileURLToPath(file));
-            uploads.set(name, file);
-            return name;
+            GotenbergUtils.assert(
+                file.protocol === 'file:',
+                `Stage files take a path or a file: URL, got ${file.href}; use downloadFrom and { name } for remote files`
+            );
+            const filePath = fileURLToPath(file);
+            return this.register(path.basename(filePath), filePath, uploads);
         }
 
         if ('file' in file) {
-            uploads.set(file.name, file.file);
+            return this.register(file.name, file.file, uploads);
         }
 
         return file.name;
+    }
+
+    /**
+     * Registers a file for upload under a name, refusing a different file under a name already taken.
+     */
+    private static register(
+        name: string,
+        file: PathLikeOrReadStream,
+        uploads: StageUploads
+    ): string {
+        const existing = uploads.get(name);
+        GotenbergUtils.assert(
+            existing === undefined || this.isSameFile(existing, file),
+            `Two different stage files are named ${name}; give one of them another name with { file, name }`
+        );
+        uploads.set(name, file);
+        return name;
+    }
+
+    private static isSameFile(
+        a: PathLikeOrReadStream,
+        b: PathLikeOrReadStream
+    ): boolean {
+        return typeof a === 'string' && typeof b === 'string'
+            ? path.resolve(a) === path.resolve(b)
+            : a === b;
     }
 
     /**
@@ -60,17 +87,6 @@ export class StageUtils {
                     uploads
                 );
             }
-        }
-
-        if (stage.op === 'compose') {
-            resolved.placements = stage.placements.map((placement) =>
-                placement.source === undefined
-                    ? placement
-                    : {
-                          ...placement,
-                          source: this.resolveFile(placement.source, uploads)
-                      }
-            );
         }
 
         return resolved;

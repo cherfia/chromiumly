@@ -2,7 +2,7 @@ import { PaperSize, PathLikeOrReadStream } from './types';
 
 /**
  * A file a stage needs, such as an image to stamp or a certificate to sign with:
- * - a path, uploaded under its base name;
+ * - a path or a `file:` URL, uploaded under its base name;
  * - `{ file, name }`, uploaded under `name`;
  * - `{ name }`, a file the request already carries, through `downloadFrom`, `archives` or another upload.
  */
@@ -52,9 +52,20 @@ export type PdfuaProfile = 'PDF/UA-1' | 'PDF/UA-2';
 
 export type ConformanceProfile = PdfaProfile | PdfuaProfile | 'Factur-X';
 
-/** A single profile, or a PDF/A (or Factur-X) profile paired with the PDF/UA profile of its PDF version. */
+/**
+ * A single profile, or a PDF/A (or Factur-X) profile paired with the PDF/UA profile of its PDF version:
+ * PDF/A-1 to PDF/A-3 and Factur-X with PDF/UA-1, PDF/A-4 with PDF/UA-2.
+ */
 export type ConformanceProfiles =
-    ConformanceProfile | [PdfaProfile | 'Factur-X', PdfuaProfile];
+    | ConformanceProfile
+    | [
+          (
+              | Exclude<PdfaProfile, 'PDF/A-4' | 'PDF/A-4e' | 'PDF/A-4f'>
+              | 'Factur-X'
+          ),
+          'PDF/UA-1'
+      ]
+    | ['PDF/A-4' | 'PDF/A-4e' | 'PDF/A-4f', 'PDF/UA-2'];
 
 export type FacturXConformanceLevel =
     'MINIMUM' | 'BASIC WL' | 'BASIC' | 'EN 16931' | 'EXTENDED' | 'XRECHNUNG';
@@ -70,8 +81,8 @@ export type Bookmark = {
 };
 
 export type ComposePlacement = {
-    /** The uploaded PDF to draw from; may be left out with one PDF. */
-    source?: StageFile;
+    /** The name of the input PDF to draw from; may be left out with one PDF. */
+    source?: string;
     /** Default 1. */
     sourcePage?: number;
     /** The new page to draw on. Default 1. */

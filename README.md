@@ -557,7 +557,7 @@ A stage is one operation on a PDF: merge, stamp, sign, make PDF/A, and so on. Go
 
 Options of type _pages_ take Gotenberg's [page selections](https://gotenberg.dev/docs/pdf/pipe#page-selections): `3`, `2-5`, `3-`, `odd`, `even`, `last`, `!1`, comma-separated. Gotenberg checks the [order rules](https://gotenberg.dev/docs/pdf/pipe#order-rules) — `decrypt` first, `render` and the extracts last, at most one `remediate`, `encrypt`, `sign` and `timestamp` — and answers 400 with the broken rule.
 
-**Files a stage needs.** An option that names a file (`insert.source`, `stamp-image.image`, `stamp-pdf.source`, `attach.file`, `remediate.xml`, `sign.certificate`, `sign.key`, `compose.placements[].source`) takes a `StageFile`. Chromiumly uploads it with the request and puts its name in the stage:
+**Files a stage needs.** An option that names a file (`insert.source`, `stamp-image.image`, `stamp-pdf.source`, `attach.file`, `remediate.xml`, `sign.certificate`, `sign.key`) takes a `StageFile`. Chromiumly uploads it with the request and puts its name in the stage. Two different files under one name throw an error: give one of them another `name`.
 
 ```typescript
 type StageFile =
@@ -595,6 +595,8 @@ const buffer = await new HtmlConverter().convert({
     ]
 });
 ```
+
+`compose` is the exception: its `placements[].source` names one of the input PDFs, such as `'report.pdf'`, rather than a file to upload.
 
 Every stage type is exported (`Stage`, `StampTextStage`, `RemediateStage`, …), as are `StageFile`, `PageSelection`, `Bookmark` and the profile unions.
 

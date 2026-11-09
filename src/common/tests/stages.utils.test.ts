@@ -90,13 +90,13 @@ describe('StageUtils', () => {
             expect(uploadedNames()).toEqual(['annex.pdf']);
         });
 
-        it('should resolve the sources of compose placements', async () => {
+        it('should send compose placement sources as input PDF names', async () => {
             await StageUtils.appendStages(new FormData(), [
                 {
                     op: 'compose',
                     paperSize: 'A4',
                     placements: [
-                        { source: 'path/to/label.pdf', x: 10, y: 20 },
+                        { source: 'label.pdf', x: 10, y: 20 },
                         { page: 2 }
                     ]
                 }
@@ -114,7 +114,43 @@ describe('StageUtils', () => {
                     }
                 ])
             );
-            expect(uploadedNames()).toEqual(['label.pdf']);
+            expect(uploadedNames()).toEqual([]);
+        });
+
+        it('should throw an error when two different files share a name', async () => {
+            await expect(
+                StageUtils.appendStages(new FormData(), [
+                    { op: 'stamp-image', image: 'a/logo.png' },
+                    { op: 'attach', file: 'b/logo.png' }
+                ])
+            ).rejects.toThrow(
+                'Two different stage files are named logo.png; give one of them another name with { file, name }'
+            );
+            await expect(
+                StageUtils.appendStages(new FormData(), [
+                    {
+                        op: 'attach',
+                        file: { file: Buffer.from('a'), name: 'x.xml' }
+                    },
+                    {
+                        op: 'attach',
+                        file: { file: Buffer.from('b'), name: 'x.xml' }
+                    }
+                ])
+            ).rejects.toThrow('Two different stage files are named x.xml');
+        });
+
+        it('should throw an error for a URL that is not a file: URL', async () => {
+            await expect(
+                StageUtils.appendStages(new FormData(), [
+                    {
+                        op: 'stamp-image',
+                        image: new URL('https://example.com/logo.png')
+                    }
+                ])
+            ).rejects.toThrow(
+                'Stage files take a path or a file: URL, got https://example.com/logo.png'
+            );
         });
 
         it('should reject a stage file that cannot be read', async () => {
