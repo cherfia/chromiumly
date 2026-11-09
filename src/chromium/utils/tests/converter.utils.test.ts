@@ -1,8 +1,8 @@
-import { createReadStream, promises, ReadStream } from 'fs';
+import { createReadStream, promises } from 'fs';
 import { blob } from 'node:stream/consumers';
 
 import { ConverterUtils } from '../converter.utils';
-import { GotenbergUtils, PdfFormat } from '../../../common';
+import { GotenbergUtils } from '../../../common';
 
 jest.mock('fs', () => ({
     ...jest.requireActual('fs'),
@@ -600,27 +600,27 @@ describe('ConverterUtils', () => {
         });
 
         describe('Page ranges', () => {
-            describe('when nativePageRanges is valid', () => {
-                it('should append nativePageRanges to data', () => {
+            describe('when nativePages is valid', () => {
+                it('should append nativePages to data', () => {
                     ConverterUtils.addPageProperties(data, {
-                        nativePageRanges: { from: 1, to: 6 }
+                        nativePages: { from: 1, to: 6 }
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                     expect(mockFormDataAppend).toHaveBeenCalledWith(
-                        'nativePageRanges',
+                        'nativePages',
                         '1-6'
                     );
                 });
             });
 
-            describe('when nativePageRanges is a free-form string', () => {
+            describe('when nativePages is a free-form string', () => {
                 it('should append it as-is', () => {
                     ConverterUtils.addPageProperties(data, {
-                        nativePageRanges: '1-5, 8, 11-13'
+                        nativePages: '1-5, 8, 11-13'
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                     expect(mockFormDataAppend).toHaveBeenCalledWith(
-                        'nativePageRanges',
+                        'nativePages',
                         '1-5, 8, 11-13'
                     );
                 });
@@ -715,32 +715,6 @@ describe('ConverterUtils', () => {
             });
         });
 
-        describe('when pdf format parameter is passed', () => {
-            it('should append pdf format', async () => {
-                await ConverterUtils.customize(data, {
-                    pdfFormat: PdfFormat.A_1a
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'pdfa',
-                    'PDF/A-1a'
-                );
-            });
-        });
-
-        describe('when pdf universal access parameter is passed', () => {
-            it('should append pdfua format', async () => {
-                await ConverterUtils.customize(data, {
-                    pdfUA: true
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'pdfua',
-                    'true'
-                );
-            });
-        });
-
         describe('when page properties parameter is passed', () => {
             it('should append page properties', async () => {
                 await ConverterUtils.customize(data, {
@@ -774,10 +748,10 @@ describe('ConverterUtils', () => {
 
         describe('when emulatedMediaFeatures parameter is passed', () => {
             it('should append emulatedMediaFeatures', async () => {
-                const emulatedMediaFeatures = [
-                    { name: 'prefers-color-scheme', value: 'dark' },
-                    { name: 'prefers-reduced-motion', value: 'reduce' }
-                ];
+                const emulatedMediaFeatures = {
+                    'prefers-color-scheme': 'dark',
+                    'prefers-reduced-motion': 'reduce'
+                };
                 await ConverterUtils.customize(data, {
                     emulatedMediaFeatures
                 });
@@ -874,19 +848,6 @@ describe('ConverterUtils', () => {
             });
         });
 
-        describe('when metadata parameter is passed', () => {
-            it('should append metadata', async () => {
-                await ConverterUtils.customize(data, {
-                    metadata: { Author: 'John Doe' }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'metadata',
-                    JSON.stringify({ Author: 'John Doe' })
-                );
-            });
-        });
-
         describe('when cookies parameter is passed', () => {
             it('should append cookies', async () => {
                 await ConverterUtils.customize(data, {
@@ -943,201 +904,61 @@ describe('ConverterUtils', () => {
             });
         });
 
-        describe('when split parameter is passed', () => {
-            it('should append split', async () => {
+        describe('when native parameters are passed', () => {
+            it('should append nativeBookmarks and nativeTaggedPdf', async () => {
                 await ConverterUtils.customize(data, {
-                    split: { mode: 'pages', span: '1-10' }
+                    nativeBookmarks: true,
+                    nativeTaggedPdf: true
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'splitMode',
-                    'pages'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'splitSpan',
-                    '1-10'
-                );
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    ['nativeBookmarks', 'true'],
+                    ['nativeTaggedPdf', 'true']
+                ]);
             });
         });
 
-        describe('when userPassword parameter is passed', () => {
-            it('should append userPassword', async () => {
+        describe('when waitForWindowStatus parameter is passed', () => {
+            it('should append waitForWindowStatus', async () => {
                 await ConverterUtils.customize(data, {
-                    userPassword: 'my_user_password'
+                    waitForWindowStatus: 'ready'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    ['waitForWindowStatus', 'ready']
+                ]);
             });
         });
 
-        describe('when ownerPassword parameter is passed', () => {
-            it('should append ownerPassword', async () => {
+        describe('when failOnConsoleMessageTypes parameter is passed', () => {
+            it('should append failOnConsoleMessageTypes as JSON', async () => {
                 await ConverterUtils.customize(data, {
-                    ownerPassword: 'my_owner_password'
+                    failOnConsoleMessageTypes: ['error', 'warning']
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    [
+                        'failOnConsoleMessageTypes',
+                        JSON.stringify(['error', 'warning'])
+                    ]
+                ]);
             });
         });
 
-        describe('when both userPassword and ownerPassword are passed', () => {
-            it('should append both passwords', async () => {
+        describe('when stages parameter is passed', () => {
+            it('should append the stages as JSON', async () => {
                 await ConverterUtils.customize(data, {
-                    userPassword: 'my_user_password',
-                    ownerPassword: 'my_owner_password'
+                    stages: [
+                        { op: 'set-metadata', title: 'Report' },
+                        { op: 'encrypt', userPassword: 'secret' }
+                    ]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-            });
-        });
-
-        describe('when permission flags are passed', () => {
-            it('should append only the flags that are explicitly set', async () => {
-                await ConverterUtils.customize(data, {
-                    allowPrinting: false,
-                    allowAssembling: true
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'allowPrinting',
-                    'false'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'allowAssembling',
-                    'true'
-                );
-            });
-
-            it('should append every permission flag when all are set', async () => {
-                await ConverterUtils.customize(data, {
-                    allowPrinting: true,
-                    allowCopying: false,
-                    allowModifying: true,
-                    allowAnnotating: false,
-                    allowFillingForms: true,
-                    allowAssembling: false
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
-            });
-        });
-
-        describe('when flatten parameter is passed', () => {
-            it('should append flatten', async () => {
-                await ConverterUtils.customize(data, { flatten: true });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'flatten',
-                    'true'
-                );
-            });
-        });
-
-        describe('when generateTaggedPdf parameter is passed', () => {
-            it('should append generateTaggedPdf', async () => {
-                await ConverterUtils.customize(data, {
-                    generateTaggedPdf: true
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'generateTaggedPdf',
-                    'true'
-                );
-            });
-        });
-
-        describe('when embedsMetadata parameter is passed', () => {
-            it('should append embedsMetadata as JSON', async () => {
-                await ConverterUtils.customize(data, {
-                    embedsMetadata: {
-                        'factur-x.xml': {
-                            mimeType: 'text/xml',
-                            relationship: 'Alternative'
-                        }
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'embedsMetadata',
-                    JSON.stringify({
-                        'factur-x.xml': {
-                            mimeType: 'text/xml',
-                            relationship: 'Alternative'
-                        }
-                    })
-                );
-            });
-        });
-
-        describe('when facturx parameter is passed', () => {
-            it('should append the factur-x fields and xml file', async () => {
-                await ConverterUtils.customize(data, {
-                    facturx: {
-                        facturxXml: Buffer.from('<xml/>'),
-                        facturxConformanceLevel: 'EN 16931'
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'facturxXml',
-                    expect.any(Blob),
-                    'factur-x.xml'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'facturxConformanceLevel',
-                    'EN 16931'
-                );
-            });
-        });
-
-        describe('when embeds parameter is passed', () => {
-            it('should append embeds with string paths', async () => {
-                await ConverterUtils.customize(data, {
-                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-            });
-
-            it('should append embeds with Buffer', async () => {
-                await ConverterUtils.customize(data, {
-                    embeds: [Buffer.from('embed content')]
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'embeds',
-                    expect.any(Blob),
-                    'file1'
-                );
-            });
-
-            it('should append embeds with ReadStream', async () => {
-                const mockReadStream = {
-                    pipe: jest.fn(),
-                    on: jest.fn(),
-                    read: jest.fn(),
-                    [Symbol.toStringTag]: 'ReadStream'
-                } as unknown as ReadStream;
-                Object.setPrototypeOf(mockReadStream, ReadStream.prototype);
-                const mockBlob = new Blob(['stream content']);
-                (blob as jest.Mock).mockResolvedValue(mockBlob);
-                await ConverterUtils.customize(data, {
-                    embeds: [mockReadStream]
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(blob).toHaveBeenCalledWith(mockReadStream);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'embeds',
-                    mockBlob,
-                    'file1'
-                );
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    [
+                        'stages',
+                        JSON.stringify([
+                            { op: 'set-metadata', title: 'Report' },
+                            { op: 'encrypt', userPassword: 'secret' }
+                        ])
+                    ]
+                ]);
             });
         });
 
@@ -1146,15 +967,19 @@ describe('ConverterUtils', () => {
                 await ConverterUtils.customize(data, {
                     header: Buffer.from('header.html'),
                     footer: Buffer.from('footer.html'),
-                    pdfFormat: PdfFormat.A_1a,
-                    pdfUA: true,
+                    properties: {
+                        paperSize: 'A4',
+                        size: { width: 8.3, height: 11.7 }
+                    },
+                    nativeBookmarks: true,
+                    nativeTaggedPdf: true,
                     emulatedMediaType: 'screen',
-                    properties: { size: { width: 8.3, height: 11.7 } },
+                    emulatedMediaFeatures: { 'prefers-color-scheme': 'dark' },
                     waitDelay: '5s',
                     waitForExpression: "document.readyState === 'complete'",
                     waitForSelector: '#ready-node',
-                    userAgent:
-                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+                    waitForWindowStatus: 'ready',
+                    userAgent: 'Mozilla/5.0',
                     extraHttpHeaders: { 'X-Custom-Header': 'value' },
                     failOnHttpStatusCodes: [499, 599],
                     failOnResourceHttpStatusCodes: [499, 599],
@@ -1163,221 +988,76 @@ describe('ConverterUtils', () => {
                         'analytics.example.com'
                     ],
                     failOnResourceLoadingFailed: true,
+                    failOnConsoleExceptions: true,
+                    failOnConsoleMessageTypes: ['error'],
                     skipNetworkIdleEvent: false,
                     skipNetworkAlmostIdleEvent: false,
-                    failOnConsoleExceptions: true,
-                    metadata: { Author: 'John Doe' },
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     },
-                    generateDocumentOutline: true,
-                    split: { mode: 'pages', span: '1-10', unify: true },
-                    userPassword: 'my_user_password',
-                    ownerPassword: 'my_owner_password'
+                    stages: [{ op: 'split', every: 2 }]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(27);
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    1,
-                    'pdfa',
-                    'PDF/A-1a'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    2,
-                    'pdfua',
-                    'true'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    3,
-                    'files',
-                    new Blob([Buffer.from('header.html')]),
-                    'header.html'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    4,
-                    'files',
-                    new Blob([Buffer.from('footer.html')]),
-                    'footer.html'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    5,
-                    'emulatedMediaType',
-                    'screen'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    6,
-                    'paperWidth',
-                    8.3
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    7,
-                    'paperHeight',
-                    11.7
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    8,
-                    'waitDelay',
-                    '5s'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    9,
-                    'waitForExpression',
-                    "document.readyState === 'complete'"
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    10,
-                    'waitForSelector',
-                    '#ready-node'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    11,
-                    'userAgent',
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    12,
-                    'extraHttpHeaders',
-                    JSON.stringify({ 'X-Custom-Header': 'value' })
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    13,
-                    'failOnHttpStatusCodes',
-                    JSON.stringify([499, 599])
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    14,
-                    'failOnResourceHttpStatusCodes',
-                    JSON.stringify([499, 599])
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    15,
-                    'ignoreResourceHttpStatusDomains',
-                    JSON.stringify(['sentry-cdn.com', 'analytics.example.com'])
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    16,
-                    'failOnResourceLoadingFailed',
-                    'true'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    17,
-                    'failOnConsoleExceptions',
-                    'true'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    18,
-                    'skipNetworkIdleEvent',
-                    'false'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    19,
-                    'skipNetworkAlmostIdleEvent',
-                    'false'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    20,
-                    'metadata',
-                    JSON.stringify({ Author: 'John Doe' })
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    21,
-                    'downloadFrom',
-                    JSON.stringify([
-                        {
-                            url: 'http://example.com',
-                            extraHttpHeaders: {
-                                'Content-Type': 'application/json'
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    [
+                        'files',
+                        new Blob([Buffer.from('header.html')]),
+                        'header.html'
+                    ],
+                    [
+                        'files',
+                        new Blob([Buffer.from('footer.html')]),
+                        'footer.html'
+                    ],
+                    ['paperSize', 'A4'],
+                    ['paperWidth', 8.3],
+                    ['paperHeight', 11.7],
+                    ['nativeBookmarks', 'true'],
+                    ['nativeTaggedPdf', 'true'],
+                    ['emulatedMediaType', 'screen'],
+                    [
+                        'emulatedMediaFeatures',
+                        JSON.stringify({ 'prefers-color-scheme': 'dark' })
+                    ],
+                    ['waitDelay', '5s'],
+                    ['waitForExpression', "document.readyState === 'complete'"],
+                    ['waitForSelector', '#ready-node'],
+                    ['waitForWindowStatus', 'ready'],
+                    ['userAgent', 'Mozilla/5.0'],
+                    [
+                        'extraHttpHeaders',
+                        JSON.stringify({ 'X-Custom-Header': 'value' })
+                    ],
+                    ['failOnHttpStatusCodes', JSON.stringify([499, 599])],
+                    [
+                        'failOnResourceHttpStatusCodes',
+                        JSON.stringify([499, 599])
+                    ],
+                    [
+                        'ignoreResourceHttpStatusDomains',
+                        JSON.stringify([
+                            'sentry-cdn.com',
+                            'analytics.example.com'
+                        ])
+                    ],
+                    ['failOnResourceLoadingFailed', 'true'],
+                    ['failOnConsoleExceptions', 'true'],
+                    ['failOnConsoleMessageTypes', JSON.stringify(['error'])],
+                    ['skipNetworkIdleEvent', 'false'],
+                    ['skipNetworkAlmostIdleEvent', 'false'],
+                    [
+                        'downloadFrom',
+                        JSON.stringify([
+                            {
+                                url: 'http://example.com',
+                                extraHttpHeaders: {
+                                    'Content-Type': 'application/json'
+                                }
                             }
-                        }
-                    ])
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    22,
-                    'generateDocumentOutline',
-                    'true'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    23,
-                    'splitMode',
-                    'pages'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    24,
-                    'splitSpan',
-                    '1-10'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    25,
-                    'splitUnify',
-                    'true'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    26,
-                    'userPassword',
-                    'my_user_password'
-                );
-                expect(mockFormDataAppend).toHaveBeenNthCalledWith(
-                    27,
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-            });
-        });
-
-        describe('when watermark and stamp options are passed', () => {
-            it('should append watermark and stamp form fields', async () => {
-                await ConverterUtils.customize(data, {
-                    watermark: {
-                        source: 'text',
-                        expression: 'CONFIDENTIAL',
-                        options: { opacity: 0.25, rotation: 45 }
-                    },
-                    stamp: {
-                        source: 'text',
-                        expression: 'APPROVED',
-                        pages: '1-2'
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkSource',
-                    'text'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkExpression',
-                    'CONFIDENTIAL'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkOptions',
-                    JSON.stringify({ opacity: 0.25, rotation: 45 })
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampSource',
-                    'text'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampExpression',
-                    'APPROVED'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampPages',
-                    '1-2'
-                );
-            });
-        });
-
-        describe('when rotate option is passed', () => {
-            it('should append rotateAngle and rotatePages', async () => {
-                await ConverterUtils.customize(data, {
-                    rotate: { angle: 90, pages: '1-2' }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'rotateAngle',
-                    '90'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'rotatePages',
-                    '1-2'
-                );
+                        ])
+                    ],
+                    ['stages', JSON.stringify([{ op: 'split', every: 2 }])]
+                ]);
             });
         });
     });

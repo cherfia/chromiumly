@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
 
-import { PdfFormat } from '../../../common';
 import { HtmlConverter } from '../html.converter';
 
 jest.mock('fs', () => ({
@@ -56,17 +55,6 @@ describe('HtmlConverter', () => {
                 const buffer = await converter.convert({
                     html: Buffer.from('data')
                 });
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when pdf format parameter is passed', () => {
-            it('should return a buffer', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    pdfFormat: PdfFormat.A_1a
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(buffer).toEqual(await getResponseBuffer());
             });
         });
@@ -163,142 +151,6 @@ describe('HtmlConverter', () => {
             });
         });
 
-        describe('when split parameter is passed', () => {
-            it('should return a buffer', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    split: { mode: 'pages', span: '1-10', unify: true }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(4);
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when userPassword parameter is passed', () => {
-            it('should return a buffer', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    userPassword: 'my_user_password'
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when ownerPassword parameter is passed', () => {
-            it('should return a buffer', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    ownerPassword: 'my_owner_password'
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when both userPassword and ownerPassword are passed', () => {
-            it('should return a buffer', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    userPassword: 'my_user_password',
-                    ownerPassword: 'my_owner_password'
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when embeds parameter is passed', () => {
-            it('should return a buffer', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when permission flags are passed', () => {
-            it('should append them', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    allowPrinting: false,
-                    allowCopying: false
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'allowPrinting',
-                    'false'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'allowCopying',
-                    'false'
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when embedsMetadata parameter is passed', () => {
-            it('should append embedsMetadata as JSON', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    embeds: ['path/to/factur-x.xml'],
-                    embedsMetadata: {
-                        'factur-x.xml': {
-                            mimeType: 'text/xml',
-                            relationship: 'Alternative'
-                        }
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'embedsMetadata',
-                    JSON.stringify({
-                        'factur-x.xml': {
-                            mimeType: 'text/xml',
-                            relationship: 'Alternative'
-                        }
-                    })
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
-        describe('when facturx parameter is passed', () => {
-            it('should append factur-x fields', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    facturx: {
-                        facturxXml: Buffer.from('<xml/>'),
-                        facturxConformanceLevel: 'EN 16931'
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'facturxConformanceLevel',
-                    'EN 16931'
-                );
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
         describe('when outputFilename and trace parameters are passed', () => {
             it('should send them as request headers', async () => {
                 await converter.convert({
@@ -318,6 +170,61 @@ describe('HtmlConverter', () => {
             });
         });
 
+        describe('when native parameters are passed', () => {
+            it('should append them', async () => {
+                await converter.convert({
+                    html: Buffer.from('data'),
+                    nativeBookmarks: true,
+                    nativeTaggedPdf: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeBookmarks',
+                    'true'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeTaggedPdf',
+                    'true'
+                );
+            });
+        });
+
+        describe('when stages parameter is passed', () => {
+            it('should append the stages and upload the files they name', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await converter.convert({
+                    html: Buffer.from('data'),
+                    stages: [
+                        { op: 'stamp-image', image: 'path/to/logo.png' },
+                        { op: 'remediate', profile: 'PDF/A-3b' }
+                    ]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stages',
+                    JSON.stringify([
+                        { op: 'stamp-image', image: 'logo.png' },
+                        { op: 'remediate', profile: 'PDF/A-3b' }
+                    ])
+                );
+                expect(
+                    mockFormDataAppend.mock.calls.map((call) => call[2])
+                ).toContain('logo.png');
+            });
+        });
+
+        describe('when archives parameter is passed', () => {
+            it('should upload them under the archives field', async () => {
+                await converter.convert({
+                    html: Buffer.from('data'),
+                    archives: [Buffer.from('zip')]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'archives',
+                    expect.anything(),
+                    'archive1.zip'
+                );
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
@@ -327,16 +234,16 @@ describe('HtmlConverter', () => {
                     assets,
                     header: Buffer.from('header'),
                     footer: Buffer.from('footer'),
-                    pdfFormat: PdfFormat.A_1a,
                     emulatedMediaType: 'screen',
                     properties: { size: { width: 8.3, height: 11.7 } },
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     },
-                    split: { mode: 'pages', span: 'r3-r1' }
+                    nativeBookmarks: true,
+                    stages: [{ op: 'split', every: 2 }]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(12);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
                 expect(buffer).toEqual(await getResponseBuffer());
             });
         });

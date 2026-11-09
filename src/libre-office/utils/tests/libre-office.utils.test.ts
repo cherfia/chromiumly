@@ -2,8 +2,6 @@ import { promises, ReadStream } from 'fs';
 import { blob } from 'node:stream/consumers';
 import { LibreOfficeUtils } from '../libre-office.utils';
 
-import { PdfFormat } from '../../../common';
-
 jest.mock('fs', () => ({
     ...jest.requireActual('fs'),
     openAsBlob: jest.fn().mockResolvedValue(new Blob(['file content']))
@@ -104,6 +102,15 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
+        describe('when one of the files is an epub', () => {
+            it('should throw an error', async () => {
+                mockPromisesAccess.mockResolvedValueOnce();
+                await expect(() =>
+                    LibreOfficeUtils.addFiles(['path/to/book.epub'], data)
+                ).rejects.toThrow('epub is not supported');
+            });
+        });
+
         describe('when one of the files does not exist', () => {
             it('should throw an error', async () => {
                 const errorMessage =
@@ -153,29 +160,68 @@ describe('LibreOfficeUtils', () => {
         });
 
         describe('Page ranges', () => {
-            describe('when nativePageRanges is valid', () => {
-                it('should append nativePageRanges to data', () => {
+            describe('when nativePages is a range', () => {
+                it('should append nativePages to data', () => {
                     LibreOfficeUtils.addPageProperties(data, {
-                        nativePageRanges: { from: 1, to: 6 }
+                        nativePages: { from: 1, to: 6 }
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                     expect(data.append).toHaveBeenCalledWith(
-                        'nativePageRanges',
+                        'nativePages',
                         '1-6'
                     );
                 });
             });
+
+            describe('when nativePages is a free-form string', () => {
+                it('should append it as-is', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        nativePages: '1,3,5-7'
+                    });
+                    expect(data.append).toHaveBeenCalledWith(
+                        'nativePages',
+                        '1,3,5-7'
+                    );
+                });
+            });
+
+            describe('when nativePages is an invalid range', () => {
+                it('should throw an error', () => {
+                    expect(() =>
+                        LibreOfficeUtils.addPageProperties(data, {
+                            nativePages: { from: 5, to: 2 }
+                        })
+                    ).toThrow('page ranges syntax error');
+                });
+            });
         });
 
-        describe('Single page sheets', () => {
-            describe('when singlePageSheets parameter is set', () => {
-                it('should append singlePageSheets to data', () => {
+        describe('Paper size', () => {
+            describe('when paper size fields are set', () => {
+                it('should append paperSize, paperWidth and paperHeight', () => {
                     LibreOfficeUtils.addPageProperties(data, {
-                        singlePageSheets: true
+                        paperSize: 'A4',
+                        paperWidth: '200mm',
+                        paperHeight: 11
+                    });
+                    expect(mockFormDataAppend.mock.calls).toEqual([
+                        ['paperSize', 'A4'],
+                        ['paperWidth', '200mm'],
+                        ['paperHeight', '11']
+                    ]);
+                });
+            });
+        });
+
+        describe('Single page', () => {
+            describe('when singlePage parameter is set', () => {
+                it('should append singlePage to data', () => {
+                    LibreOfficeUtils.addPageProperties(data, {
+                        singlePage: true
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                     expect(data.append).toHaveBeenCalledWith(
-                        'singlePageSheets',
+                        'singlePage',
                         'true'
                     );
                 });
@@ -197,15 +243,15 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
-        describe('export bookmarks', () => {
-            describe('when exportBookmarks parameter is set', () => {
-                it('should append exportBookmarks to data', () => {
+        describe('native bookmarks', () => {
+            describe('when nativeBookmarks parameter is set to false', () => {
+                it('should append nativeBookmarks to data', () => {
                     LibreOfficeUtils.addPageProperties(data, {
-                        exportBookmarks: false
+                        nativeBookmarks: false
                     });
                     expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                     expect(data.append).toHaveBeenCalledWith(
-                        'exportBookmarks',
+                        'nativeBookmarks',
                         'false'
                     );
                 });
@@ -406,95 +452,88 @@ describe('LibreOfficeUtils', () => {
             });
         });
 
-        describe('when pdf format parameter is passed', () => {
-            it('should append pdf format', async () => {
+        describe('when native PDF fields are passed', () => {
+            it('should append nativePdfa, nativePdfua and nativeTaggedPdf', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    pdfa: PdfFormat.A_2b
+                    nativePdfa: 'PDF/A-2b',
+                    nativePdfua: 'PDF/UA-1',
+                    nativeTaggedPdf: true
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('pdfa', 'PDF/A-2b');
-            });
-        });
-
-        describe('when pdf universal access parameter is passed', () => {
-            it('should append pdfua format', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    pdfUA: true
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('pdfua', 'true');
-            });
-        });
-
-        describe('when merge parameter is passed', () => {
-            it('should append merge', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    merge: true
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('merge', 'true');
-            });
-        });
-
-        describe('when metadata parameter is passed', () => {
-            it('should append metadata', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    metadata: { Author: 'John Doe' }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    'metadata',
-                    JSON.stringify({ Author: 'John Doe' })
-                );
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    ['nativePdfa', 'PDF/A-2b'],
+                    ['nativePdfua', 'PDF/UA-1'],
+                    ['nativeTaggedPdf', 'true']
+                ]);
             });
         });
 
         describe('when lossless image compression is passed', () => {
-            it('should append losslessImageCompression', async () => {
+            it('should append nativeLosslessImageCompression', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    losslessImageCompression: true
+                    nativeLosslessImageCompression: true
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                 expect(data.append).toHaveBeenCalledWith(
-                    'losslessImageCompression',
+                    'nativeLosslessImageCompression',
                     'true'
                 );
             });
         });
 
         describe('when reduce image resolution is passed', () => {
-            it('should append reduceImageResolution', async () => {
+            it('should append nativeReduceImageResolution', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    reduceImageResolution: true
+                    nativeReduceImageResolution: true
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
                 expect(data.append).toHaveBeenCalledWith(
-                    'reduceImageResolution',
+                    'nativeReduceImageResolution',
                     'true'
                 );
             });
         });
 
         describe('when quality is passed', () => {
-            it('should append quality', async () => {
+            it('should append nativeQuality', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    quality: 100
+                    nativeQuality: 100
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('quality', 100);
+                expect(data.append).toHaveBeenCalledWith(
+                    'nativeQuality',
+                    '100'
+                );
+            });
+
+            it('should throw an error when it is out of range', async () => {
+                await expect(
+                    LibreOfficeUtils.customize(data, { nativeQuality: 0.5 })
+                ).rejects.toThrow(
+                    'Invalid compression quality. Please provide a value between 1 and 100.'
+                );
             });
         });
 
         describe('when maximum image resolution is passed', () => {
-            it('should maxImageResolution quality', async () => {
+            it('should append nativeMaxImageResolution', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    reduceImageResolution: true,
-                    maxImageResolution: 75
+                    nativeReduceImageResolution: true,
+                    nativeMaxImageResolution: 75
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
                 expect(data.append).toHaveBeenCalledWith(
-                    'maxImageResolution',
-                    75
+                    'nativeMaxImageResolution',
+                    '75'
+                );
+            });
+
+            it('should throw an error without nativeReduceImageResolution', async () => {
+                await expect(
+                    LibreOfficeUtils.customize(data, {
+                        nativeMaxImageResolution: 75
+                    })
+                ).rejects.toThrow(
+                    'nativeMaxImageResolution is only supported when nativeReduceImageResolution is enabled.'
                 );
             });
         });
@@ -502,12 +541,11 @@ describe('LibreOfficeUtils', () => {
         describe('when PDF viewer preference fields are passed', () => {
             it('should append all PDF viewer preference fields', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    initialView: 2,
+                    initialView: 'thumbnails',
                     initialPage: 3,
-                    magnification: 4,
+                    magnification: 'zoom',
                     zoom: 125,
-                    pageLayout: 3,
-                    firstPageOnLeft: true,
+                    pageLayout: 'twoColumnRight',
                     resizeWindowToInitialPage: true,
                     centerWindow: true,
                     openInFullScreenMode: true,
@@ -518,15 +556,20 @@ describe('LibreOfficeUtils', () => {
                     useTransitionEffects: false,
                     openBookmarkLevels: -1
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(15);
-                expect(data.append).toHaveBeenCalledWith('initialView', '2');
-                expect(data.append).toHaveBeenCalledWith('initialPage', '3');
-                expect(data.append).toHaveBeenCalledWith('magnification', '4');
-                expect(data.append).toHaveBeenCalledWith('zoom', '125');
-                expect(data.append).toHaveBeenCalledWith('pageLayout', '3');
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(14);
                 expect(data.append).toHaveBeenCalledWith(
-                    'firstPageOnLeft',
-                    'true'
+                    'initialView',
+                    'thumbnails'
+                );
+                expect(data.append).toHaveBeenCalledWith('initialPage', '3');
+                expect(data.append).toHaveBeenCalledWith(
+                    'magnification',
+                    'zoom'
+                );
+                expect(data.append).toHaveBeenCalledWith('zoom', '125');
+                expect(data.append).toHaveBeenCalledWith(
+                    'pageLayout',
+                    'twoColumnRight'
                 );
                 expect(data.append).toHaveBeenCalledWith(
                     'resizeWindowToInitialPage',
@@ -594,228 +637,11 @@ describe('LibreOfficeUtils', () => {
             it('should append page properties', async () => {
                 await LibreOfficeUtils.customize(data, {
                     properties: {
-                        singlePageSheets: true
+                        singlePage: true
                     }
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    'singlePageSheets',
-                    'true'
-                );
-            });
-        });
-
-        describe('when split parameter is passed', () => {
-            it('should append split mode and span', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    split: {
-                        mode: 'pages',
-                        span: '1-10'
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(data.append).toHaveBeenCalledWith('splitMode', 'pages');
-                expect(data.append).toHaveBeenCalledWith('splitSpan', '1-10');
-            });
-
-            it('should append split unify when unify is true and mode is pages', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    split: {
-                        mode: 'pages',
-                        span: '1-10',
-                        unify: true
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(data.append).toHaveBeenCalledWith('splitMode', 'pages');
-                expect(data.append).toHaveBeenCalledWith('splitSpan', '1-10');
-                expect(data.append).toHaveBeenCalledWith('splitUnify', 'true');
-            });
-
-            it('should throw an error when unify is true but mode is not pages', async () => {
-                await expect(
-                    LibreOfficeUtils.customize(data, {
-                        split: {
-                            mode: 'intervals',
-                            span: '1-10',
-                            unify: true
-                        }
-                    })
-                ).rejects.toThrow(
-                    'split unify is only supported for pages mode'
-                );
-            });
-        });
-
-        describe('when flatten parameter is passed', () => {
-            it('should append flatten', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    flatten: true
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith('flatten', 'true');
-            });
-        });
-
-        describe('when userPassword parameter is passed', () => {
-            it('should append userPassword', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    userPassword: 'my_user_password'
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-            });
-        });
-
-        describe('when ownerPassword parameter is passed', () => {
-            it('should append ownerPassword', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    ownerPassword: 'my_owner_password'
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-            });
-        });
-
-        describe('when both userPassword and ownerPassword are passed', () => {
-            it('should append both passwords', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    userPassword: 'my_user_password',
-                    ownerPassword: 'my_owner_password'
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(data.append).toHaveBeenCalledWith(
-                    'userPassword',
-                    'my_user_password'
-                );
-                expect(data.append).toHaveBeenCalledWith(
-                    'ownerPassword',
-                    'my_owner_password'
-                );
-            });
-        });
-
-        describe('when permission flags are passed', () => {
-            it('should append only the flags that are explicitly set', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    allowPrinting: false,
-                    allowAssembling: true
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-                expect(data.append).toHaveBeenCalledWith(
-                    'allowPrinting',
-                    'false'
-                );
-                expect(data.append).toHaveBeenCalledWith(
-                    'allowAssembling',
-                    'true'
-                );
-            });
-
-            it('should append every permission flag when all are set', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    allowPrinting: true,
-                    allowCopying: false,
-                    allowModifying: true,
-                    allowAnnotating: false,
-                    allowFillingForms: true,
-                    allowAssembling: false
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(6);
-            });
-        });
-
-        describe('when embedsMetadata parameter is passed', () => {
-            it('should append embedsMetadata as JSON', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    embedsMetadata: {
-                        'factur-x.xml': {
-                            mimeType: 'text/xml',
-                            relationship: 'Alternative'
-                        }
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'embedsMetadata',
-                    JSON.stringify({
-                        'factur-x.xml': {
-                            mimeType: 'text/xml',
-                            relationship: 'Alternative'
-                        }
-                    })
-                );
-            });
-        });
-
-        describe('when facturx parameter is passed', () => {
-            it('should append the factur-x fields and xml file', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    facturx: {
-                        facturxXml: Buffer.from('<xml/>'),
-                        facturxConformanceLevel: 'EN 16931'
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'facturxXml',
-                    expect.any(Blob),
-                    'factur-x.xml'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'facturxConformanceLevel',
-                    'EN 16931'
-                );
-            });
-        });
-
-        describe('when embeds parameter is passed', () => {
-            it('should append embeds with string paths', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                await LibreOfficeUtils.customize(data, {
-                    embeds: ['path/to/embed.xml', 'path/to/embed.png']
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(2);
-            });
-
-            it('should append embeds with Buffer', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                await LibreOfficeUtils.customize(data, {
-                    embeds: [{ data: Buffer.from('embed content'), ext: 'xml' }]
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(data.append).toHaveBeenCalledWith(
-                    'embeds',
-                    expect.any(Blob),
-                    'file1'
-                );
-            });
-
-            it('should append embeds with ReadStream', async () => {
-                mockPromisesAccess.mockResolvedValue();
-                const mockReadStream = {
-                    pipe: jest.fn(),
-                    on: jest.fn(),
-                    read: jest.fn(),
-                    [Symbol.toStringTag]: 'ReadStream'
-                } as unknown as ReadStream;
-                Object.setPrototypeOf(mockReadStream, ReadStream.prototype);
-                const mockBlob = new Blob(['stream content']);
-                (blob as jest.Mock).mockResolvedValue(mockBlob);
-                await LibreOfficeUtils.customize(data, {
-                    embeds: [{ data: mockReadStream, ext: 'xml' }]
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(1);
-                expect(blob).toHaveBeenCalledWith(mockReadStream);
-                expect(data.append).toHaveBeenCalledWith(
-                    'embeds',
-                    mockBlob,
-                    'file1'
-                );
+                expect(data.append).toHaveBeenCalledWith('singlePage', 'true');
             });
         });
 
@@ -823,160 +649,59 @@ describe('LibreOfficeUtils', () => {
             it('should append native watermark fields', async () => {
                 await LibreOfficeUtils.customize(data, {
                     nativeWatermarkText: 'DRAFT',
-                    nativeWatermarkColor: 16711680,
-                    nativeWatermarkFontHeight: 48,
-                    nativeWatermarkRotateAngle: 450,
-                    nativeWatermarkFontName: 'Times New Roman',
+                    nativeWatermarkColor: '#ff0000',
+                    nativeWatermarkFontSize: 48,
+                    nativeWatermarkRotation: 45,
+                    nativeWatermarkFont: 'Times New Roman'
+                });
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    ['nativeWatermarkText', 'DRAFT'],
+                    ['nativeWatermarkColor', '#ff0000'],
+                    ['nativeWatermarkFontSize', '48'],
+                    ['nativeWatermarkRotation', '45'],
+                    ['nativeWatermarkFont', 'Times New Roman']
+                ]);
+            });
+
+            it('should append the tiled watermark text', async () => {
+                await LibreOfficeUtils.customize(data, {
                     nativeTiledWatermarkText: 'COPY'
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkText',
-                    'DRAFT'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkColor',
-                    '16711680'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkFontHeight',
-                    '48'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkRotateAngle',
-                    '450'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'nativeWatermarkFontName',
-                    'Times New Roman'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                expect(data.append).toHaveBeenCalledWith(
                     'nativeTiledWatermarkText',
                     'COPY'
                 );
             });
-        });
 
-        describe('when PDF-engine watermark uses LibreOffice FileInfo', () => {
-            it('should append watermark fields and FileInfo blob', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    watermark: {
-                        source: 'image',
-                        expression: 'w.png',
-                        file: { data: Buffer.from('png-bytes'), ext: 'png' }
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkSource',
-                    'image'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkExpression',
-                    'w.png'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermark',
-                    expect.any(Blob),
-                    'file1'
+            it('should throw an error when both watermark texts are set', async () => {
+                await expect(
+                    LibreOfficeUtils.customize(data, {
+                        nativeWatermarkText: 'DRAFT',
+                        nativeTiledWatermarkText: 'COPY'
+                    })
+                ).rejects.toThrow(
+                    'Set nativeWatermarkText or nativeTiledWatermarkText, not both'
                 );
             });
         });
 
-        describe('when PDF-engine watermark has no file', () => {
-            it('should append only watermark scalar fields', async () => {
+        describe('when stages parameter is passed', () => {
+            it('should append the stages as JSON', async () => {
                 await LibreOfficeUtils.customize(data, {
-                    watermark: {
-                        source: 'text',
-                        expression: 'DRAFT'
-                    }
+                    stages: [
+                        { op: 'merge' },
+                        { op: 'remediate', profile: 'PDF/A-2b' }
+                    ]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkSource',
-                    'text'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermarkExpression',
-                    'DRAFT'
-                );
-            });
-        });
-
-        describe('when PDF-engine watermark file is a plain Buffer', () => {
-            it('should pass buffer through to shared utils', async () => {
-                const buf = Buffer.from('wm');
-                await LibreOfficeUtils.customize(data, {
-                    watermark: {
-                        source: 'image',
-                        expression: 'x.png',
-                        file: buf
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'watermark',
-                    new Blob([buf]),
-                    'watermark'
-                );
-            });
-        });
-
-        describe('when PDF-engine stamp has no file', () => {
-            it('should append only stamp scalar fields', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    stamp: {
-                        source: 'text',
-                        expression: 'OK'
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampSource',
-                    'text'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampExpression',
-                    'OK'
-                );
-            });
-        });
-
-        describe('when PDF-engine stamp file is a plain Buffer', () => {
-            it('should pass buffer through to shared utils', async () => {
-                const buf = Buffer.from('st');
-                await LibreOfficeUtils.customize(data, {
-                    stamp: {
-                        source: 'image',
-                        expression: 's.png',
-                        file: buf
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stamp',
-                    new Blob([buf]),
-                    'stamp'
-                );
-            });
-        });
-
-        describe('when PDF-engine stamp uses LibreOffice FileInfo', () => {
-            it('should append stamp fields and FileInfo blob', async () => {
-                await LibreOfficeUtils.customize(data, {
-                    stamp: {
-                        source: 'pdf',
-                        expression: 's.pdf',
-                        file: { data: Buffer.from('pdf-bytes'), ext: 'pdf' }
-                    }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampSource',
-                    'pdf'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stampExpression',
-                    's.pdf'
-                );
-                expect(mockFormDataAppend).toHaveBeenCalledWith(
-                    'stamp',
-                    expect.any(Blob),
-                    'file1'
-                );
+                expect(mockFormDataAppend.mock.calls).toEqual([
+                    [
+                        'stages',
+                        JSON.stringify([
+                            { op: 'merge' },
+                            { op: 'remediate', profile: 'PDF/A-2b' }
+                        ])
+                    ]
+                ]);
             });
         });
     });

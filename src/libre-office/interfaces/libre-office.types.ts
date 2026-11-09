@@ -1,166 +1,32 @@
 import { ReadStream } from 'fs';
+
+import { Stage } from '../../common';
 import {
-    Metadata,
-    PdfFormat,
-    type FacturXOptions,
-    type PdfEnginePermissions,
-    type PdfEngineStamp,
-    type PdfEngineWatermark
-} from '../../common';
-import {
-    ConvertSplit,
-    DownloadFrom,
-    EmbedsMetadata,
     OutputOptions,
-    PdfEngineRotate,
+    PaperSize,
+    RequestInputOptions,
     WebhookOptions
 } from '../../common/types';
-
-type FileExtension =
-    | '123'
-    | '602'
-    | 'abw'
-    | 'bib'
-    | 'bmp'
-    | 'cdr'
-    | 'cgm'
-    | 'cmx'
-    | 'csv'
-    | 'cwk'
-    | 'dbf'
-    | 'dif'
-    | 'doc'
-    | 'docm'
-    | 'docx'
-    | 'dot'
-    | 'dotm'
-    | 'dotx'
-    | 'dxf'
-    | 'emf'
-    | 'eps'
-    | 'epub'
-    | 'fodg'
-    | 'fodp'
-    | 'fods'
-    | 'fodt'
-    | 'fopd'
-    | 'gif'
-    | 'htm'
-    | 'html'
-    | 'hwp'
-    | 'jpeg'
-    | 'jpg'
-    | 'key'
-    | 'ltx'
-    | 'lwp'
-    | 'mcw'
-    | 'met'
-    | 'mml'
-    | 'mw'
-    | 'numbers'
-    | 'odd'
-    | 'odg'
-    | 'odm'
-    | 'odp'
-    | 'ods'
-    | 'odt'
-    | 'otg'
-    | 'oth'
-    | 'otp'
-    | 'ots'
-    | 'ott'
-    | 'pages'
-    | 'pbm'
-    | 'pcd'
-    | 'pct'
-    | 'pcx'
-    | 'pdb'
-    | 'pdf'
-    | 'pgm'
-    | 'png'
-    | 'pot'
-    | 'potm'
-    | 'potx'
-    | 'ppm'
-    | 'pps'
-    | 'ppt'
-    | 'pptm'
-    | 'pptx'
-    | 'psd'
-    | 'psw'
-    | 'pub'
-    | 'pwp'
-    | 'pxl'
-    | 'ras'
-    | 'rtf'
-    | 'sda'
-    | 'sdc'
-    | 'sdd'
-    | 'sdp'
-    | 'sgl'
-    | 'slk'
-    | 'smf'
-    | 'stc'
-    | 'std'
-    | 'sti'
-    | 'stw'
-    | 'svg'
-    | 'svm'
-    | 'swf'
-    | 'sxc'
-    | 'sxd'
-    | 'sxg'
-    | 'sxi'
-    | 'sxm'
-    | 'sxw'
-    | 'tga'
-    | 'tif'
-    | 'tiff'
-    | 'txt'
-    | 'uof'
-    | 'uop'
-    | 'uos'
-    | 'vdx'
-    | 'vor'
-    | 'vsd'
-    | 'vsdm'
-    | 'vsdx'
-    | 'wb2'
-    | 'wk1'
-    | 'wks'
-    | 'wmf'
-    | 'wpd'
-    | 'wpg'
-    | 'wps'
-    | 'xbm'
-    | 'xhtml'
-    | 'xls'
-    | 'xlsb'
-    | 'xlsm'
-    | 'xlsx'
-    | 'xlt'
-    | 'xltm'
-    | 'xltx'
-    | 'xlw'
-    | 'xml'
-    | 'xpm'
-    | 'zabw';
+import { LibreOfficeExtension } from '../utils/constants';
 
 type FileInfo = {
     data: Buffer | ReadStream;
-    ext: FileExtension;
+    ext: LibreOfficeExtension;
 };
 
 export type PathLikeOrReadStream = string | FileInfo;
 
 export type PageProperties = {
     password?: string; // Password to open the document
+    paperSize?: PaperSize; // Named paper size for every page; without it, each document keeps its own
+    paperWidth?: number | string; // Overrides the width paperSize sets (number in inches or string with units)
+    paperHeight?: number | string; // Overrides the height paperSize sets (number in inches or string with units)
     landscape?: boolean; // Paper orientation landscape (default false)
-    nativePageRanges?: { from: number; to: number }; // Page ranges to print
+    nativePages?: { from: number; to: number } | string; // Pages to export, e.g. a single range, or "1,3,5-7"
     exportFormFields?: boolean; // Export form fields or inputted content (default true)
-    singlePageSheets?: boolean; // Render entire spreadsheet as single page (default false)
+    singlePage?: boolean; // Put each sheet of a spreadsheet on one page (default false)
     allowDuplicateFieldNames?: boolean; // Allow multiple form fields with same name
-    exportBookmarks?: boolean; // Export bookmarks to PDF
+    nativeBookmarks?: boolean; // Export bookmarks built from the headings (default true)
     exportBookmarksToPdfDestination?: boolean; // Export bookmarks as Named Destination in PDF
     exportPlaceholders?: boolean; // Export placeholder fields (visual markings only)
     exportNotes?: boolean; // Export notes to PDF
@@ -176,22 +42,21 @@ export type PageProperties = {
 };
 
 export type ConversionOptions = OutputOptions &
-    PdfEnginePermissions & {
+    RequestInputOptions & {
         properties?: PageProperties;
-        merge?: boolean;
-        pdfa?: PdfFormat;
-        pdfUA?: boolean;
-        metadata?: Metadata;
-        losslessImageCompression?: boolean; // Allow turning lossless compression on or off (default to false).
-        reduceImageResolution?: boolean; // Allow turning on or off image resolution reduction (default to false).
-        quality?: number; // Specify the quality of the JPG export. A higher value produces a higher-quality image and a larger file. Between 1 and 100.
-        maxImageResolution?: 75 | 150 | 300 | 600 | 1200; // Specify if all images will be reduced to the given value in DPI
-        initialView?: number; // Initial PDF view mode (default 0)
+        nativePdfa?: 'PDF/A-1b' | 'PDF/A-2b' | 'PDF/A-3b' | 'PDF/A-4'; // Export PDF/A; the remediate stage reaches the other levels
+        nativePdfua?: 'PDF/UA-1'; // Export PDF/UA
+        nativeTaggedPdf?: boolean; // Write a tagged PDF without declaring PDF/UA (default false)
+        nativeQuality?: number; // JPEG quality of the images, between 1 and 100 (default 90)
+        nativeLosslessImageCompression?: boolean; // Compress images losslessly instead of as JPEG (default false)
+        nativeReduceImageResolution?: boolean; // Downsample images to nativeMaxImageResolution (default false)
+        nativeMaxImageResolution?: 75 | 150 | 300 | 600 | 1200; // DPI that nativeReduceImageResolution downsamples to (default 300)
+        initialView?: 'default' | 'outline' | 'thumbnails'; // The side panel a viewer opens
         initialPage?: number; // Initial page to open (default 1)
-        magnification?: number; // Initial magnification mode (default 0)
-        zoom?: number; // Initial zoom percentage when magnification is 4 (default 100)
-        pageLayout?: number; // Initial page layout mode (default 0)
-        firstPageOnLeft?: boolean; // Place first page on the left for two-column layout (default false)
+        magnification?:
+            'default' | 'fitWindow' | 'fitWidth' | 'fitVisible' | 'zoom'; // How a viewer fits the page
+        zoom?: number; // Zoom percentage when magnification is 'zoom' (default 100)
+        pageLayout?: 'default' | 'singlePage' | 'oneColumn' | 'twoColumnRight'; // How a viewer lays the pages out
         resizeWindowToInitialPage?: boolean; // Resize viewer window to first page size (default false)
         centerWindow?: boolean; // Center viewer window on screen (default false)
         openInFullScreenMode?: boolean; // Open in full screen mode (default false)
@@ -201,35 +66,19 @@ export type ConversionOptions = OutputOptions &
         hideViewerWindowControls?: boolean; // Hide viewer window controls (default false)
         useTransitionEffects?: boolean; // Use transition effects for Impress slides (default true)
         openBookmarkLevels?: number; // Number of open bookmark levels on open (-1 for all, default -1)
-        downloadFrom?: DownloadFrom; // Download a file from a URL. It must return a Content-Disposition header with a filename parameter.
         webhook?: WebhookOptions;
-        split?: ConvertSplit; // Split the PDF into multiple files.
-        flatten?: boolean; // Flatten the PDF document.
-        userPassword?: string; // Password for opening the resulting PDF(s)
-        ownerPassword?: string; // Password for full access on the resulting PDF(s)
-        embeds?: PathLikeOrReadStream[]; // Files to embed in the generated PDF
-        /** Per-attachment metadata keyed by filename, for PDF/A-3 and Factur-X compliance */
-        embedsMetadata?: EmbedsMetadata;
-        /** LibreOffice single-line text watermark during export */
+        /** Draws this text on every page. Set it or `nativeTiledWatermarkText`, not both. */
         nativeWatermarkText?: string;
-        /** Decimal RGB (e.g. 16711680 for red) */
-        nativeWatermarkColor?: number;
-        /** Font height in points; 0 = auto */
-        nativeWatermarkFontHeight?: number;
-        /** Rotation in tenths of a degree (e.g. 450 = 45°) */
-        nativeWatermarkRotateAngle?: number;
-        nativeWatermarkFontName?: string;
+        /** `#rrggbb` (default `#7ffe7f`) */
+        nativeWatermarkColor?: string;
+        /** Font size in points; without it, the text spans the page */
+        nativeWatermarkFontSize?: number;
+        /** Degrees, counter-clockwise */
+        nativeWatermarkRotation?: number;
+        /** Font name (default Helvetica) */
+        nativeWatermarkFont?: string;
+        /** Repeats this text across every page, in a grid */
         nativeTiledWatermarkText?: string;
-        /** PDF-engine post-processing watermark; `file` may be a LibreOffice PathLikeOrReadStream */
-        watermark?: Omit<PdfEngineWatermark, 'file'> & {
-            file?: PathLikeOrReadStream | Buffer;
-        };
-        /** PDF-engine post-processing stamp */
-        stamp?: Omit<PdfEngineStamp, 'file'> & {
-            file?: PathLikeOrReadStream | Buffer;
-        };
-        /** PDF-engine post-process page rotation */
-        rotate?: PdfEngineRotate;
-        /** Turn the resulting PDF into a Factur-X / ZUGFeRD e-invoice */
-        facturx?: FacturXOptions;
+        /** Stages to run on the exported PDFs, in order. */
+        stages?: Stage[];
     };

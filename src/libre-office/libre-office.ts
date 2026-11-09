@@ -7,7 +7,7 @@ import {
 import { LibreOfficeUtils } from './utils/libre-office.utils';
 
 /**
- * Class representing a LibreOffice for various operations such as merging and conversion.
+ * Class representing LibreOffice conversions of office documents to PDF.
  */
 export class LibreOffice {
     /**
@@ -16,127 +16,26 @@ export class LibreOffice {
      * @param {Object} options - Options for the conversion operation.
      * @param {PathLikeOrReadStream[]} options.files - An array of PathLikes or ReadStreams to the files to be converted to PDF.
      * @param {PageProperties} [options.properties] - Page properties for the conversion.
-     * @param {pdfa} [options.pdfFormat] - PDF format options.
-     * @param {boolean} [options.pdfUA] - Indicates whether to generate PDF/UA compliant output.
-     * @param {boolean} [options.merge] - Indicates whether to merge the resulting PDFs.
-     * @param {Metadata} [options.metadata] - Metadata to be included in the converted PDF.
-     * @param {boolean} [options.losslessImageCompression] - Indicates whether to use lossless image compression.
-     * @param {boolean} [options.reduceImageResolution] - Indicates whether to reduce image resolution.
-     * @param {number} [options.quality] - Quality of the JPG export.
-     * @param {75 | 150 | 300 | 600 | 1200} [options.maxImageResolution] - Maximum image resolution for the converted PDF.
-     * @param {ConvertSplit} [options.split] - Split the PDF into multiple files.
-     * @param {boolean} [options.flatten] - Flatten the PDF document.
-     * @param {import('../common/types').PdfEngineRotate} [options.rotate] - PDF-engine post-process page rotation.
+     * @param {string} [options.nativePdfa] - Export PDF/A at conversion time.
+     * @param {string} [options.nativePdfua] - Export PDF/UA at conversion time.
+     * @param {Stage[]} [options.stages] - Stages to run on the exported PDFs, in order, such as `{ op: 'merge' }`.
+     * @param {WebhookOptions} [options.webhook] - Deliver the result to a webhook instead.
      *
      * @returns {Promise<Buffer>} A Promise resolving to the converted PDF content as a buffer
      */
     public static async convert({
         files,
-        properties,
-        pdfa,
-        pdfUA,
-        merge,
-        metadata,
-        losslessImageCompression,
-        reduceImageResolution,
-        quality,
-        maxImageResolution,
-        initialView,
-        initialPage,
-        magnification,
-        zoom,
-        pageLayout,
-        firstPageOnLeft,
-        resizeWindowToInitialPage,
-        centerWindow,
-        openInFullScreenMode,
-        displayPDFDocumentTitle,
-        hideViewerMenubar,
-        hideViewerToolbar,
-        hideViewerWindowControls,
-        useTransitionEffects,
-        openBookmarkLevels,
-        downloadFrom,
-        split,
-        flatten,
-        userPassword,
-        ownerPassword,
-        allowPrinting,
-        allowCopying,
-        allowModifying,
-        allowAnnotating,
-        allowFillingForms,
-        allowAssembling,
-        embeds,
-        embedsMetadata,
-        nativeWatermarkText,
-        nativeWatermarkColor,
-        nativeWatermarkFontHeight,
-        nativeWatermarkRotateAngle,
-        nativeWatermarkFontName,
-        nativeTiledWatermarkText,
         webhook,
-        watermark,
-        stamp,
-        rotate,
-        facturx,
         outputFilename,
-        trace
+        trace,
+        ...options
     }: {
         files: PathLikeOrReadStream[];
     } & ConversionOptions): Promise<Buffer> {
         const data = new FormData();
 
         await LibreOfficeUtils.addFiles(files, data);
-        await LibreOfficeUtils.customize(data, {
-            properties,
-            merge,
-            pdfa,
-            pdfUA,
-            metadata,
-            losslessImageCompression,
-            reduceImageResolution,
-            quality,
-            maxImageResolution,
-            initialView,
-            initialPage,
-            magnification,
-            zoom,
-            pageLayout,
-            firstPageOnLeft,
-            resizeWindowToInitialPage,
-            centerWindow,
-            openInFullScreenMode,
-            displayPDFDocumentTitle,
-            hideViewerMenubar,
-            hideViewerToolbar,
-            hideViewerWindowControls,
-            useTransitionEffects,
-            openBookmarkLevels,
-            downloadFrom,
-            split,
-            flatten,
-            userPassword,
-            ownerPassword,
-            allowPrinting,
-            allowCopying,
-            allowModifying,
-            allowAnnotating,
-            allowFillingForms,
-            allowAssembling,
-            embeds,
-            embedsMetadata,
-            nativeWatermarkText,
-            nativeWatermarkColor,
-            nativeWatermarkFontHeight,
-            nativeWatermarkRotateAngle,
-            nativeWatermarkFontName,
-            nativeTiledWatermarkText,
-            watermark,
-            stamp,
-            rotate,
-            facturx
-        });
+        await LibreOfficeUtils.customize(data, options);
 
         const endpoint = `${Chromiumly.getGotenbergEndpoint()}/${Chromiumly.LIBRE_OFFICE_PATH}/${Chromiumly.LIBRE_OFFICE_ROUTES.convert}`;
 

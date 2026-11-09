@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createReadStream, promises } from 'fs';
 
-import { PdfFormat } from '../../../common';
 import { MarkdownConverter } from '../markdown.converter';
 
 jest.mock('fs', () => ({
@@ -103,18 +102,6 @@ describe('MarkdownConverter', () => {
             });
         });
 
-        describe('when pdf format parameter is passed', () => {
-            it('should return a buffer', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    markdown: Buffer.from('markdown'),
-                    pdfFormat: PdfFormat.A_2b
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(3);
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
         describe('when page properties parameter is passed', () => {
             it('should return a buffer', async () => {
                 const buffer = await converter.convert({
@@ -202,18 +189,6 @@ describe('MarkdownConverter', () => {
             });
         });
 
-        describe('when split parameter is passed', () => {
-            it('should return a buffer', async () => {
-                const buffer = await converter.convert({
-                    html: Buffer.from('data'),
-                    markdown: Buffer.from('markdown'),
-                    split: { mode: 'pages', span: '1-10', unify: true }
-                });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(5);
-                expect(buffer).toEqual(await getResponseBuffer());
-            });
-        });
-
         describe('when outputFilename and trace parameters are passed', () => {
             it('should send them as request headers', async () => {
                 mockPromisesAccess.mockResolvedValue();
@@ -235,6 +210,64 @@ describe('MarkdownConverter', () => {
             });
         });
 
+        describe('when native parameters are passed', () => {
+            it('should append them', async () => {
+                await converter.convert({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    nativeBookmarks: true,
+                    nativeTaggedPdf: true
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeBookmarks',
+                    'true'
+                );
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'nativeTaggedPdf',
+                    'true'
+                );
+            });
+        });
+
+        describe('when stages parameter is passed', () => {
+            it('should append the stages and upload the files they name', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await converter.convert({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    stages: [
+                        { op: 'stamp-image', image: 'path/to/logo.png' },
+                        { op: 'remediate', profile: 'PDF/A-3b' }
+                    ]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'stages',
+                    JSON.stringify([
+                        { op: 'stamp-image', image: 'logo.png' },
+                        { op: 'remediate', profile: 'PDF/A-3b' }
+                    ])
+                );
+                expect(
+                    mockFormDataAppend.mock.calls.map((call) => call[2])
+                ).toContain('logo.png');
+            });
+        });
+
+        describe('when archives parameter is passed', () => {
+            it('should upload them under the archives field', async () => {
+                await converter.convert({
+                    html: Buffer.from('data'),
+                    markdown: Buffer.from('markdown'),
+                    archives: [Buffer.from('zip')]
+                });
+                expect(mockFormDataAppend).toHaveBeenCalledWith(
+                    'archives',
+                    expect.anything(),
+                    'archive1.zip'
+                );
+            });
+        });
+
         describe('when all parameters are passed', () => {
             it('should return a buffer', async () => {
                 mockPromisesAccess.mockResolvedValue();
@@ -244,16 +277,16 @@ describe('MarkdownConverter', () => {
                     markdown: Buffer.from('markdown'),
                     header: Buffer.from('header'),
                     footer: Buffer.from('footer'),
-                    pdfFormat: PdfFormat.A_1a,
                     emulatedMediaType: 'screen',
                     properties: { size: { width: 8.3, height: 11.7 } },
                     downloadFrom: {
                         url: 'http://example.com',
                         extraHttpHeaders: { 'Content-Type': 'application/json' }
                     },
-                    split: { mode: 'pages', span: 'r3-r1' }
+                    nativeBookmarks: true,
+                    stages: [{ op: 'split', every: 2 }]
                 });
-                expect(mockFormDataAppend).toHaveBeenCalledTimes(11);
+                expect(mockFormDataAppend).toHaveBeenCalledTimes(10);
                 expect(buffer).toEqual(await getResponseBuffer());
             });
         });

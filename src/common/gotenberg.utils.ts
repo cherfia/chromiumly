@@ -1,11 +1,14 @@
 import { constants, ReadStream, promises, openAsBlob } from 'fs';
 import { blob } from 'node:stream/consumers';
 
+import path from 'path';
+
 import {
     DownloadFrom,
     DownloadFromEntry,
     OutputOptions,
     PathLikeOrReadStream,
+    RequestInputOptions,
     WebhookOptions
 } from './types';
 
@@ -27,27 +30,17 @@ export class GotenbergUtils {
         }
 
         this.assert(
-            !!options.webhookUrl || !!options.webhookErrorUrl,
-            'At least one of webhookUrl or webhookErrorUrl must be provided'
+            !!options.webhookUrl && !!options.webhookEventsUrl,
+            'webhookUrl and webhookEventsUrl must be provided together'
         );
 
-        const headers: Record<string, string> = {};
-
-        if (options.webhookUrl) {
-            headers['Gotenberg-Webhook-Url'] = options.webhookUrl;
-        }
-
-        if (options.webhookErrorUrl) {
-            headers['Gotenberg-Webhook-Error-Url'] = options.webhookErrorUrl;
-        }
+        const headers: Record<string, string> = {
+            'Gotenberg-Webhook-Url': options.webhookUrl,
+            'Gotenberg-Webhook-Events-Url': options.webhookEventsUrl
+        };
 
         if (options.webhookMethod) {
             headers['Gotenberg-Webhook-Method'] = options.webhookMethod;
-        }
-
-        if (options.webhookErrorMethod) {
-            headers['Gotenberg-Webhook-Error-Method'] =
-                options.webhookErrorMethod;
         }
 
         if (options.webhookExtraHttpHeaders) {
@@ -56,11 +49,41 @@ export class GotenbergUtils {
             );
         }
 
-        if (options.webhookEventsUrl) {
-            headers['Gotenberg-Webhook-Events-Url'] = options.webhookEventsUrl;
+        return headers;
+    }
+
+    /**
+     * Appends the `archives` and `downloadFrom` inputs every route takes.
+     *
+     * @param {FormData} data - The FormData object to append to.
+     * @param {RequestInputOptions} options - The archives to upload and the URLs to download.
+     * @returns {Promise<void>} A Promise that resolves once the inputs are appended.
+     */
+    public static async appendRequestInputs(
+        data: FormData,
+        { archives, downloadFrom }: RequestInputOptions
+    ): Promise<void> {
+        if (downloadFrom) {
+            data.append(
+                'downloadFrom',
+                JSON.stringify(this.normalizeDownloadFrom(downloadFrom))
+            );
         }
 
-        return headers;
+        if (archives?.length) {
+            await Promise.all(
+                archives.map((archive, index) =>
+                    this.addFile(
+                        data,
+                        archive,
+                        typeof archive === 'string'
+                            ? path.basename(archive)
+                            : `archive${index + 1}.zip`,
+                        'archives'
+                    )
+                )
+            );
+        }
     }
 
     /**
@@ -143,6 +166,25 @@ export class GotenbergUtils {
     }
 
     /**
+     * Asserts that no two files are uploaded under the same name: Gotenberg tells files apart by name,
+     * so one of them would be lost.
+     *
+     * @param {FormData} data - The FormData object about to be sent.
+     * @throws {Error} Throws an error naming the first duplicated file name.
+     */
+    public static assertUniqueFileNames(data: FormData): void {
+        const names = data.getAll('files').map((file) => (file as File).name);
+        const duplicate = names.find(
+            (name, index) => names.indexOf(name) !== index
+        );
+
+        this.assert(
+            duplicate === undefined,
+            `Two uploaded files are named ${duplicate}; rename one of them, or have a stage reuse the upload with { name: '${duplicate}' }`
+        );
+    }
+
+    /**
      * Performs a POST request to the specified Gotenberg endpoint with the provided FormData.
      *
      * @param {string} endpoint - The Gotenberg endpoint URL.
@@ -163,6 +205,8 @@ export class GotenbergUtils {
         apiKey?: string,
         requestHttpHeaders?: Record<string, string>
     ): Promise<Buffer> {
+        this.assertUniqueFileNames(data);
+
         const headers = this.buildRequestHeaders(
             username,
             password,
@@ -243,22 +287,24 @@ export class GotenbergUtils {
      * @param {FormData} data - The FormData object to which the file will be added.
      * @param {PathLikeOrReadStream} file - The file to be added (either a PathLike or a ReadStream).
      * @param {string} name - The name to be used for the file in the FormData.
+     * @param {string} [fieldName] - The form field to upload the file under. Defaults to `files`.
      * @returns {Promise<void>} A Promise that resolves once the file has been added.
      */
     public static async addFile(
         data: FormData,
         file: PathLikeOrReadStream,
-        name: string
+        name: string,
+        fieldName = 'files'
     ): Promise<void> {
         if (Buffer.isBuffer(file)) {
-            data.append('files', new Blob([file]), name);
+            data.append(fieldName, new Blob([file]), name);
         } else if (file instanceof ReadStream) {
             const content = await blob(file);
-            data.append('files', content, name);
+            data.append(fieldName, content, name);
         } else {
             await promises.access(file, constants.R_OK);
             const content = await openAsBlob(file);
-            data.append('files', content, name);
+            data.append(fieldName, content, name);
         }
     }
 }

@@ -117,28 +117,4 @@ describe('System', () => {
             })
         );
     });
-
-    it('should call GET /prometheus/metrics', async () => {
-        const buffer = await System.getPrometheusMetrics();
-        expect(buffer).toEqual(await getResponseBuffer());
-        expect(mockFetch).toHaveBeenCalledWith(
-            'http://localhost:3000/prometheus/metrics',
-            expect.objectContaining({
-                method: 'GET'
-            })
-        );
-    });
-
-    it('should call GET /prometheus/metrics with a custom trace header', async () => {
-        await System.getPrometheusMetrics('my-trace-id');
-        expect(mockFetch).toHaveBeenCalledWith(
-            'http://localhost:3000/prometheus/metrics',
-            expect.objectContaining({
-                method: 'GET',
-                headers: expect.objectContaining({
-                    'Gotenberg-Trace': 'my-trace-id'
-                })
-            })
-        );
-    });
 });

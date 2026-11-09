@@ -2,6 +2,7 @@ import { createReadStream, promises, ReadStream } from 'fs';
 import { blob } from 'node:stream/consumers';
 
 import { GotenbergUtils } from '../gotenberg.utils';
+import { WebhookOptions } from '../types';
 
 jest.mock('fs', () => ({
     ...jest.requireActual('fs'),
@@ -58,53 +59,43 @@ describe('GotenbergUtils', () => {
             expect(GotenbergUtils.buildWebhookHeaders()).toBeUndefined();
         });
 
-        it('should build headers from webhookUrl alone', () => {
+        it('should build the required url headers', () => {
             expect(
                 GotenbergUtils.buildWebhookHeaders({
-                    webhookUrl: 'https://my.webhook/success'
+                    webhookUrl: 'https://my.webhook/upload',
+                    webhookEventsUrl: 'https://my.webhook/events'
                 })
             ).toEqual({
-                'Gotenberg-Webhook-Url': 'https://my.webhook/success'
-            });
-        });
-
-        it('should build headers from the deprecated webhookErrorUrl alone', () => {
-            expect(
-                GotenbergUtils.buildWebhookHeaders({
-                    webhookErrorUrl: 'https://my.webhook/error'
-                })
-            ).toEqual({
-                'Gotenberg-Webhook-Error-Url': 'https://my.webhook/error'
+                'Gotenberg-Webhook-Url': 'https://my.webhook/upload',
+                'Gotenberg-Webhook-Events-Url': 'https://my.webhook/events'
             });
         });
 
         it('should build all optional headers when provided', () => {
             expect(
                 GotenbergUtils.buildWebhookHeaders({
-                    webhookUrl: 'https://my.webhook/success',
-                    webhookErrorUrl: 'https://my.webhook/error',
+                    webhookUrl: 'https://my.webhook/upload',
+                    webhookEventsUrl: 'https://my.webhook/events',
                     webhookMethod: 'PUT',
-                    webhookErrorMethod: 'PATCH',
-                    webhookExtraHttpHeaders: { Authorization: 'Bearer 123' },
-                    webhookEventsUrl: 'https://my.webhook/events'
+                    webhookExtraHttpHeaders: { Authorization: 'Bearer 123' }
                 })
             ).toEqual({
-                'Gotenberg-Webhook-Url': 'https://my.webhook/success',
-                'Gotenberg-Webhook-Error-Url': 'https://my.webhook/error',
+                'Gotenberg-Webhook-Url': 'https://my.webhook/upload',
+                'Gotenberg-Webhook-Events-Url': 'https://my.webhook/events',
                 'Gotenberg-Webhook-Method': 'PUT',
-                'Gotenberg-Webhook-Error-Method': 'PATCH',
                 'Gotenberg-Webhook-Extra-Http-Headers': JSON.stringify({
                     Authorization: 'Bearer 123'
-                }),
-                'Gotenberg-Webhook-Events-Url': 'https://my.webhook/events'
+                })
             });
         });
 
-        it('should throw when neither webhookUrl nor webhookErrorUrl is provided', () => {
+        it('should throw when the events url is missing', () => {
             expect(() =>
-                GotenbergUtils.buildWebhookHeaders({ webhookMethod: 'POST' })
+                GotenbergUtils.buildWebhookHeaders({
+                    webhookUrl: 'https://my.webhook/upload'
+                } as WebhookOptions)
             ).toThrow(
-                'At least one of webhookUrl or webhookErrorUrl must be provided'
+                'webhookUrl and webhookEventsUrl must be provided together'
             );
         });
     });
@@ -328,8 +319,7 @@ describe('GotenbergUtils', () => {
                 })
             );
             const init = mockFetch.mock.calls[0]?.[1] as
-                | RequestInit
-                | undefined;
+                RequestInit | undefined;
             expect(init).toBeDefined();
             expect((init as RequestInit).headers).not.toHaveProperty(
                 'Authorization'
@@ -407,6 +397,97 @@ describe('GotenbergUtils', () => {
                 new Blob([file]),
                 'file'
             );
+        });
+    });
+
+    describe('addFile with a field name', () => {
+        it('should append the file under the given field', async () => {
+            const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
+            const file = Buffer.from('zip');
+            await GotenbergUtils.addFile(
+                new FormData(),
+                file,
+                'site.zip',
+                'archives'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'archives',
+                new Blob([file]),
+                'site.zip'
+            );
+        });
+    });
+
+    describe('appendRequestInputs', () => {
+        const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
+
+        it('should append nothing when no input is passed', async () => {
+            await GotenbergUtils.appendRequestInputs(new FormData(), {});
+            expect(mockFormDataAppend).not.toHaveBeenCalled();
+        });
+
+        it('should append downloadFrom as a JSON array', async () => {
+            await GotenbergUtils.appendRequestInputs(new FormData(), {
+                downloadFrom: {
+                    url: 'https://example.com/report.docx',
+                    filename: 'report.docx'
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([
+                    {
+                        url: 'https://example.com/report.docx',
+                        filename: 'report.docx'
+                    }
+                ])
+            );
+        });
+
+        it('should append archives under the archives field', async () => {
+            jest.spyOn(promises, 'access').mockResolvedValue();
+            await GotenbergUtils.appendRequestInputs(new FormData(), {
+                archives: ['path/to/site.zip', Buffer.from('zip')]
+            });
+            const archives = mockFormDataAppend.mock.calls
+                .filter(([field]) => field === 'archives')
+                .map((call) => call[2]);
+            expect(archives.sort()).toEqual(['archive2.zip', 'site.zip']);
+        });
+    });
+
+    describe('assertUniqueFileNames', () => {
+        const formData = (...names: string[]) =>
+            ({
+                getAll: () => names.map((name) => new File(['x'], name))
+            }) as unknown as FormData;
+
+        it('should accept distinct file names', () => {
+            expect(() =>
+                GotenbergUtils.assertUniqueFileNames(
+                    formData('index.html', 'logo.png')
+                )
+            ).not.toThrow();
+        });
+
+        it('should throw an error naming a duplicated file name', () => {
+            expect(() =>
+                GotenbergUtils.assertUniqueFileNames(
+                    formData('report.pdf', 'logo.png', 'report.pdf')
+                )
+            ).toThrow(
+                "Two uploaded files are named report.pdf; rename one of them, or have a stage reuse the upload with { name: 'report.pdf' }"
+            );
+        });
+
+        it('should refuse to send a request with duplicated file names', async () => {
+            await expect(
+                GotenbergUtils.fetch(
+                    'http://localhost:3000/forms/pdf/merge',
+                    formData('a.pdf', 'a.pdf')
+                )
+            ).rejects.toThrow('Two uploaded files are named a.pdf');
+            expect(mockFetch).not.toHaveBeenCalled();
         });
     });
 });

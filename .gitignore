@@ -115,3 +115,6 @@ dist
 .tern-port
 
 .idea
+
+# Gotenberg documentation (local reference clone)
+.reference/
