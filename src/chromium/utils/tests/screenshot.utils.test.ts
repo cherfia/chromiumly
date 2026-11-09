@@ -52,6 +52,19 @@ describe('ScreenshotUtils', () => {
         });
 
         describe('Image quality', () => {
+            describe('when quality is out of range', () => {
+                it('should throw an error for 0', () => {
+                    expect(() =>
+                        ScreenshotUtils.addImageProperties(data, {
+                            format: 'jpeg',
+                            quality: 0
+                        })
+                    ).toThrow(
+                        'Invalid compression quality. Please provide a value between 1 and 100.'
+                    );
+                });
+            });
+
             describe('when quality parameter is set', () => {
                 it('should append quality to data', () => {
                     ScreenshotUtils.addImageProperties(data, {

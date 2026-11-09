@@ -22,7 +22,7 @@ export class ScreenshotUtils {
     ): void {
         data.append('format', imageProperties.format);
 
-        if (imageProperties.quality) {
+        if (imageProperties.quality !== undefined) {
             GotenbergUtils.assert(
                 imageProperties.format === 'jpeg',
                 'Compression quality is exclusively supported for JPEG format.'
