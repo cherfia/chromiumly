@@ -38,7 +38,11 @@ export class PDFUtils {
                 }
                 const filename = `file${String(index + 1).padStart(paddingLength, '0')}.pdf`;
                 if (Buffer.isBuffer(file)) {
-                    data.append('files', new Blob([file]), filename);
+                    data.append(
+                        'files',
+                        new Blob([new Uint8Array(file)]),
+                        filename
+                    );
                 } else if (file instanceof ReadStream) {
                     const content = await blob(file);
                     data.append('files', content, filename);
