@@ -69,6 +69,23 @@ describe('PDFUtils', () => {
             });
         });
 
+        describe('when files parameter contains named inputs', () => {
+            it('should upload each under its name', async () => {
+                mockPromisesAccess.mockResolvedValue();
+                await PDFUtils.addFiles(
+                    [
+                        { file: Buffer.from('a'), name: '2-body.pdf' },
+                        { file: 'path/to/cover.pdf', name: '1-cover.pdf' },
+                        Buffer.from('c')
+                    ],
+                    data
+                );
+                expect(
+                    mockFormDataAppend.mock.calls.map((call) => call[2]).sort()
+                ).toEqual(['1-cover.pdf', '2-body.pdf', 'file03.pdf']);
+            });
+        });
+
         describe('when one of the files is not PDF', () => {
             it('should throw an error', async () => {
                 mockPromisesAccess.mockResolvedValue();

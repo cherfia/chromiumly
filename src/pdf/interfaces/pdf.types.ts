@@ -12,10 +12,18 @@ import {
     WebhookOptions
 } from '../../common';
 
+/**
+ * A PDF to process: a `.pdf` path, kept under its base name; `{ file, name }`, uploaded under `name`;
+ * or a Buffer or ReadStream, named `fileNN.pdf` after its position. Gotenberg takes the PDFs in the
+ * alphanumeric order of their names, and stages and read results refer to them by name.
+ */
+export type PdfInput =
+    PathLikeOrReadStream | { file: PathLikeOrReadStream; name: string };
+
 export type PdfRequestOptions = RequestInputOptions &
     OutputOptions & {
         /** The PDFs to process. Optional when `archives` or `downloadFrom` bring them. */
-        files?: PathLikeOrReadStream[];
+        files?: PdfInput[];
         webhook?: WebhookOptions;
     };
 
@@ -30,7 +38,7 @@ export type PipeOptions = PdfRequestOptions & {
 
 /** The read routes answer JSON: they take no webhook and no output filename. */
 export type PdfReadOptions = RequestInputOptions & {
-    files?: PathLikeOrReadStream[];
+    files?: PdfInput[];
     /** Opens encrypted PDFs. */
     password?: string;
     trace?: string;

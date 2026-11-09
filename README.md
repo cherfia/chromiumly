@@ -617,7 +617,26 @@ const buffer = await PDF.pipe({
 });
 ```
 
-Every method also takes `files`, `archives`, `downloadFrom`, `webhook`, `outputFilename` and `trace`. `files` accepts `.pdf` paths, `Buffer`s or `ReadStream`s, and may be left out when `archives` or `downloadFrom` bring the PDFs. Gotenberg takes the PDFs in the alphanumeric order of their names, so name them after the order you want.
+Every method also takes `files`, `archives`, `downloadFrom`, `webhook`, `outputFilename` and `trace`. `files` may be left out when `archives` or `downloadFrom` bring the PDFs. Each entry is a `PdfInput`:
+
+```typescript
+type PdfInput =
+    | PathLikeOrReadStream // a .pdf path keeps its base name; a Buffer or ReadStream is named fileNN.pdf after its position
+    | { file: PathLikeOrReadStream; name: string }; // uploaded under `name`
+```
+
+Gotenberg takes the PDFs in the alphanumeric order of their names, and stages (such as `compose`) and the read routes refer to them by name, so name them after the order you want:
+
+```typescript
+const merged = await PDF.merge({
+    files: [
+        { file: coverBuffer, name: '1-cover.pdf' },
+        { file: bodyBuffer, name: '2-body.pdf' }
+    ]
+});
+```
+
+Two uploads under the same name, such as an input and a stage file, throw an error before the request is sent.
 
 #### Single-stage routes
 
