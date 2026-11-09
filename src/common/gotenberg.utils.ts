@@ -30,37 +30,23 @@ export class GotenbergUtils {
         }
 
         this.assert(
-            !!options.webhookUrl || !!options.webhookErrorUrl,
-            'At least one of webhookUrl or webhookErrorUrl must be provided'
+            !!options.webhookUrl && !!options.webhookEventsUrl,
+            'webhookUrl and webhookEventsUrl must be provided together'
         );
 
-        const headers: Record<string, string> = {};
-
-        if (options.webhookUrl) {
-            headers['Gotenberg-Webhook-Url'] = options.webhookUrl;
-        }
-
-        if (options.webhookErrorUrl) {
-            headers['Gotenberg-Webhook-Error-Url'] = options.webhookErrorUrl;
-        }
+        const headers: Record<string, string> = {
+            'Gotenberg-Webhook-Url': options.webhookUrl,
+            'Gotenberg-Webhook-Events-Url': options.webhookEventsUrl
+        };
 
         if (options.webhookMethod) {
             headers['Gotenberg-Webhook-Method'] = options.webhookMethod;
-        }
-
-        if (options.webhookErrorMethod) {
-            headers['Gotenberg-Webhook-Error-Method'] =
-                options.webhookErrorMethod;
         }
 
         if (options.webhookExtraHttpHeaders) {
             headers['Gotenberg-Webhook-Extra-Http-Headers'] = JSON.stringify(
                 options.webhookExtraHttpHeaders
             );
-        }
-
-        if (options.webhookEventsUrl) {
-            headers['Gotenberg-Webhook-Events-Url'] = options.webhookEventsUrl;
         }
 
         return headers;

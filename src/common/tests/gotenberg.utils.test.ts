@@ -2,6 +2,7 @@ import { createReadStream, promises, ReadStream } from 'fs';
 import { blob } from 'node:stream/consumers';
 
 import { GotenbergUtils } from '../gotenberg.utils';
+import { WebhookOptions } from '../types';
 
 jest.mock('fs', () => ({
     ...jest.requireActual('fs'),
@@ -58,53 +59,43 @@ describe('GotenbergUtils', () => {
             expect(GotenbergUtils.buildWebhookHeaders()).toBeUndefined();
         });
 
-        it('should build headers from webhookUrl alone', () => {
+        it('should build the required url headers', () => {
             expect(
                 GotenbergUtils.buildWebhookHeaders({
-                    webhookUrl: 'https://my.webhook/success'
+                    webhookUrl: 'https://my.webhook/upload',
+                    webhookEventsUrl: 'https://my.webhook/events'
                 })
             ).toEqual({
-                'Gotenberg-Webhook-Url': 'https://my.webhook/success'
-            });
-        });
-
-        it('should build headers from the deprecated webhookErrorUrl alone', () => {
-            expect(
-                GotenbergUtils.buildWebhookHeaders({
-                    webhookErrorUrl: 'https://my.webhook/error'
-                })
-            ).toEqual({
-                'Gotenberg-Webhook-Error-Url': 'https://my.webhook/error'
+                'Gotenberg-Webhook-Url': 'https://my.webhook/upload',
+                'Gotenberg-Webhook-Events-Url': 'https://my.webhook/events'
             });
         });
 
         it('should build all optional headers when provided', () => {
             expect(
                 GotenbergUtils.buildWebhookHeaders({
-                    webhookUrl: 'https://my.webhook/success',
-                    webhookErrorUrl: 'https://my.webhook/error',
+                    webhookUrl: 'https://my.webhook/upload',
+                    webhookEventsUrl: 'https://my.webhook/events',
                     webhookMethod: 'PUT',
-                    webhookErrorMethod: 'PATCH',
-                    webhookExtraHttpHeaders: { Authorization: 'Bearer 123' },
-                    webhookEventsUrl: 'https://my.webhook/events'
+                    webhookExtraHttpHeaders: { Authorization: 'Bearer 123' }
                 })
             ).toEqual({
-                'Gotenberg-Webhook-Url': 'https://my.webhook/success',
-                'Gotenberg-Webhook-Error-Url': 'https://my.webhook/error',
+                'Gotenberg-Webhook-Url': 'https://my.webhook/upload',
+                'Gotenberg-Webhook-Events-Url': 'https://my.webhook/events',
                 'Gotenberg-Webhook-Method': 'PUT',
-                'Gotenberg-Webhook-Error-Method': 'PATCH',
                 'Gotenberg-Webhook-Extra-Http-Headers': JSON.stringify({
                     Authorization: 'Bearer 123'
-                }),
-                'Gotenberg-Webhook-Events-Url': 'https://my.webhook/events'
+                })
             });
         });
 
-        it('should throw when neither webhookUrl nor webhookErrorUrl is provided', () => {
+        it('should throw when the events url is missing', () => {
             expect(() =>
-                GotenbergUtils.buildWebhookHeaders({ webhookMethod: 'POST' })
+                GotenbergUtils.buildWebhookHeaders({
+                    webhookUrl: 'https://my.webhook/upload'
+                } as WebhookOptions)
             ).toThrow(
-                'At least one of webhookUrl or webhookErrorUrl must be provided'
+                'webhookUrl and webhookEventsUrl must be provided together'
             );
         });
     });

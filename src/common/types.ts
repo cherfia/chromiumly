@@ -20,18 +20,13 @@ export type DownloadFromEntry = {
 export type DownloadFrom = DownloadFromEntry | DownloadFromEntry[];
 
 export type WebhookOptions = {
-    /**
-     * At least one of `webhookUrl` or `webhookErrorUrl` is required.
-     */
-    webhookUrl?: string;
-    /**
-     * @deprecated Use the events url instead, together with `webhookUrl`.
-     */
-    webhookErrorUrl?: string;
+    /** Gotenberg uploads the result to this URL instead of answering with it. */
+    webhookUrl: string;
+    /** Receives a `webhook.success` or `webhook.error` event once the work is done. */
+    webhookEventsUrl: string;
     webhookMethod?: 'POST' | 'PUT' | 'PATCH';
-    webhookErrorMethod?: 'POST' | 'PUT' | 'PATCH';
+    /** Headers sent with both the upload and the event. */
     webhookExtraHttpHeaders?: Record<string, string>;
-    webhookEventsUrl?: string;
 };
 
 export type OutputOptions = {
