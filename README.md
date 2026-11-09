@@ -103,7 +103,7 @@ Gotenberg 9 renamed most fields, moved post-processing into ordered [stages](#st
 
 **Which version do I need?**
 
-- **On Gotenberg 8:** stay on Chromiumly 6 (`npm install chromiumly@6`). Its docs are in the [6.x README](https://github.com/cherfia/chromiumly/blob/6.0.0/README.md).
+- **On Gotenberg 8:** stay on Chromiumly 6: pin `chromiumly@^6` with your package manager (see [Installation](#installation)). Its docs are in the [6.x README](https://github.com/cherfia/chromiumly/blob/6.0.0/README.md).
 - **Moving to Gotenberg 9:** upgrade to Chromiumly 7 in the same deploy, then follow [Migrating from Chromiumly 6](#migrating-from-chromiumly-6).
 - **Starting fresh:** use Chromiumly 7 with `gotenberg/gotenberg:9`.
 
@@ -122,6 +122,26 @@ Using yarn:
 ```bash
 yarn add chromiumly
 ```
+
+Using pnpm:
+
+```bash
+pnpm add chromiumly
+```
+
+Using Bun:
+
+```bash
+bun add chromiumly
+```
+
+Using Deno:
+
+```bash
+deno add npm:chromiumly
+```
+
+Append a version range to pin a major, such as `chromiumly@^6` to stay on Gotenberg 8 (see [Gotenberg Compatibility](#gotenberg-compatibility)).
 
 ### Prerequisites
 
@@ -955,7 +975,7 @@ Gotenberg 9 removed the Prometheus route: it exports its metrics with OpenTeleme
 Chromiumly 7 targets Gotenberg 9. Most changes follow [Gotenberg's own upgrade guide](https://gotenberg.dev/docs/getting-started/upgrade).
 
 1. Move your Gotenberg image to `gotenberg/gotenberg:9`, and your own Gotenberg configuration with it: see [Gotenberg's upgrade guide](https://gotenberg.dev/docs/getting-started/upgrade) for its flags and environment variables.
-2. Bump Chromiumly to 7: `npm install chromiumly@7`.
+2. Bump Chromiumly to `^7` with your package manager (see [Installation](#installation)).
 3. Update your calls with the tables below. TypeScript flags most of them, since the removed options and the renamed fields no longer type-check.
 
 Ship steps 1 and 2 together: in between, every request fails.
