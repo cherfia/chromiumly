@@ -70,13 +70,21 @@ describe('MarkdownScreenshot', () => {
                     html: Buffer.from('data'),
                     markdown: Buffer.from('markdown'),
                     cookies: [
-                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                        {
+                            name: 'cookie',
+                            value: 'value',
+                            domain: 'example.com'
+                        }
                     ]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'cookies',
                     JSON.stringify([
-                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                        {
+                            name: 'cookie',
+                            value: 'value',
+                            domain: 'example.com'
+                        }
                     ])
                 );
                 expect(buffer).toEqual(await getResponseBuffer());

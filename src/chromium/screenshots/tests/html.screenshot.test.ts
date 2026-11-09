@@ -90,13 +90,21 @@ describe('HtmlScreenshot', () => {
                 const buffer = await screenshot.capture({
                     html: Buffer.from('data'),
                     cookies: [
-                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                        {
+                            name: 'cookie',
+                            value: 'value',
+                            domain: 'example.com'
+                        }
                     ]
                 });
                 expect(mockFormDataAppend).toHaveBeenCalledWith(
                     'cookies',
                     JSON.stringify([
-                        { name: 'cookie', value: 'value', domain: 'example.com' }
+                        {
+                            name: 'cookie',
+                            value: 'value',
+                            domain: 'example.com'
+                        }
                     ])
                 );
                 expect(buffer).toEqual(await getResponseBuffer());

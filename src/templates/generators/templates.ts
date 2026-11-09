@@ -22,8 +22,7 @@ export class Templates extends Generator {
 
         if (options?.validate) {
             const validator = templateValidators[request.type] as
-                | ((data: unknown) => boolean)
-                | undefined;
+                ((data: unknown) => boolean) | undefined;
 
             if (validator && !validator(request.data)) {
                 throw new Error(
