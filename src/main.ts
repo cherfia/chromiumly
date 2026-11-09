@@ -1,6 +1,7 @@
 export { Chromiumly } from './main.config';
 
 export { PdfFormat } from './common/constants';
+export type * from './common/stages.types';
 export type {
     PdfEngineRotate,
     PdfEngineStamp,

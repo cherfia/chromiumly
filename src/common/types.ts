@@ -13,6 +13,8 @@ export type DownloadFromEntry = {
     extraHttpHeaders?: Record<string, string>;
     embedded?: boolean;
     field?: DownloadFromField;
+    /** Names the downloaded file, over the server's `Content-Disposition` header and the URL path. */
+    filename?: string;
 };
 
 export type DownloadFrom = DownloadFromEntry | DownloadFromEntry[];
@@ -39,6 +41,18 @@ export type OutputOptions = {
     trace?: string;
 };
 
+/** Inputs every Gotenberg route takes besides its own files. */
+export type RequestInputOptions = {
+    /** ZIP files Gotenberg unpacks; each entry counts as an uploaded file. */
+    archives?: PathLikeOrReadStream[];
+    /** URLs Gotenberg downloads first, as if the files had been uploaded. */
+    downloadFrom?: DownloadFrom;
+};
+
+/** A paper size Gotenberg knows by name. */
+export type PaperSize =
+    'A3' | 'A4' | 'A5' | 'B4' | 'B5' | 'Letter' | 'Legal' | 'Tabloid';
+
 export type Split = {
     mode: 'pages' | 'intervals';
     span: string;
@@ -61,11 +75,7 @@ export type PdfEngineRotate = {
 
 /** The `/AFRelationship` value for an embedded attachment. */
 export type EmbedAttachmentRelationship =
-    | 'Source'
-    | 'Data'
-    | 'Alternative'
-    | 'Supplement'
-    | 'Unspecified';
+    'Source' | 'Data' | 'Alternative' | 'Supplement' | 'Unspecified';
 
 export type EmbedMetadataEntry = {
     /** Written to the embedded file stream's `/Subtype`. */

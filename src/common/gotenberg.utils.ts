@@ -1,11 +1,14 @@
 import { constants, ReadStream, promises, openAsBlob } from 'fs';
 import { blob } from 'node:stream/consumers';
 
+import path from 'path';
+
 import {
     DownloadFrom,
     DownloadFromEntry,
     OutputOptions,
     PathLikeOrReadStream,
+    RequestInputOptions,
     WebhookOptions
 } from './types';
 
@@ -61,6 +64,40 @@ export class GotenbergUtils {
         }
 
         return headers;
+    }
+
+    /**
+     * Appends the `archives` and `downloadFrom` inputs every route takes.
+     *
+     * @param {FormData} data - The FormData object to append to.
+     * @param {RequestInputOptions} options - The archives to upload and the URLs to download.
+     * @returns {Promise<void>} A Promise that resolves once the inputs are appended.
+     */
+    public static async appendRequestInputs(
+        data: FormData,
+        { archives, downloadFrom }: RequestInputOptions
+    ): Promise<void> {
+        if (downloadFrom) {
+            data.append(
+                'downloadFrom',
+                JSON.stringify(this.normalizeDownloadFrom(downloadFrom))
+            );
+        }
+
+        if (archives?.length) {
+            await Promise.all(
+                archives.map((archive, index) =>
+                    this.addFile(
+                        data,
+                        archive,
+                        typeof archive === 'string'
+                            ? path.basename(archive)
+                            : `archive${index + 1}.zip`,
+                        'archives'
+                    )
+                )
+            );
+        }
     }
 
     /**
@@ -243,22 +280,24 @@ export class GotenbergUtils {
      * @param {FormData} data - The FormData object to which the file will be added.
      * @param {PathLikeOrReadStream} file - The file to be added (either a PathLike or a ReadStream).
      * @param {string} name - The name to be used for the file in the FormData.
+     * @param {string} [fieldName] - The form field to upload the file under. Defaults to `files`.
      * @returns {Promise<void>} A Promise that resolves once the file has been added.
      */
     public static async addFile(
         data: FormData,
         file: PathLikeOrReadStream,
-        name: string
+        name: string,
+        fieldName = 'files'
     ): Promise<void> {
         if (Buffer.isBuffer(file)) {
-            data.append('files', new Blob([file]), name);
+            data.append(fieldName, new Blob([file]), name);
         } else if (file instanceof ReadStream) {
             const content = await blob(file);
-            data.append('files', content, name);
+            data.append(fieldName, content, name);
         } else {
             await promises.access(file, constants.R_OK);
             const content = await openAsBlob(file);
-            data.append('files', content, name);
+            data.append(fieldName, content, name);
         }
     }
 }

@@ -1,5 +1,6 @@
 export { PdfFormat } from './constants';
 export { GotenbergUtils } from './gotenberg.utils';
+export { StageUtils } from './stages.utils';
 export { PdfEngineWatermarkStampUtils } from './pdf-engine-watermark-stamp.utils';
 export type {
     PathLikeOrReadStream,
@@ -8,6 +9,8 @@ export type {
     DownloadFromEntry,
     DownloadFromField,
     OutputOptions,
+    PaperSize,
+    RequestInputOptions,
     WebhookOptions,
     EmbedsMetadata,
     EmbedMetadataEntry,
@@ -30,3 +33,21 @@ export type {
     PdfEngineWatermark,
     PdfEngineWatermarkSource
 } from './pdf-engine-watermark-stamp.types';
+export type {
+    StageFile,
+    PageSelection,
+    StandardFont,
+    PdfaProfile,
+    PdfuaProfile,
+    ConformanceProfile,
+    ConformanceProfiles,
+    AttachmentRelationship,
+    Bookmark,
+    ComposePlacement,
+    RedactRegion,
+    EncryptPermissions,
+    Stage,
+    StageOp,
+    StageOptions,
+    SetMetadataStage
+} from './stages.types';

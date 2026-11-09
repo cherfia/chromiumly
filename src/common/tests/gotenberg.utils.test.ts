@@ -328,8 +328,7 @@ describe('GotenbergUtils', () => {
                 })
             );
             const init = mockFetch.mock.calls[0]?.[1] as
-                | RequestInit
-                | undefined;
+                RequestInit | undefined;
             expect(init).toBeDefined();
             expect((init as RequestInit).headers).not.toHaveProperty(
                 'Authorization'
@@ -407,6 +406,62 @@ describe('GotenbergUtils', () => {
                 new Blob([file]),
                 'file'
             );
+        });
+    });
+
+    describe('addFile with a field name', () => {
+        it('should append the file under the given field', async () => {
+            const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
+            const file = Buffer.from('zip');
+            await GotenbergUtils.addFile(
+                new FormData(),
+                file,
+                'site.zip',
+                'archives'
+            );
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'archives',
+                new Blob([file]),
+                'site.zip'
+            );
+        });
+    });
+
+    describe('appendRequestInputs', () => {
+        const mockFormDataAppend = jest.spyOn(FormData.prototype, 'append');
+
+        it('should append nothing when no input is passed', async () => {
+            await GotenbergUtils.appendRequestInputs(new FormData(), {});
+            expect(mockFormDataAppend).not.toHaveBeenCalled();
+        });
+
+        it('should append downloadFrom as a JSON array', async () => {
+            await GotenbergUtils.appendRequestInputs(new FormData(), {
+                downloadFrom: {
+                    url: 'https://example.com/report.docx',
+                    filename: 'report.docx'
+                }
+            });
+            expect(mockFormDataAppend).toHaveBeenCalledWith(
+                'downloadFrom',
+                JSON.stringify([
+                    {
+                        url: 'https://example.com/report.docx',
+                        filename: 'report.docx'
+                    }
+                ])
+            );
+        });
+
+        it('should append archives under the archives field', async () => {
+            jest.spyOn(promises, 'access').mockResolvedValue();
+            await GotenbergUtils.appendRequestInputs(new FormData(), {
+                archives: ['path/to/site.zip', Buffer.from('zip')]
+            });
+            const archives = mockFormDataAppend.mock.calls
+                .filter(([field]) => field === 'archives')
+                .map((call) => call[2]);
+            expect(archives.sort()).toEqual(['archive2.zip', 'site.zip']);
         });
     });
 });
