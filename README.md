@@ -145,6 +145,8 @@ Append a version range to pin a major, such as `chromiumly@^6` to stay on Gotenb
 
 ### Prerequisites
 
+Chromiumly requires Node.js 20.19 or later on the 20.x line, or 22.12 or later.
+
 If you are using the hosted API key option at [https://api.chromiumly.dev](https://api.chromiumly.dev), you **do not need Docker** or a local Gotenberg instance — the service is fully managed for you.
 
 If you prefer to self‑host Gotenberg, be sure you install [Docker](https://www.docker.com/) if you have not already done so.

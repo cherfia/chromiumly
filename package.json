@@ -15,7 +15,7 @@
     "license": "MIT",
     "packageManager": "yarn@4.18.1",
     "engines": {
-        "node": ">=18.x"
+        "node": "^20.19.0 || >=22.12.0"
     },
     "keywords": [
         "gotenberg",
