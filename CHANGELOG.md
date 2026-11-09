@@ -1,5 +1,162 @@
 # Changelog
 
+## [7.0.0](https://github.com/cherfia/chromiumly/compare/6.0.0...7.0.0) (2026-11-09)
+
+### ⚠ BREAKING CHANGES
+
+- **chromium:** generateDocumentOutline and generateTaggedPdf become
+  nativeBookmarks and nativeTaggedPdf; properties.nativePageRanges
+  becomes properties.nativePages; emulatedMediaFeatures takes an object
+  such as { 'prefers-color-scheme': 'dark' } instead of a list of
+  { name, value }. Screenshot quality ranges from 1 to 100. The
+  post-processing options pdfFormat, pdfUA, metadata, split, userPassword,
+  ownerPassword, allow*, flatten, embeds, embedsMetadata, watermark,
+  stamp, rotate and facturx are removed: add the matching stage instead.
+- Node.js 18, 20 before 20.19, 21 and 22 before 22.12
+  are no longer supported.
+- **libre-office:** pdfa and pdfUA become nativePdfa and nativePdfua
+  ('PDF/UA-1'); quality, losslessImageCompression, reduceImageResolution
+  and maxImageResolution take the `native` prefix; properties.singlePageSheets,
+  exportBookmarks and nativePageRanges become singlePage, nativeBookmarks
+  and nativePages. initialView, magnification and pageLayout take strings
+  instead of numbers. nativeWatermarkColor takes [#rrggbb](https://github.com/cherfia/chromiumly/issues/rrggbb);
+  nativeWatermarkFontHeight, nativeWatermarkFontName and
+  nativeWatermarkRotateAngle become nativeWatermarkFontSize,
+  nativeWatermarkFont and nativeWatermarkRotation, in degrees.
+  firstPageOnLeft is removed. merge, metadata, split, flatten,
+  userPassword, ownerPassword, allow*, embeds, embedsMetadata, watermark,
+  stamp, rotate and facturx are removed: add the matching stage instead.
+- **pdf:** PDFEngines is removed. Use PDF: merge(), split({ every
+  | ranges }), select(), flattenForm(), remediate() for the former
+  convert() and facturX(), setMetadata(), setBookmarks() (bookmarks take
+  pageNumber), encrypt(), attach(), stampText()/stampImage()/stampPdf()
+  and rotate(). readMetadata() and readBookmarks() become metadata() and
+  bookmarks(), and resolve to parsed JSON instead of a Buffer.
+  Chromiumly.PDF_ENGINES_PATH and PDF_ENGINE_ROUTES become PDF_PATH and
+  PDF_ROUTES.
+- **system:** System.getPrometheusMetrics() and
+  Chromiumly.SYSTEM_ROUTES.prometheusMetrics are removed.
+- **common:** the PdfFormat enum and the PdfEngineRotate,
+  PdfEngineStamp and PdfEngineWatermark types are removed: use the
+  PdfaProfile and ConformanceProfiles unions and the stage types.
+  DownloadFromEntry loses `embedded` and `field`: name a downloaded file
+  in a stage with { name } instead.
+- **common:** WebhookOptions requires webhookUrl and
+  webhookEventsUrl; webhookErrorUrl and webhookErrorMethod are removed.
+
+### Features
+
+- **chromium:** support Gotenberg 9 conversions and screenshots ([708b954](https://github.com/cherfia/chromiumly/commit/708b954d2fa719661a5cb8dd58356338add871c7))
+- **common:** add typed stages and request inputs ([8176d0c](https://github.com/cherfia/chromiumly/commit/8176d0cd3b87e1240e11d4ec6036ce38344fe11c))
+- **common:** require the webhook events URL ([5602840](https://github.com/cherfia/chromiumly/commit/56028402814158fbab2769974df61dae8fe2c679))
+- **libre-office:** support Gotenberg 9 conversions ([f1238ec](https://github.com/cherfia/chromiumly/commit/f1238ece588fb1312c738641ba4b2500c4041a90)), references [#rrggbb](https://github.com/cherfia/chromiumly/issues/rrggbb)
+- **pdf:** name input PDFs with { file, name } ([d81c203](https://github.com/cherfia/chromiumly/commit/d81c203d21efcc3ba846ede21dec1875c30b17a1))
+- **pdf:** replace PDFEngines with PDF for the /forms/pdf routes ([d3c42ea](https://github.com/cherfia/chromiumly/commit/d3c42ea2966d93583505b2711f5360061b551cdb))
+- **system:** drop the Prometheus metrics route ([dd9715d](https://github.com/cherfia/chromiumly/commit/dd9715d6f6fa24fd948bdd5018c6b92b8f589b42))
+
+### Bug Fixes
+
+- **chromium:** reject a screenshot quality of 0 ([bea3cf3](https://github.com/cherfia/chromiumly/commit/bea3cf3435187e1b3518b204b4574c15c6312975))
+- **common:** name compose sources and refuse clashing stage files ([58a305a](https://github.com/cherfia/chromiumly/commit/58a305a0f5d9fe87f10578215f7779e5151645d1))
+- **common:** refuse requests that upload two files under one name ([8dc147f](https://github.com/cherfia/chromiumly/commit/8dc147fe0c082aaa471a992cffd22c44315d2ce6))
+- **common:** suggest { name } when an upload name is taken ([e7528f8](https://github.com/cherfia/chromiumly/commit/e7528f8734f1e46ed08605fe3b5f5f2ce8906fc9))
+- export the request input types and complete the migration notes ([510d117](https://github.com/cherfia/chromiumly/commit/510d117ff2369f9c972dae4dc2dd840739a8c27d))
+- pass Buffers to Blob as Uint8Array views ([0ebd61e](https://github.com/cherfia/chromiumly/commit/0ebd61ee8403e2704bc2157b2f2bdca5607c40e4))
+
+### Documentation
+
+- document the Gotenberg 9 API ([64a8aee](https://github.com/cherfia/chromiumly/commit/64a8aee29ef9a23b5180cbe08474356d95e4f60f))
+- keep install guidance package-manager neutral ([d7ae21a](https://github.com/cherfia/chromiumly/commit/d7ae21abb8e0f4bd0ceddc9b38e712b313bc103a))
+- say which Chromiumly major to use with each Gotenberg ([3176c9c](https://github.com/cherfia/chromiumly/commit/3176c9c591e20f93d3a0a60ec4809f13ecc641dd))
+
+### Styles
+
+- apply prettier formatting ([523079a](https://github.com/cherfia/chromiumly/commit/523079a3d6e3a72dc37794b546f1d7c60d8376f6))
+
+### Code Refactoring
+
+- **common:** remove the Gotenberg 8 post-processing helpers ([99b7f4d](https://github.com/cherfia/chromiumly/commit/99b7f4d50465bb6a607031508ef52230df620c5a))
+
+### Tests
+
+- **gotenberg:** cover suppression of config WARNING messages ([5aca8ce](https://github.com/cherfia/chromiumly/commit/5aca8ceb5b13bd06cbe6315798e46f0f0a05fd35))
+
+### Build System
+
+- require Node.js ^20.19.0 || >=22.12.0 ([3652b2c](https://github.com/cherfia/chromiumly/commit/3652b2c9ff36f57420abf8273e4c94edb9f682b9))
+
+### Continuous Integration
+
+- lint every commit of a pull request ([2a8416a](https://github.com/cherfia/chromiumly/commit/2a8416a113f43c255d30508353f7add239671b57))
+
+### Chores
+
+- **deps:** update babel monorepo to v8.0.7 ([#914](https://github.com/cherfia/chromiumly/issues/914)) ([46b607b](https://github.com/cherfia/chromiumly/commit/46b607b4185d6f309d1e717981d206db469b2116))
+- **deps:** update commitlint monorepo to v21.2.2 ([#877](https://github.com/cherfia/chromiumly/issues/877)) ([e7870e5](https://github.com/cherfia/chromiumly/commit/e7870e548ce4cf1ed0b8e4654c9d452a8acb5c6c))
+- **deps:** update commitlint monorepo to v21.2.3 ([#903](https://github.com/cherfia/chromiumly/issues/903)) ([6f87ba2](https://github.com/cherfia/chromiumly/commit/6f87ba29557b62bcdb4502e68443a23bcb33a547))
+- **deps:** update commitlint monorepo to v21.2.4 ([#923](https://github.com/cherfia/chromiumly/issues/923)) ([2de118c](https://github.com/cherfia/chromiumly/commit/2de118c9c1f85dced3df4e52cd5f4750caf1e4d6))
+- **deps:** update dependency @babel/core to v8.0.5 ([#893](https://github.com/cherfia/chromiumly/issues/893)) ([0ca7f48](https://github.com/cherfia/chromiumly/commit/0ca7f48d4e10b752cd2edc03b797ee25f02527f4))
+- **deps:** update dependency @babel/core to v8.0.6 ([#900](https://github.com/cherfia/chromiumly/issues/900)) ([69f22df](https://github.com/cherfia/chromiumly/commit/69f22df2f7118cc112f13e31f4c58fd519693e5a))
+- **deps:** update dependency @babel/core to v8.0.9 ([#924](https://github.com/cherfia/chromiumly/issues/924)) ([2d3de5a](https://github.com/cherfia/chromiumly/commit/2d3de5ad224989d097ecf10a0024ec0f31962444))
+- **deps:** update dependency @babel/core to v8.1.0 ([#931](https://github.com/cherfia/chromiumly/issues/931)) ([6d22ef4](https://github.com/cherfia/chromiumly/commit/6d22ef43929a805b81216b60571197f162fabd56))
+- **deps:** update dependency @eslint/eslintrc to v3.3.7 ([#887](https://github.com/cherfia/chromiumly/issues/887)) ([afdd670](https://github.com/cherfia/chromiumly/commit/afdd670f244d8cd5ca5545c3aeb5852e04719e07))
+- **deps:** update dependency @release-it/conventional-changelog to v12 ([5f3a037](https://github.com/cherfia/chromiumly/commit/5f3a037ab37d57e519f81c3939b8e75e30888706))
+- **deps:** update dependency @release-it/conventional-changelog to v12.0.2 ([#895](https://github.com/cherfia/chromiumly/issues/895)) ([8eccf39](https://github.com/cherfia/chromiumly/commit/8eccf39241b7054f10bde910ac8a2286d3f52137))
+- **deps:** update dependency @types/node to v24.13.6 ([#897](https://github.com/cherfia/chromiumly/issues/897)) ([7e952fa](https://github.com/cherfia/chromiumly/commit/7e952fabdce1b1f3eed9db436d5c757d88efbff0))
+- **deps:** update dependency @types/node to v24.19.0 ([#906](https://github.com/cherfia/chromiumly/issues/906)) ([f64d15e](https://github.com/cherfia/chromiumly/commit/f64d15effac5f78abe2d1dda7fd96d207615fe9a))
+- **deps:** update dependency @types/node to v24.19.1 ([#910](https://github.com/cherfia/chromiumly/issues/910)) ([a883267](https://github.com/cherfia/chromiumly/commit/a883267c06d60968a7a21bb7cb6febb4760b3150))
+- **deps:** update dependency @types/node to v24.19.2 ([#915](https://github.com/cherfia/chromiumly/issues/915)) ([071c05a](https://github.com/cherfia/chromiumly/commit/071c05a512ade013fed3beed42c7983a3752d1da))
+- **deps:** update dependency config to v5 ([71ef127](https://github.com/cherfia/chromiumly/commit/71ef127aa72b862d8922dbfa4334e134190b006f))
+- **deps:** update dependency conventional-changelog-conventionalcommits to v10.3.0 ([#878](https://github.com/cherfia/chromiumly/issues/878)) ([071c5f1](https://github.com/cherfia/chromiumly/commit/071c5f1f6ff17745833960b81e7f36f7143ac25f))
+- **deps:** update dependency conventional-changelog-conventionalcommits to v10.4.0 ([#881](https://github.com/cherfia/chromiumly/issues/881)) ([d231679](https://github.com/cherfia/chromiumly/commit/d231679769c134a7c3b119e88026b312d9c3f0a4))
+- **deps:** update dependency conventional-changelog-conventionalcommits to v10.4.1 ([#912](https://github.com/cherfia/chromiumly/issues/912)) ([98d3ab8](https://github.com/cherfia/chromiumly/commit/98d3ab8bb50bcf347a61c6d5b1220e50e00d801e))
+- **deps:** update dependency dotenv to v18 ([0e5ec82](https://github.com/cherfia/chromiumly/commit/0e5ec829a1f9526c1f265b52de5533eecb28c861))
+- **deps:** update dependency dotenv to v18.0.8 ([#921](https://github.com/cherfia/chromiumly/issues/921)) ([58e48a5](https://github.com/cherfia/chromiumly/commit/58e48a5cfa4e0a95a437bb2bbbbf9198b8fd3945))
+- **deps:** update dependency dotenv to v18.0.9 ([#926](https://github.com/cherfia/chromiumly/issues/926)) ([8f038ea](https://github.com/cherfia/chromiumly/commit/8f038ea72ce0d69fc02a75b8b5f072009cd4d902))
+- **deps:** update dependency globals to v17.11.0 ([#879](https://github.com/cherfia/chromiumly/issues/879)) ([2cd1a15](https://github.com/cherfia/chromiumly/commit/2cd1a158d8aec0a956f4ba20bf8a74a3d543fb1c))
+- **deps:** update dependency globals to v17.12.0 ([#890](https://github.com/cherfia/chromiumly/issues/890)) ([c2988d9](https://github.com/cherfia/chromiumly/commit/c2988d90331cee503166054c47ea98bf32a8dcbe))
+- **deps:** update dependency globals to v17.13.0 ([#911](https://github.com/cherfia/chromiumly/issues/911)) ([569ea2c](https://github.com/cherfia/chromiumly/commit/569ea2c1bdc049653a248ada15edcd1bc0961c3a))
+- **deps:** update dependency globals to v17.14.0 ([#932](https://github.com/cherfia/chromiumly/issues/932)) ([e5d4a9c](https://github.com/cherfia/chromiumly/commit/e5d4a9c233e763d5ab1b2e05c9345a05857ff08f))
+- **deps:** update dependency globals to v17.9.0 ([#873](https://github.com/cherfia/chromiumly/issues/873)) ([0e019a5](https://github.com/cherfia/chromiumly/commit/0e019a51d54d1f2ad8a74b945426964c745de4aa))
+- **deps:** update dependency jest to v30.5.0 ([#884](https://github.com/cherfia/chromiumly/issues/884)) ([eaf0247](https://github.com/cherfia/chromiumly/commit/eaf0247e91189dae7689dbe5e4dfd454acae823e))
+- **deps:** update dependency jest to v30.5.1 ([#888](https://github.com/cherfia/chromiumly/issues/888)) ([bdfe194](https://github.com/cherfia/chromiumly/commit/bdfe1946160fc84bf43d68a00bfc73a888b8ce22))
+- **deps:** update dependency jest to v30.5.2 ([#901](https://github.com/cherfia/chromiumly/issues/901)) ([b1dd76f](https://github.com/cherfia/chromiumly/commit/b1dd76fd944af96849a183a87ff4697c1c80f865))
+- **deps:** update dependency lint-staged to v17.3.0 ([#872](https://github.com/cherfia/chromiumly/issues/872)) ([c735e07](https://github.com/cherfia/chromiumly/commit/c735e07dae697abc50195d48ef23b9d04182ab3c))
+- **deps:** update dependency lint-staged to v17.4.1 ([#885](https://github.com/cherfia/chromiumly/issues/885)) ([ca485ea](https://github.com/cherfia/chromiumly/commit/ca485ea26bed10e1567ddf3b6f368197fdf32858))
+- **deps:** update dependency lint-staged to v17.5.0 ([#891](https://github.com/cherfia/chromiumly/issues/891)) ([f40a957](https://github.com/cherfia/chromiumly/commit/f40a9575015ac16f5d3a2b7a751145262898fe5a))
+- **deps:** update dependency lint-staged to v17.5.1 ([#894](https://github.com/cherfia/chromiumly/issues/894)) ([ae37e3b](https://github.com/cherfia/chromiumly/commit/ae37e3ba7a7eff2fadee74089ad89420ffb86200))
+- **deps:** update dependency lint-staged to v17.6.0 ([#908](https://github.com/cherfia/chromiumly/issues/908)) ([f284e78](https://github.com/cherfia/chromiumly/commit/f284e78592c21c1ca5ffbbd26de7f65c4d8f3373))
+- **deps:** update dependency prettier to v3.9.10 ([#918](https://github.com/cherfia/chromiumly/issues/918)) ([087ff73](https://github.com/cherfia/chromiumly/commit/087ff738df1656f6f00087181c320dcc9328d9fb))
+- **deps:** update dependency prettier to v3.9.9 ([#898](https://github.com/cherfia/chromiumly/issues/898)) ([bd16cc4](https://github.com/cherfia/chromiumly/commit/bd16cc450918a9acd879140282796d3a8bdf640e))
+- **deps:** update dependency release-it to v21 ([84b2dbe](https://github.com/cherfia/chromiumly/commit/84b2dbe1657f35fff2f3adfc6c837f752af141c1))
+- **deps:** update dependency release-it to v21.0.3 ([#896](https://github.com/cherfia/chromiumly/issues/896)) ([c88e75c](https://github.com/cherfia/chromiumly/commit/c88e75c54fda5c2be944f6eafeda1bbab3effc43))
+- **deps:** update dependency release-it to v21.1.0 ([#902](https://github.com/cherfia/chromiumly/issues/902)) ([ed963a3](https://github.com/cherfia/chromiumly/commit/ed963a3f886a3544cbf23e1f848d345edcec7d3c))
+- **deps:** update dependency release-it to v21.1.1 ([#916](https://github.com/cherfia/chromiumly/issues/916)) ([6ecd777](https://github.com/cherfia/chromiumly/commit/6ecd7779599b5d49d1a660009d97622a889b1ad7))
+- **deps:** update dependency release-it to v21.1.2 ([#930](https://github.com/cherfia/chromiumly/issues/930)) ([e05a109](https://github.com/cherfia/chromiumly/commit/e05a10932b81063a748f19a088e7239ea490cb37))
+- **deps:** update dependency ts-jest to v29.4.14 ([#905](https://github.com/cherfia/chromiumly/issues/905)) ([a833e24](https://github.com/cherfia/chromiumly/commit/a833e24f437b2641d40729996df744f70e04ba9e))
+- **deps:** update dependency ts-jest to v29.4.15 ([#919](https://github.com/cherfia/chromiumly/issues/919)) ([bf60b32](https://github.com/cherfia/chromiumly/commit/bf60b32f749d9a70a943153dc02f8e2efd36e819))
+- **deps:** update dependency tslib to v2.9.1 ([#933](https://github.com/cherfia/chromiumly/issues/933)) ([0c0780d](https://github.com/cherfia/chromiumly/commit/0c0780d778ea2086cb8aff475ac6e34a993952b2))
+- **deps:** update node.js to v24.19.0 ([#874](https://github.com/cherfia/chromiumly/issues/874)) ([00be47f](https://github.com/cherfia/chromiumly/commit/00be47fc66bfdfddeb7919bac626409b60e0bf52))
+- **deps:** update node.js to v24.20.0 ([#883](https://github.com/cherfia/chromiumly/issues/883)) ([861c046](https://github.com/cherfia/chromiumly/commit/861c046eea4b7e7c1e271420b9ce5af686f6bb01))
+- **deps:** update node.js to v24.21.0 ([#892](https://github.com/cherfia/chromiumly/issues/892)) ([ae444ba](https://github.com/cherfia/chromiumly/commit/ae444bab6f8ac5beb7dca0a34763fea19479c391))
+- **deps:** update node.js to v24.22.0 ([#920](https://github.com/cherfia/chromiumly/issues/920)) ([798c909](https://github.com/cherfia/chromiumly/commit/798c90902775ebdfe55a3ab858de4cf662fd44f7))
+- **deps:** update node.js to v24.22.1 ([#925](https://github.com/cherfia/chromiumly/issues/925)) ([721d3be](https://github.com/cherfia/chromiumly/commit/721d3be3ed57c151b0cd4e25040f5c3016621c06))
+- **deps:** update node.js to v24.22.2 ([#929](https://github.com/cherfia/chromiumly/issues/929)) ([4c4fa89](https://github.com/cherfia/chromiumly/commit/4c4fa89331d075d644399e40cde18961aa66b680))
+- **deps:** update node.js to v26 ([0c9edbe](https://github.com/cherfia/chromiumly/commit/0c9edbe22bb9d53a2f4b60ac9768829b084aa59d))
+- **deps:** update typescript-eslint monorepo to v8.66.0 ([#876](https://github.com/cherfia/chromiumly/issues/876)) ([27d5013](https://github.com/cherfia/chromiumly/commit/27d50132057c61c257b347db83a1ad7d5bf112d2))
+- **deps:** update typescript-eslint monorepo to v8.67.0 ([#880](https://github.com/cherfia/chromiumly/issues/880)) ([9a1e550](https://github.com/cherfia/chromiumly/commit/9a1e55062879735bacd1e38879995878c336494d))
+- **deps:** update typescript-eslint monorepo to v8.68.0 ([#882](https://github.com/cherfia/chromiumly/issues/882)) ([f17745d](https://github.com/cherfia/chromiumly/commit/f17745dca3baea1bb7af28b4462761256424c260))
+- **deps:** update typescript-eslint monorepo to v8.69.0 ([#886](https://github.com/cherfia/chromiumly/issues/886)) ([c7b2d8b](https://github.com/cherfia/chromiumly/commit/c7b2d8be82759d45352e80c9179badad1dc78bef))
+- **deps:** update typescript-eslint monorepo to v8.70.0 ([#889](https://github.com/cherfia/chromiumly/issues/889)) ([912041b](https://github.com/cherfia/chromiumly/commit/912041b47fda2495491101b808eef1221e5f4f3c))
+- **deps:** update typescript-eslint monorepo to v8.70.1 ([#904](https://github.com/cherfia/chromiumly/issues/904)) ([24de695](https://github.com/cherfia/chromiumly/commit/24de69562e7f5db0348f1b852e695f71bd3acab7))
+- **deps:** update typescript-eslint monorepo to v8.71.0 ([#909](https://github.com/cherfia/chromiumly/issues/909)) ([6b8f04e](https://github.com/cherfia/chromiumly/commit/6b8f04e276d1cd578e6f8bef3b917c4ff1e6aac6))
+- **deps:** update typescript-eslint monorepo to v8.71.1 ([#913](https://github.com/cherfia/chromiumly/issues/913)) ([8b61770](https://github.com/cherfia/chromiumly/commit/8b6177075c15f25673392a27df4402791c244ca0))
+- **deps:** update typescript-eslint monorepo to v8.71.2 ([#917](https://github.com/cherfia/chromiumly/issues/917)) ([9db5844](https://github.com/cherfia/chromiumly/commit/9db58448df9621bc4d8c0e2038b7dff674e6b56a))
+- **deps:** update typescript-eslint monorepo to v8.72.0 ([#922](https://github.com/cherfia/chromiumly/issues/922)) ([210f425](https://github.com/cherfia/chromiumly/commit/210f4252a64dcb3cc70271b93c8a726634a92d9f))
+- **deps:** update typescript-eslint monorepo to v8.72.1 ([#927](https://github.com/cherfia/chromiumly/issues/927)) ([005009d](https://github.com/cherfia/chromiumly/commit/005009d0bd4bd7b613feb688fd2f5b9b0897fd07))
+- **deps:** update yarn to v4.18.1 ([#907](https://github.com/cherfia/chromiumly/issues/907)) ([f8ada0e](https://github.com/cherfia/chromiumly/commit/f8ada0ee82885c9c57f91e8f42d06c2ba8965b64))
+- ignore the local reference docs clone ([f4ca24c](https://github.com/cherfia/chromiumly/commit/f4ca24c3cd56f694bb2d030da6234cebed177d5f))
+
 ## [6.0.0](https://github.com/cherfia/chromiumly/compare/5.2.1...6.0.0) (2026-08-01)
 
 ## [5.2.1](https://github.com/cherfia/chromiumly/compare/5.2.0...5.2.1) (2026-04-07)
