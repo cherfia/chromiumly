@@ -1008,7 +1008,9 @@ Chromiumly 7 targets Gotenberg 9. Most changes follow [Gotenberg's own upgrade g
 - `webhook` requires both `webhookUrl` and `webhookEventsUrl`; `webhookErrorUrl` and `webhookErrorMethod` are gone, and errors arrive as `webhook.error` events.
 - `System.getPrometheusMetrics()` is gone, with Gotenberg's Prometheus route.
 - The `PdfFormat` enum and the `PdfEngine*` types are gone; use the `PdfaProfile`, `ConformanceProfiles` and stage types.
-- LibreOffice no longer accepts `.epub`.
+- LibreOffice no longer accepts `.epub`. Chromiumly uploads LibreOffice documents as `fileNN.<ext>`, and Gotenberg 9 names each PDF after its document, so a single document comes back as `file01.docx.pdf` unless you set `outputFilename`.
+- `PDF` read routes answer one entry per PDF under its file name: a path keeps its base name, a `Buffer` or `ReadStream` is `fileNN.pdf`, unless you pass `{ file, name }`.
+- The published type declarations use `export type *`, which needs TypeScript 5.0 or later.
 - New: every stage, `archives`, `downloadFrom[].filename`, `paperSize`, `waitForWindowStatus`, `failOnConsoleMessageTypes`, the screenshot `selector`, and the `PDF` read routes.
 
 ## Snippet

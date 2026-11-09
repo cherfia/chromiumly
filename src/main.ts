@@ -6,6 +6,8 @@ export type {
     DownloadFromEntry,
     OutputOptions,
     PaperSize,
+    PathLikeOrReadStream,
+    RequestInputOptions,
     WebhookOptions
 } from './common/types';
 export {
